@@ -44,6 +44,9 @@
         .daily-item { border: 1px solid #333; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; opacity: 0.5; }
         .daily-item.active { border-color: var(--warn); background: rgba(255, 200, 0, 0.1); opacity: 1; box-shadow: 0 0 15px rgba(255,200,0,0.2); transform: scale(1.05); }
         .daily-item.claimed { border-color: var(--primary); background: rgba(0, 255, 255, 0.1); opacity: 0.8; }
+        
+        /* Full screen overlay for daily to hide menu */
+        #dailyModal { background-color: #000; }
     </style>
 </head>
 <body>
@@ -72,7 +75,7 @@
                     <div class="w-32 h-4 bg-gray-900 border border-cyan-600 transform -skew-x-12 overflow-hidden relative">
                          <div id="healthBar" class="h-full bg-cyan-400 shadow-[0_0_10px_#0ff] w-full transition-all duration-200"></div>
                     </div>
-                    <div class="text-xs text-yellow-400 font-mono font-bold"><i class="fas fa-bolt mr-1"></i><span id="gameCredits">0</span></div>
+                    <div class="text-xs text-yellow-400 font-mono font-bold"><i class="fas fa-coins mr-1"></i><span id="gameCredits">0</span></div>
                 </div>
             </div>
             <button id="pauseBtn" class="pointer-events-auto absolute top-16 right-2 text-cyan-600 hover:text-white transition p-2 font-[Orbitron] text-xl shadow-[0_0_10px_rgba(0,255,255,0.3)] rounded border border-cyan-900/50 bg-black/50 w-10 h-10 flex items-center justify-center">
@@ -90,7 +93,7 @@
             </div>
             
             <div class="flex gap-8 mb-8 text-sm border-y border-cyan-900/50 py-3 bg-black/40 backdrop-blur w-full justify-center z-30">
-                <div class="text-yellow-400 font-bold flex items-center"><i class="fas fa-bolt mr-2"></i> <span id="menuCredits">0</span></div>
+                <div class="text-yellow-400 font-bold flex items-center"><i class="fas fa-coins mr-2"></i> <span id="menuCredits">0</span></div>
                 <div class="text-cyan-400 font-bold flex items-center"><i class="fas fa-star mr-2"></i> УР. <span id="menuLevel">1</span></div>
             </div>
 
@@ -106,8 +109,8 @@
             </div>
         </div>
 
-        <!-- DAILY REWARD MODAL -->
-        <div id="dailyModal" class="absolute inset-0 z-50 hidden bg-black/95 flex flex-col items-center justify-center p-4">
+        <!-- DAILY REWARD MODAL (Opaque BG) -->
+        <div id="dailyModal" class="absolute inset-0 z-50 hidden flex flex-col items-center justify-center p-4">
             <h2 class="text-3xl text-yellow-400 font-black mb-2 italic tracking-widest">ЕЖЕДНЕВНАЯ НАГРАДА</h2>
             <p class="text-gray-400 text-xs mb-8 uppercase tracking-widest">ЗАХОДИ КАЖДЫЙ ДЕНЬ</p>
             
@@ -144,7 +147,7 @@
         <div id="shopMenu" class="absolute inset-0 z-30 hidden bg-black flex flex-col">
             <div class="p-4 border-b border-cyan-900 flex justify-between items-center bg-gray-900/50">
                 <h2 class="text-xl text-cyan-400 font-black italic tracking-wider">АНГАР</h2>
-                <div class="text-yellow-400 font-mono font-bold"><i class="fas fa-bolt"></i> <span id="shopCredits">0</span></div>
+                <div class="text-yellow-400 font-mono font-bold"><i class="fas fa-coins"></i> <span id="shopCredits">0</span></div>
             </div>
             <div class="flex-1 overflow-y-auto p-4 pb-24 space-y-6 hide-scrollbar">
                 <div class="relative h-48 border border-cyan-900 bg-gray-900/30 rounded-lg flex items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
@@ -203,24 +206,26 @@
             <div class="space-y-6 text-sm text-gray-300 overflow-y-auto flex-1 hide-scrollbar">
                 <div class="bg-gray-900/50 p-4 rounded border-l-4 border-yellow-500 shadow-lg">
                     <h3 class="text-yellow-400 font-bold mb-3 uppercase tracking-wider">МОДУЛИ</h3>
-                    <div class="flex items-center gap-4 mb-3">
-                         <div class="w-10 h-10 rounded-full border-2 border-green-500 flex items-center justify-center text-green-500 font-bold bg-green-500/10 text-xl">+</div>
-                         <div><strong class="text-green-400 block">РЕМОНТ</strong><span class="text-xs text-gray-400">Восстанавливает 30% структуры.</span></div>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="flex flex-col items-center">
+                            <canvas id="infoHealth" width="40" height="40" class="mb-2"></canvas>
+                            <strong class="text-green-400 text-[10px]">РЕМОНТ</strong>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <canvas id="infoOverdrive" width="40" height="40" class="mb-2"></canvas>
+                            <strong class="text-purple-400 text-[10px]">ОВЕРДРАЙВ</strong>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <canvas id="infoMulti" width="40" height="40" class="mb-2"></canvas>
+                            <strong class="text-cyan-400 text-[10px]">МУЛЬТИ</strong>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-4 mb-3">
-                         <div class="w-10 h-10 rounded-full border-2 border-purple-500 flex items-center justify-center text-purple-500 font-bold bg-purple-500/10 text-xl"><i class="fas fa-bolt"></i></div>
-                         <div><strong class="text-purple-400 block">ОВЕРДРАЙВ</strong><span class="text-xs text-gray-400">Максимальная скорострельность (5 сек).</span></div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full border-2 border-cyan-400 flex items-center justify-center text-cyan-400 font-bold bg-cyan-400/10 text-xl">M</div>
-                        <div><strong class="text-cyan-400 block">МУЛЬТИ-ЗАЛП</strong><span class="text-xs text-gray-400">Дополнительные боковые орудия.</span></div>
-                   </div>
                 </div>
                 <div class="bg-gray-900/50 p-4 rounded border-l-4 border-cyan-500 shadow-lg">
                     <h3 class="text-cyan-400 font-bold mb-2 uppercase tracking-wider">ТАКТИКА</h3>
                     <ul class="list-disc pl-4 space-y-2 text-xs text-gray-300">
-                        <li><strong>Не врезайтесь!</strong> Таран не дает очков.</li>
-                        <li><strong>Копите кредиты.</strong> Покупайте новые корабли для выживания.</li>
+                        <li><strong>Не врезайтесь!</strong> Таран не дает очков и наносит урон.</li>
+                        <li><strong>Кампания.</strong> Новые враги появляются только на высоких уровнях. Не расслабляйтесь!</li>
                         <li><strong>Комбо.</strong> Мульти-залп + Овердрайв = Победа.</li>
                     </ul>
                 </div>
@@ -260,11 +265,11 @@
 
     <script>
         /**
-         * VOIDSTORM ENGINE v8.0
-         * - VK Bridge Integration (Storage, Ads, Music)
-         * - Daily Rewards
-         * - Fixed EndGame & Orientation
-         * - Restored Detailed Player Ships
+         * VOIDSTORM ENGINE v9.0 FINAL
+         * - Advanced Ship Geometry (Neon style, high detail)
+         * - Correct Enemy Orientation (Pointing Down)
+         * - Non-linear Campaign Progression
+         * - UI Polish (Opaque Daily, Icons)
          */
 
         const V_WIDTH = 600;
@@ -276,240 +281,108 @@
         const shipPreviewCanvas = document.getElementById('shipPreviewCanvas');
         const shipCtx = shipPreviewCanvas.getContext('2d');
 
-        // --- VK & DATA MANAGER ---
-        const VKManager = {
-            userId: null,
-            isInit: false,
-            adsCounter: 0,
-            
-            init: async function() {
-                try {
-                    const res = await vkBridge.send('VKWebAppInit');
-                    this.isInit = true;
-                    
-                    // Music handling for background/minimize
-                    vkBridge.subscribe((e) => {
-                        if(e.detail.type === 'VKWebAppViewHide') SoundManager.toggleMusic(false, true);
-                        if(e.detail.type === 'VKWebAppViewRestore') SoundManager.toggleMusic(true, true);
-                    });
-
-                    // Get User
-                    const user = await vkBridge.send('VKWebAppGetUserInfo');
-                    this.userId = user.id;
-                    
-                    // Load Data
-                    await saveSystem.load();
-                    
-                    // Show Banner
-                    vkBridge.send('VKWebAppShowBannerAd', { banner_location: 'bottom' }).catch(e=>{});
-                    
-                    // Daily Check
-                    DailyManager.check();
-                    
-                } catch(e) { console.log('VK Init Error (Local Mode)', e); saveSystem.load(); DailyManager.check(); }
-            },
-            
-            showInterstitial: function() {
-                this.adsCounter++;
-                if(this.adsCounter >= 3 || gameState.mode === 'ENDLESS') {
-                    this.adsCounter = 0;
-                    vkBridge.send('VKWebAppShowInterstitialAd').catch(e=>{});
-                }
-            }
-        };
-
-        // --- SAVE SYSTEM ---
-        const saveSystem = {
-            data: { credits: 0, campaignLevel: 1, unlockedShips: [0], currentShip: 0, upgrades: {}, highScore: 0, daily: { last: null, streak: 0 } },
-            
-            load: async function() {
-                const key = VKManager.userId ? `voidstorm_data_${VKManager.userId}` : 'voidstorm_save';
-                try {
-                    let loaded = null;
-                    if(VKManager.userId) {
-                        const r = await vkBridge.send('VKWebAppStorageGet', { keys: [key] });
-                        if(r.keys[0].value) loaded = JSON.parse(r.keys[0].value);
-                    } else {
-                        loaded = JSON.parse(localStorage.getItem(key));
-                    }
-                    
-                    if(loaded) this.data = { ...this.data, ...loaded };
-                    // Fix upgrades structure if new ships added
-                    SHIPS_DB.forEach(s => { if(!this.data.upgrades[s.id]) this.data.upgrades[s.id] = {dmg:1, hp:1, spd:1}; });
-                    
-                    // Init settings
-                    const settings = JSON.parse(localStorage.getItem('voidstorm_settings') || '{"sfx":true,"music":true}');
-                    SoundManager.sfxEnabled = settings.sfx;
-                    SoundManager.musicEnabled = settings.music;
-                    document.getElementById('sfxToggle').checked = settings.sfx;
-                    document.getElementById('musicToggle').checked = settings.music;
-                    SoundManager.updateMusicState();
-                    updateMenuStats();
-
-                } catch(e) { console.error("Load error", e); }
-            },
-            
-            save: async function() {
-                const key = VKManager.userId ? `voidstorm_data_${VKManager.userId}` : 'voidstorm_save';
-                const val = JSON.stringify(this.data);
-                try {
-                    if(VKManager.userId) await vkBridge.send('VKWebAppStorageSet', { key: key, value: val });
-                    else localStorage.setItem(key, val);
-                } catch(e) {}
-                updateMenuStats();
-            }
-        };
-
-        // --- DAILY REWARDS ---
-        const DailyManager = {
-            rewards: [100, 200, 300, 400, 500, 750, 1000],
-            check: function() {
-                const today = new Date().toDateString();
-                const last = saveSystem.data.daily.last;
-                
-                if(last !== today) {
-                    // New Day
-                    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-                    if(last !== yesterday.toDateString()) saveSystem.data.daily.streak = 0; // Reset if missed
-                    
-                    this.showModal();
-                }
-            },
-            showModal: function() {
-                const modal = document.getElementById('dailyModal');
-                const grid = document.getElementById('dailyGrid');
-                const streak = saveSystem.data.daily.streak;
-                
-                grid.innerHTML = '';
-                this.rewards.forEach((amt, i) => {
-                    const div = document.createElement('div');
-                    div.className = `daily-item ${i < streak ? 'claimed' : ''} ${i === streak ? 'active' : ''}`;
-                    div.innerHTML = `<div class="text-xs text-gray-400">ДЕНЬ ${i+1}</div><div class="text-yellow-400 font-bold text-lg">${amt}</div>`;
-                    grid.appendChild(div);
-                });
-                
-                modal.classList.remove('hidden');
-            },
-            claim: function() {
-                const streak = saveSystem.data.daily.streak;
-                const reward = this.rewards[Math.min(streak, 6)];
-                
-                saveSystem.data.credits += reward;
-                saveSystem.data.daily.last = new Date().toDateString();
-                saveSystem.data.daily.streak = (streak + 1) % 7;
-                saveSystem.save();
-                
-                document.getElementById('dailyModal').classList.add('hidden');
-                SoundManager.play('powerup');
-            }
-        };
-        document.getElementById('claimDailyBtn').onclick = () => DailyManager.claim();
-
-        // --- AUDIO ---
-        const SoundManager = {
-            ctx: new (window.AudioContext || window.webkitAudioContext)(),
-            sfxEnabled: true,
-            musicEnabled: true,
-            
-            updateMusicState: function() {
-                const audio = document.getElementById('bgMusic');
-                if(this.musicEnabled) audio.play().catch(e=>{});
-                else audio.pause();
-            },
-            toggleMusic: function(v, temp=false) {
-                if(!temp) { this.musicEnabled = v; localStorage.setItem('voidstorm_settings', JSON.stringify({sfx: this.sfxEnabled, music: v})); }
-                const audio = document.getElementById('bgMusic');
-                if(v && this.musicEnabled) audio.play().catch(e=>{}); else audio.pause();
-            },
-            toggleSFX: function(v) { this.sfxEnabled = v; localStorage.setItem('voidstorm_settings', JSON.stringify({sfx: v, music: this.musicEnabled})); },
-            
-            play: function(type) {
-                if(!this.sfxEnabled) return;
-                if(this.ctx.state === 'suspended') this.ctx.resume();
-                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                const now = this.ctx.currentTime;
-
-                if (type === 'shoot') { osc.type = 'square'; osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(100, now+0.1); gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.1); osc.start(now); osc.stop(now+0.1); }
-                else if (type === 'enemy_shoot') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(50, now+0.2); gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.2); osc.start(now); osc.stop(now+0.2); }
-                else if (type === 'hit') { osc.type = 'triangle'; osc.frequency.setValueAtTime(100, now); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.05); osc.start(now); osc.stop(now+0.05); }
-                else if (type === 'explode') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(10, now+0.3); gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.3); osc.start(now); osc.stop(now+0.3); }
-                else if (type === 'powerup') { osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.linearRampToValueAtTime(800, now+0.2); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.2); osc.start(now); osc.stop(now+0.2); }
-                else if (type === 'ui') { osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.05); osc.start(now); osc.stop(now+0.05); }
-            }
-        };
-
-        // --- ASSETS (High Detail Player Ships) ---
+        // --- ASSET DRAWER (HIGH QUALITY) ---
         const AssetDrawer = {
+            // Helpers
+            neonPath: function(c, pathFn, color, blur=15, width=2) {
+                c.save();
+                c.lineJoin = 'round'; c.lineCap = 'round';
+                c.shadowBlur = blur; c.shadowColor = color; c.strokeStyle = color; c.lineWidth = width;
+                c.fillStyle = '#000';
+                c.beginPath(); pathFn(c); c.closePath();
+                c.fill(); c.stroke();
+                // Inner Highlight
+                c.shadowBlur = 0; c.strokeStyle = '#fff'; c.lineWidth = 1; c.globalAlpha = 0.5;
+                c.stroke();
+                c.restore();
+            },
+
             drawShip: function(c, model, color, isMoving) {
                 c.save();
-                c.shadowBlur = 15; c.shadowColor = color; c.fillStyle = '#000'; c.strokeStyle = color; c.lineWidth = 2;
                 
                 // Thrusters
-                c.beginPath(); c.fillStyle = '#fff'; c.globalAlpha = isMoving ? 0.8 : 0.4;
-                const t = isMoving ? 30 : 10;
-                if(model==='tank') { c.rect(-12,25,6,t); c.rect(6,25,6,t); }
-                else c.rect(-4,25,8,t); 
-                c.fill(); c.globalAlpha = 1.0; c.fillStyle = '#000';
-
+                c.fillStyle = '#fff'; c.shadowBlur = 20; c.shadowColor = color; c.globalAlpha = isMoving ? 0.8 : 0.4;
+                const t = isMoving ? (30 + Math.random()*10) : 10;
                 c.beginPath();
-                if (model === 'interceptor') {
-                    // Classic detailed fighter
-                    c.moveTo(0, -30); c.lineTo(8, -10); c.lineTo(25, 20); c.lineTo(10, 15); c.lineTo(0, 25); c.lineTo(-10, 15); c.lineTo(-25, 20); c.lineTo(-8, -10);
-                    c.closePath(); c.moveTo(0, -10); c.lineTo(0, 15); // Spine
-                } else if (model === 'tank') {
-                    // Heavy double-hull
-                    c.moveTo(-10,-30); c.lineTo(10,-30); c.lineTo(15,-10); c.lineTo(25,0); c.lineTo(25,20); c.lineTo(10,20); c.lineTo(10,10); c.lineTo(-10,10); c.lineTo(-10,20); c.lineTo(-25,20); c.lineTo(-25,0); c.lineTo(-15,-10);
-                    c.closePath(); c.rect(-8,-20,16,20); // Armor plate
-                } else if (model === 'wing') {
-                    // Swept wing
-                    c.moveTo(0, -30); c.lineTo(5, -5); c.lineTo(35, 15); c.lineTo(35, 25); c.lineTo(5, 10); c.lineTo(0, 20); c.lineTo(-5, 10); c.lineTo(-35, 25); c.lineTo(-35, 15); c.lineTo(-5, -5);
-                } else if (model === 'needle') {
-                    // Long sniper
-                    c.moveTo(0, -40); c.lineTo(5, 20); c.lineTo(12, 25); c.lineTo(0, 30); c.lineTo(-12, 25); c.lineTo(-5, 20);
-                    c.moveTo(0, -40); c.lineTo(0, 20); // Barrel
-                } else if (model === 'wide') {
-                    // Wide spread
-                    c.moveTo(0,-20); c.lineTo(15,-10); c.lineTo(35,10); c.lineTo(20,20); c.lineTo(0,10); c.lineTo(-20,20); c.lineTo(-35,10); c.lineTo(-15,-10);
-                    c.moveTo(-25,10); c.lineTo(-25,-5); c.moveTo(25,10); c.lineTo(25,-5); // Guns
-                } else if (model === 'alien') {
-                    c.arc(0,0,15,0,Math.PI*2); c.moveTo(-15,0); c.bezierCurveTo(-25,-20,-10,-30,0,-35); c.bezierCurveTo(10,-30,25,-20,15,0);
-                } else if (model === 'elite') {
-                    c.moveTo(0,-40); c.lineTo(10,-15); c.lineTo(30,10); c.lineTo(20,25); c.lineTo(0,15); c.lineTo(-20,25); c.lineTo(-30,10); c.lineTo(-10,-15);
-                    c.moveTo(0,-15); c.lineTo(0,15); c.moveTo(-30,10); c.lineTo(-10,10); c.moveTo(30,10); c.lineTo(10,10);
-                }
-                c.stroke(); c.fill();
-                
+                if(model === 'tank') { c.rect(-15, 25, 8, t); c.rect(7, 25, 8, t); }
+                else c.rect(-5, 28, 10, t);
+                c.fill(); c.globalAlpha = 1.0;
+
+                // Detailed Geometry
+                this.neonPath(c, (ctx) => {
+                    if (model === 'interceptor') {
+                        ctx.moveTo(0, -35); ctx.lineTo(5, -10); ctx.lineTo(25, 15); ctx.lineTo(25, 25); ctx.lineTo(10, 15); ctx.lineTo(0, 25); ctx.lineTo(-10, 15); ctx.lineTo(-25, 25); ctx.lineTo(-25, 15); ctx.lineTo(-5, -10);
+                    } else if (model === 'tank') {
+                        ctx.moveTo(-15,-30); ctx.lineTo(15,-30); ctx.lineTo(20,-10); ctx.lineTo(30,0); ctx.lineTo(30,25); ctx.lineTo(10,25); ctx.lineTo(10,10); ctx.lineTo(-10,10); ctx.lineTo(-10,25); ctx.lineTo(-30,25); ctx.lineTo(-30,0); ctx.lineTo(-20,-10);
+                    } else if (model === 'wing') {
+                        ctx.moveTo(0,-30); ctx.lineTo(10,0); ctx.lineTo(40,10); ctx.lineTo(30,30); ctx.lineTo(10,15); ctx.lineTo(0,25); ctx.lineTo(-10,15); ctx.lineTo(-30,30); ctx.lineTo(-40,10); ctx.lineTo(-10,0);
+                    } else if (model === 'needle') {
+                        ctx.moveTo(0,-45); ctx.lineTo(5,0); ctx.lineTo(12,25); ctx.lineTo(0,30); ctx.lineTo(-12,25); ctx.lineTo(-5,0);
+                    } else if (model === 'wide') {
+                        ctx.moveTo(0,-20); ctx.lineTo(15,-5); ctx.lineTo(35,5); ctx.lineTo(35,20); ctx.lineTo(15,10); ctx.lineTo(0,20); ctx.lineTo(-15,10); ctx.lineTo(-35,20); ctx.lineTo(-35,5); ctx.lineTo(-15,-5);
+                    } else if (model === 'alien') {
+                        ctx.moveTo(0,-35); ctx.bezierCurveTo(20,-20, 30,10, 0,30); ctx.bezierCurveTo(-30,10, -20,-20, 0,-35);
+                    } else if (model === 'elite') {
+                        ctx.moveTo(0,-45); ctx.lineTo(10,-10); ctx.lineTo(30,0); ctx.lineTo(20,30); ctx.lineTo(0,15); ctx.lineTo(-20,30); ctx.lineTo(-30,0); ctx.lineTo(-10,-10);
+                    }
+                }, color, 20, 2.5);
+
                 // Cockpit
-                c.fillStyle = '#fff'; c.shadowBlur = 20; c.beginPath(); c.arc(0, -5, 3, 0, Math.PI*2); c.fill();
+                c.fillStyle = '#fff'; c.shadowBlur = 15; c.shadowColor = '#fff'; c.beginPath();
+                c.arc(0, -5, 3, 0, Math.PI*2); c.fill();
+                
                 c.restore();
             },
+
             drawEnemy: function(c, type, color) {
                 c.save();
-                c.shadowBlur = 10; c.shadowColor = color; c.strokeStyle = color; c.lineWidth = 2; c.fillStyle = 'rgba(20,20,20,0.9)';
-                c.beginPath();
-                // Fixed: Triangles point DOWN
-                if(type==='drone') { c.moveTo(0,25); c.lineTo(15,-15); c.lineTo(-15,-15); }
-                else if(type==='scout') { c.moveTo(0,30); c.lineTo(8,-20); c.lineTo(0,-10); c.lineTo(-8,-20); }
-                else if(type==='tank') { c.rect(-25,-25,50,50); c.moveTo(-25,0); c.lineTo(-35,20); c.moveTo(25,0); c.lineTo(35,20); } // With Cannons
-                else if(type==='sniper') { c.moveTo(0,35); c.lineTo(12,-15); c.lineTo(0,-5); c.lineTo(-12,-15); }
-                else { c.arc(0,0,20,0,Math.PI*2); c.moveTo(0,-20); c.lineTo(0,20); c.moveTo(-20,0); c.lineTo(20,0); }
-                c.closePath(); c.fill(); c.stroke();
-                c.fillStyle = color; c.shadowBlur=15; c.beginPath(); c.arc(0,0,4,0,Math.PI*2); c.fill();
+                // Draw enemies facing DOWN (Positive Y)
+                this.neonPath(c, (ctx) => {
+                    if(type==='drone') {
+                        ctx.moveTo(0, 25); ctx.lineTo(15, -15); ctx.lineTo(0, -5); ctx.lineTo(-15, -15);
+                    } 
+                    else if(type==='scout') {
+                        ctx.moveTo(0, 30); ctx.lineTo(8, -20); ctx.lineTo(0, -10); ctx.lineTo(-8, -20);
+                    }
+                    else if(type==='fighter') {
+                        ctx.moveTo(0, 25); ctx.lineTo(20, -5); ctx.lineTo(20, -15); ctx.lineTo(5, -5); ctx.lineTo(5, -20); ctx.lineTo(-5, -20); ctx.lineTo(-5, -5); ctx.lineTo(-20, -15); ctx.lineTo(-20, -5);
+                    }
+                    else if(type==='hunter') {
+                        ctx.moveTo(0, 30); ctx.bezierCurveTo(15, 10, 20, -20, 5, -10); ctx.lineTo(0, -5); ctx.lineTo(-5, -10); ctx.bezierCurveTo(-20, -20, -15, 10, 0, 30);
+                    }
+                    else if(type==='tank') {
+                        ctx.rect(-20, -20, 40, 40); 
+                        ctx.moveTo(-20, -10); ctx.lineTo(-35, 20); // Cannon L
+                        ctx.moveTo(20, -10); ctx.lineTo(35, 20);   // Cannon R
+                    }
+                    else if(type==='sniper') {
+                        ctx.moveTo(0, 35); ctx.lineTo(5, -20); ctx.lineTo(15, -25); ctx.lineTo(0, -15); ctx.lineTo(-15, -25); ctx.lineTo(-5, -20);
+                    }
+                    else if(type==='elite') {
+                        ctx.moveTo(0, 45); ctx.lineTo(25, 0); ctx.lineTo(15, -30); ctx.lineTo(0, -10); ctx.lineTo(-15, -30); ctx.lineTo(-25, 0);
+                    }
+                    else { // Round
+                        ctx.arc(0,0,20,0,Math.PI*2); 
+                    }
+                }, color, 15, 2);
+                
+                // Core/Eye
+                c.fillStyle = color; c.shadowBlur = 20; c.beginPath(); c.arc(0, 0, 4, 0, Math.PI*2); c.fill();
                 c.restore();
             },
+
             drawPowerUp: function(c, type) {
                 c.save();
                 const color = type === 'health' ? '#0f0' : (type === 'overdrive' ? '#d0f' : '#0ff');
-                c.shadowBlur = 20; c.shadowColor = color; c.strokeStyle = color; c.fillStyle = '#000'; c.lineWidth = 3;
-                c.beginPath(); c.arc(0,0,20,0,Math.PI*2); c.stroke(); c.fill();
-                c.fillStyle = color; c.font = "bold 20px Arial"; c.textAlign = "center"; c.textBaseline = "middle";
+                c.shadowBlur = 20; c.shadowColor = color; c.strokeStyle = color; c.fillStyle = '#000'; c.lineWidth = 2;
+                c.beginPath(); c.arc(0, 0, 20, 0, Math.PI*2); c.fill(); c.stroke();
+                c.fillStyle = color; c.font = "bold 18px Arial"; c.textAlign = "center"; c.textBaseline = "middle";
                 c.fillText(type==='health'?"+":(type==='overdrive'?"⚡":"M"), 0, 2);
                 c.restore();
             }
         };
 
-        // --- GAME OBJECTS ---
+        // --- DATA ---
         const SHIPS_DB = [
             { id: 0, name: "ПЕРЕХВАТЧИК", desc: "Баланс.", cost: 0, hp: 100, speed: 0.15, color: '#0ff', weapon: 'single', model: 'interceptor', stats: {dmg: 20, arm: 30, spd: 40} },
             { id: 1, name: "ДЖАГГЕРНАУТ", desc: "Танк.", cost: 1500, hp: 250, speed: 0.10, color: '#0f0', weapon: 'double', model: 'tank', stats: {dmg: 40, arm: 80, spd: 15} },
@@ -520,314 +393,201 @@
             { id: 6, name: "ОМЕГА", desc: "Элита.", cost: 50000, hp: 400, speed: 0.22, color: '#ffd700', weapon: 'omega', model: 'elite', stats: {dmg: 100, arm: 100, spd: 90} }
         ];
 
+        const saveSystem = {
+            data: { credits: 0, campaignLevel: 1, unlockedShips: [0], currentShip: 0, upgrades: {}, highScore: 0, daily: { last: null, streak: 0 } },
+            load: async function() {
+                const key = VKManager.userId ? `voidstorm_data_${VKManager.userId}` : 'voidstorm_save';
+                try {
+                    let loaded = null;
+                    if(VKManager.userId) { const r = await vkBridge.send('VKWebAppStorageGet', { keys: [key] }); if(r.keys[0].value) loaded = JSON.parse(r.keys[0].value); } 
+                    else loaded = JSON.parse(localStorage.getItem(key));
+                    if(loaded) this.data = { ...this.data, ...loaded };
+                    SHIPS_DB.forEach(s => { if(!this.data.upgrades[s.id]) this.data.upgrades[s.id] = {dmg:1, hp:1, spd:1}; });
+                    const s = JSON.parse(localStorage.getItem('voidstorm_settings')||'{"sfx":true,"music":true}');
+                    SoundManager.sfxEnabled=s.sfx; SoundManager.musicEnabled=s.music; document.getElementById('sfxToggle').checked=s.sfx; document.getElementById('musicToggle').checked=s.music;
+                    SoundManager.updateMusicState(); updateMenuStats();
+                } catch(e) {}
+            },
+            save: async function() {
+                const key = VKManager.userId ? `voidstorm_data_${VKManager.userId}` : 'voidstorm_save'; const val = JSON.stringify(this.data);
+                try { if(VKManager.userId) await vkBridge.send('VKWebAppStorageSet', { key: key, value: val }); else localStorage.setItem(key, val); } catch(e){}
+                updateMenuStats();
+            }
+        };
+
         let gameState = { mode: 'MENU', active: false, paused: false, score: 0, creditsGained: 0, levelProgress: 0, levelTarget: 100, enemySpawnTimer: 0, difficultyMult: 1, shake: 0, lastTime: 0 };
         let player, bullets = [], enemies = [], enemyBullets = [], particles = [], floatingTexts = [], stars = [], powerups = [];
 
-        // --- CLASSES ---
-        class Star {
-            constructor() { this.reset(); }
-            reset() { this.x = Math.random() * V_WIDTH; this.y = Math.random() * V_HEIGHT; this.z = Math.random() * 2 + 0.5; this.size = Math.random() * 1.5; this.alpha = Math.random() * 0.5 + 0.3; }
-            update(speed) { this.y += speed * this.z; if(this.y > V_HEIGHT) { this.y = 0; this.x = Math.random() * V_WIDTH; } }
-            draw(c) { c.fillStyle = `rgba(255,255,255,${this.alpha})`; c.fillRect(this.x, this.y, this.size, this.size); }
-        }
-
-        class PowerUp {
-            constructor(x, y) { this.x = x; this.y = y; this.type = Math.random() < 0.3 ? 'health' : (Math.random() < 0.6 ? 'overdrive' : 'multishot'); this.active = true; this.radius = 25; this.vy = 2; }
-            update() { this.y += this.vy; if(this.y > V_HEIGHT+50) this.active = false; }
-            draw(c) { c.save(); c.translate(this.x, this.y); AssetDrawer.drawPowerUp(c, this.type); c.restore(); }
-        }
+        // --- ENTITIES ---
+        class Star { constructor() { this.reset(); } reset() { this.x = Math.random() * V_WIDTH; this.y = Math.random() * V_HEIGHT; this.z = Math.random() * 2 + 0.5; this.size = Math.random() * 1.5; this.alpha = Math.random() * 0.5 + 0.3; } update(speed) { this.y += speed * this.z; if(this.y > V_HEIGHT) { this.y = 0; this.x = Math.random() * V_WIDTH; } } draw(c) { c.fillStyle = `rgba(255,255,255,${this.alpha})`; c.fillRect(this.x, this.y, this.size, this.size); } }
+        class PowerUp { constructor(x, y) { this.x = x; this.y = y; this.type = Math.random()<0.33?'health':(Math.random()<0.5?'overdrive':'multishot'); this.active=true; this.radius=25; this.vy=2; } update(){ this.y+=this.vy; if(this.y>V_HEIGHT+50)this.active=false; } draw(c){ c.save(); c.translate(this.x,this.y); AssetDrawer.drawPowerUp(c,this.type); c.restore(); } }
 
         class Player {
             constructor() {
                 const s = SHIPS_DB[saveSystem.data.currentShip]; const u = saveSystem.data.upgrades[s.id];
-                this.maxHp = s.hp * (1+(u.hp-1)*0.25); this.hp = this.maxHp;
-                this.dmgMult = 1+(u.dmg-1)*0.25; this.speed = s.speed * (1+(u.spd-1)*0.10);
-                this.color = s.color; this.model = s.model; this.weaponType = s.weapon;
-                this.x = V_WIDTH/2; this.y = V_HEIGHT-150; this.targetX = this.x; this.targetY = this.y;
-                this.radius = 30; this.iframe = 0; this.lastShot = 0; this.overdriveTimer = 0; this.multishotTimer = 0;
+                this.maxHp=s.hp*(1+(u.hp-1)*0.25); this.hp=this.maxHp; this.dmgMult=1+(u.dmg-1)*0.25; this.speed=s.speed*(1+(u.spd-1)*0.10);
+                this.color=s.color; this.model=s.model; this.weaponType=s.weapon; this.x=V_WIDTH/2; this.y=V_HEIGHT-150; this.targetX=this.x; this.targetY=this.y;
+                this.radius=30; this.iframe=0; this.lastShot=0; this.overdriveTimer=0; this.multishotTimer=0;
             }
             update(dt, time) {
-                if (isNaN(this.targetX)) this.targetX = V_WIDTH/2; if (isNaN(this.targetY)) this.targetY = V_HEIGHT-150;
-                const dx = this.targetX - this.x; const dy = this.targetY - this.y;
-                this.x += dx * this.speed; this.y += dy * this.speed;
+                if(isNaN(this.targetX)) this.targetX=V_WIDTH/2; if(isNaN(this.targetY)) this.targetY=V_HEIGHT-150;
+                this.x += (this.targetX - this.x) * this.speed; this.y += (this.targetY - this.y) * this.speed;
                 this.x = Math.max(30, Math.min(V_WIDTH-30, this.x)); this.y = Math.max(50, Math.min(V_HEIGHT-50, this.y));
-                
-                let fireRate = 200;
-                if (this.weaponType === 'sniper') fireRate = 700; else if (this.weaponType === 'rapid') fireRate = 80; else if (this.weaponType === 'omega') fireRate = 120;
-                if (this.overdriveTimer > 0) { fireRate /= 2; this.overdriveTimer -= dt; }
-                if (this.multishotTimer > 0) this.multishotTimer -= dt;
-                
-                if(time - this.lastShot > fireRate) this.shoot(time);
-                if(this.iframe > 0) this.iframe -= dt;
+                let fr = 200; if(this.weaponType==='sniper') fr=700; else if(this.weaponType==='rapid') fr=80; else if(this.weaponType==='omega') fr=120;
+                if(this.overdriveTimer>0) { fr/=2; this.overdriveTimer-=dt; } if(this.multishotTimer>0) this.multishotTimer-=dt;
+                if(time-this.lastShot>fr) this.shoot(time); if(this.iframe>0) this.iframe-=dt;
             }
             shoot(time) {
-                this.lastShot = time; SoundManager.play('shoot');
-                const y = this.y - 30; const dmg = 1 * this.dmgMult; const c = this.overdriveTimer > 0 ? '#fff' : this.color;
-                this.firePattern(this.weaponType, 0, y, c, dmg);
-                if (this.multishotTimer > 0) { this.firePattern(this.weaponType, -25, y+15, '#0ff', dmg); this.firePattern(this.weaponType, 25, y+15, '#0ff', dmg); }
+                this.lastShot=time; SoundManager.play('shoot'); const y=this.y-30; const d=this.dmgMult; const c=this.overdriveTimer>0?'#fff':this.color;
+                this.firePattern(this.weaponType,0,y,c,d); if(this.multishotTimer>0) { this.firePattern(this.weaponType,-25,y+15,'#0ff',d); this.firePattern(this.weaponType,25,y+15,'#0ff',d); }
             }
-            firePattern(w, xOff, y, c, dmg) {
-                const x = this.x + xOff;
-                if(w==='single') bullets.push(new Bullet(x,y,0,-15,c,dmg));
-                else if(w==='double') { bullets.push(new Bullet(x-10,y,0,-15,c,dmg)); bullets.push(new Bullet(x+10,y,0,-15,c,dmg)); }
-                else if(w==='spread') { bullets.push(new Bullet(x,y,0,-15,c,dmg)); bullets.push(new Bullet(x,y,-4,-14,c,dmg)); bullets.push(new Bullet(x,y,4,-14,c,dmg)); }
-                else if(w==='sniper') bullets.push(new Bullet(x,y,0,-25,c,dmg*5,8,50));
-                else if(w==='rapid') bullets.push(new Bullet(x+(Math.random()-0.5)*10,y,(Math.random()-0.5)*2,-18,c,dmg*0.5));
-                else if(w==='homing') bullets.push(new Bullet(x,y,0,-10,c,dmg,5,15,true));
-                else if(w==='omega') { bullets.push(new Bullet(x-15,y,0,-18,c,dmg)); bullets.push(new Bullet(x+15,y,0,-18,c,dmg)); }
+            firePattern(w, xOff, y, c, d) {
+                const x=this.x+xOff;
+                if(w==='single') bullets.push(new Bullet(x,y,0,-15,c,d));
+                else if(w==='double') { bullets.push(new Bullet(x-10,y,0,-15,c,d)); bullets.push(new Bullet(x+10,y,0,-15,c,d)); }
+                else if(w==='spread') { bullets.push(new Bullet(x,y,0,-15,c,d)); bullets.push(new Bullet(x,y,-4,-14,c,d)); bullets.push(new Bullet(x,y,4,-14,c,d)); }
+                else if(w==='sniper') bullets.push(new Bullet(x,y,0,-25,c,d*5,8,50));
+                else if(w==='rapid') bullets.push(new Bullet(x+(Math.random()-0.5)*10,y,(Math.random()-0.5)*2,-18,c,d*0.5));
+                else if(w==='homing') bullets.push(new Bullet(x,y,0,-10,c,d,5,15,true));
+                else if(w==='omega') { bullets.push(new Bullet(x-15,y,0,-18,c,d)); bullets.push(new Bullet(x+15,y,0,-18,c,d)); }
             }
-            hit(dmg) {
-                if(this.iframe > 0) return;
-                SoundManager.play('hit'); this.hp -= dmg; this.iframe = 500; gameState.shake = 20;
-                document.getElementById('damageOverlay').style.opacity = '1'; setTimeout(()=>document.getElementById('damageOverlay').style.opacity='0', 300);
-                updateHUD(); if(this.hp <= 0) { SoundManager.play('explode'); endGame(false); }
-            }
-            applyPowerUp(type) {
-                SoundManager.play('powerup');
-                if(type==='health') { this.hp = Math.min(this.maxHp, this.hp + this.maxHp*0.3); floatingTexts.push({x:this.x, y:this.y-50, text:"РЕМОНТ", color:'#0f0', life:1.5, vy:-1}); }
-                else if(type==='overdrive') { this.overdriveTimer = 5000; floatingTexts.push({x:this.x, y:this.y-50, text:"ОВЕРДРАЙВ", color:'#d0f', life:1.5, vy:-1}); }
-                else { this.multishotTimer = 5000; floatingTexts.push({x:this.x, y:this.y-50, text:"МУЛЬТИ", color:'#0ff', life:1.5, vy:-1}); }
-                updateHUD();
-            }
+            hit(dmg) { if(this.iframe>0)return; SoundManager.play('hit'); this.hp-=dmg; this.iframe=500; gameState.shake=20; document.getElementById('damageOverlay').style.opacity='1'; setTimeout(()=>document.getElementById('damageOverlay').style.opacity='0',300); updateHUD(); if(this.hp<=0){ SoundManager.play('explode'); endGame(false); } }
+            applyPowerUp(t) { SoundManager.play('powerup'); if(t==='health'){this.hp=Math.min(this.maxHp,this.hp+this.maxHp*0.3);floatingTexts.push({x:this.x,y:this.y-50,text:"РЕМОНТ",color:'#0f0',life:1.5,vy:-1});} else if(t==='overdrive'){this.overdriveTimer=5000;floatingTexts.push({x:this.x,y:this.y-50,text:"ОВЕРДРАЙВ",color:'#d0f',life:1.5,vy:-1});} else {this.multishotTimer=5000;floatingTexts.push({x:this.x,y:this.y-50,text:"МУЛЬТИ",color:'#0ff',life:1.5,vy:-1});} updateHUD(); }
             draw(c) { c.save(); c.translate(this.x, this.y); AssetDrawer.drawShip(c, this.model, this.color, true); c.restore(); }
         }
 
-        class Bullet {
-            constructor(x,y,vx,vy,c,d,w=4,h=16,homing=false){this.x=x;this.y=y;this.vx=vx;this.vy=vy;this.color=c;this.dmg=d;this.active=true;this.w=w;this.h=h;this.homing=homing;}
-            update(){
-                if(this.homing && enemies.length>0) {
-                    let target = enemies[0], minD = 9999;
-                    enemies.forEach(e=>{const d=Math.hypot(e.x-this.x, e.y-this.y); if(d<minD && e.y>0){minD=d; target=e;}});
-                    if(target) {
-                        const a = Math.atan2(target.y-this.y, target.x-this.x);
-                        this.vx += Math.cos(a)*0.8; this.vy += Math.sin(a)*0.8;
-                        const s = Math.hypot(this.vx, this.vy); if(s>14) { this.vx*=14/s; this.vy*=14/s; }
-                    }
-                }
-                this.x+=this.vx; this.y+=this.vy; if(this.y<-50||this.y>V_HEIGHT+50) this.active=false;
-            }
-            draw(c){ c.save(); c.translate(this.x, this.y); c.rotate(Math.atan2(this.vy,this.vx)+Math.PI/2); c.fillStyle=this.color; c.shadowBlur=5; c.shadowColor=this.color; c.fillRect(-this.w/2,-this.h/2,this.w,this.h); c.restore(); }
-        }
+        class Bullet { constructor(x,y,vx,vy,c,d,w=4,h=16,homing=false){this.x=x;this.y=y;this.vx=vx;this.vy=vy;this.color=c;this.dmg=d;this.active=true;this.w=w;this.h=h;this.homing=homing;} update(){ if(this.homing&&enemies.length>0){let t=enemies[0],m=9999;enemies.forEach(e=>{const d=Math.hypot(e.x-this.x,e.y-this.y);if(d<m&&e.y>0){m=d;t=e;}});if(t){const a=Math.atan2(t.y-this.y,t.x-this.x);this.vx+=Math.cos(a)*0.8;this.vy+=Math.sin(a)*0.8;const s=Math.hypot(this.vx,this.vy);if(s>14){this.vx*=14/s;this.vy*=14/s;}}} this.x+=this.vx;this.y+=this.vy;if(this.y<-50||this.y>V_HEIGHT+50)this.active=false; } draw(c){c.save();c.translate(this.x,this.y);c.rotate(Math.atan2(this.vy,this.vx)+Math.PI/2);c.fillStyle=this.color;c.shadowBlur=5;c.shadowColor=this.color;c.fillRect(-this.w/2,-this.h/2,this.w,this.h);c.restore();} }
 
         class Enemy {
             constructor(type, diff) {
-                this.type = type; this.active = true; this.y = -50; this.x = Math.random()*(V_WIDTH-60)+30; this.timer = 0;
-                const stats = { 'drone':{hp:3,spd:2.5,sc:50,r:25,c:'#f00'}, 'scout':{hp:4,spd:5,sc:80,r:20,c:'#ff0'}, 'fighter':{hp:8,spd:2,sc:100,r:30,c:'#0ff'}, 'tank':{hp:30,spd:0.8,sc:300,r:45,c:'#a52a2a'}, 'sniper':{hp:12,spd:1.5,sc:200,r:30,c:'#0f0'}, 'elite':{hp:50,spd:1,sc:500,r:50,c:'#fff'} };
-                const s = stats[type] || stats['drone'];
-                this.hp = s.hp * diff; this.baseSpeed = s.spd; this.radius = s.r; this.color = s.c; this.score = s.sc;
+                this.type=type; this.active=true; this.y=-50; this.x=Math.random()*(V_WIDTH-60)+30; this.timer=0;
+                const st = { 'drone':{hp:3,s:2.5,sc:50,r:25,c:'#f00'}, 'scout':{hp:4,s:5,sc:80,r:20,c:'#ff0'}, 'fighter':{hp:8,s:2,sc:100,r:30,c:'#0ff'}, 'hunter':{hp:10,s:1.8,sc:120,r:28,c:'#f90'}, 'tank':{hp:30,s:0.8,sc:300,r:45,c:'#a52a2a'}, 'sniper':{hp:12,s:1.5,sc:200,r:30,c:'#0f0'}, 'elite':{hp:50,s:1,sc:500,r:50,c:'#fff'} };
+                const s = st[type]||st['drone']; this.hp=s.hp*diff; this.baseSpeed=s.s; this.radius=s.r; this.color=s.c; this.score=s.sc;
             }
             update(dt) {
-                this.timer += dt; this.y += this.baseSpeed;
-                if(this.type==='drone') this.x += Math.sin(this.y*0.02)*2;
+                this.timer+=dt; this.y+=this.baseSpeed;
+                if(this.type==='drone') this.x+=Math.sin(this.y*0.02)*2; else if(this.type==='hunter'){const dx=player.x-this.x;this.x+=dx*0.01;} else if(this.type==='sniper'&&this.y>150&&this.timer<3000) this.y-=this.baseSpeed;
                 if(['fighter','tank','elite','sniper'].includes(this.type)) {
-                    let rate = this.type==='sniper'?3000:(this.type==='tank'?1500:2000);
-                    if(this.timer > rate) {
-                        this.timer = 0;
-                        this.shoot(this.type==='sniper'?10:5, this.type==='sniper'?'#0f0':'#ff0');
-                    }
+                    let rate=2000; if(this.type==='sniper') rate=3000; if(this.type==='tank') rate=1500;
+                    if(this.timer>rate) { this.timer=0; this.shoot(this.type==='sniper'?10:5, this.type==='sniper'?'#0f0':'#ff0'); if(this.type==='elite'){setTimeout(()=>this.shoot(5,'#f00',-0.3),200);setTimeout(()=>this.shoot(5,'#f00',0.3),400);} }
                 }
-                if(this.y > V_HEIGHT+50) this.active=false;
+                if(this.y>V_HEIGHT+50)this.active=false;
             }
-            shoot(spd, c) { SoundManager.play('enemy_shoot'); const a = Math.atan2(player.y-this.y, player.x-this.x); enemyBullets.push(new Bullet(this.x, this.y+30, Math.cos(a)*spd, Math.sin(a)*spd, c, 1)); }
-            hit(dmg, score=true) {
-                this.hp -= dmg;
-                if(this.hp <= 0) {
-                    this.active=false; SoundManager.play('explode');
-                    if(score) {
-                        gameState.score += this.score; gameState.levelProgress += this.score;
-                        if(Math.random()<0.25) powerups.push(new PowerUp(this.x, this.y));
-                        if(Math.random()>0.8) { const a=Math.floor(Math.random()*6)+2; gameState.creditsGained+=a; floatingTexts.push({x:this.x,y:this.y,text:`+${a}`,color:'#ff0',life:1,vy:-2}); }
-                    }
-                    createExplosion(this.x, this.y, 15, this.color); updateHUD();
-                } else createExplosion(this.x, this.y, 2, '#fff');
+            shoot(s,c,aO=0){ SoundManager.play('enemy_shoot'); const a=Math.atan2(player.y-this.y,player.x-this.x)+aO; enemyBullets.push(new Bullet(this.x,this.y+30,Math.cos(a)*s,Math.sin(a)*s,c,1)); }
+            hit(d,sc=true){
+                this.hp-=d; if(this.hp<=0){
+                    this.active=false; SoundManager.play('explode'); if(sc){ gameState.score+=this.score; gameState.levelProgress+=this.score; if(Math.random()<0.25)powerups.push(new PowerUp(this.x,this.y)); if(Math.random()>0.7){const a=Math.floor(Math.random()*6)+2;gameState.creditsGained+=a;floatingTexts.push({x:this.x,y:this.y,text:`+${a}`,color:'#ff0',life:1,vy:-2});} } createExplosion(this.x,this.y,15,this.color); updateHUD();
+                } else createExplosion(this.x,this.y,2,'#fff');
             }
-            draw(c) { c.save(); c.translate(this.x, this.y); c.rotate(Math.PI); AssetDrawer.drawEnemy(c, this.type, this.color); c.restore(); }
+            draw(c){ c.save(); c.translate(this.x,this.y); AssetDrawer.drawEnemy(c,this.type,this.color); c.restore(); }
         }
-
         function createExplosion(x,y,c,col) { for(let i=0;i<c;i++) particles.push({x:x,y:y,vx:(Math.random()-0.5)*10,vy:(Math.random()-0.5)*10,life:1,color:col}); }
 
-        // --- GAME FUNCTIONS ---
-        // DEFINED GLOBALLY TO FIX REFERENCE ERROR
-        function endGame(victory) {
-            gameState.active = false; gameState.mode = 'MENU';
-            document.getElementById('hud').classList.add('hidden');
-            document.getElementById('resultScreen').classList.remove('hidden');
-            
-            saveSystem.data.credits += gameState.creditsGained;
-            if(victory) {
-                saveSystem.data.campaignLevel++;
-                VKManager.showInterstitial(); // Ads on level clear (every 3rd)
-            } else {
-                if(gameState.mode === 'ENDLESS') VKManager.showInterstitial(); // Ads on death in endless
-            }
-            saveSystem.save();
+        // --- MANAGERS ---
+        const VKManager = { userId:null, init:async function(){try{await vkBridge.send('VKWebAppInit');vkBridge.subscribe((e)=>{if(e.detail.type==='VKWebAppViewHide')SoundManager.toggleMusic(false,true);if(e.detail.type==='VKWebAppViewRestore')SoundManager.toggleMusic(true,true);});const u=await vkBridge.send('VKWebAppGetUserInfo');this.userId=u.id;await saveSystem.load();vkBridge.send('VKWebAppShowBannerAd',{banner_location:'bottom'}).catch(e=>{});DailyManager.check();}catch(e){console.log('Local');saveSystem.load();DailyManager.check();}}, showInterstitial:function(){this.ac++;if(this.ac>=3||gameState.mode==='ENDLESS'){this.ac=0;vkBridge.send('VKWebAppShowInterstitialAd').catch(e=>{});}}, ac:0 };
+        const DailyManager = { rewards:[100,200,300,400,500,750,1000], check:function(){const t=new Date().toDateString(),l=saveSystem.data.daily.last;if(l!==t){const y=new Date();y.setDate(y.getDate()-1);if(l!==y.toDateString())saveSystem.data.daily.streak=0;this.show();}}, show:function(){const m=document.getElementById('dailyModal'),g=document.getElementById('dailyGrid'),s=saveSystem.data.daily.streak;g.innerHTML='';this.rewards.forEach((a,i)=>{const d=document.createElement('div');d.className=`daily-item ${i<s?'claimed':''} ${i===s?'active':''}`;d.innerHTML=`<div class="text-xs text-gray-400">ДЕНЬ ${i+1}</div><div class="text-yellow-400 font-bold text-lg">${a}</div>`;g.appendChild(d);});m.classList.remove('hidden');}, claim:function(){const s=saveSystem.data.daily.streak,r=this.rewards[Math.min(s,6)];saveSystem.data.credits+=r;saveSystem.data.daily.last=new Date().toDateString();saveSystem.data.daily.streak=(s+1)%7;saveSystem.save();document.getElementById('dailyModal').classList.add('hidden');SoundManager.play('powerup');} };
+        document.getElementById('claimDailyBtn').onclick=()=>DailyManager.claim();
+        const SoundManager = { ctx:new(window.AudioContext||window.webkitAudioContext)(), sfxEnabled:true, musicEnabled:true, updateMusicState:function(){const a=document.getElementById('bgMusic');if(this.musicEnabled)a.play().catch(e=>{});else a.pause();}, toggleMusic:function(v,t=false){if(!t){this.musicEnabled=v;localStorage.setItem('voidstorm_settings',JSON.stringify({sfx:this.sfxEnabled,music:v}));} const a=document.getElementById('bgMusic');if(v&&this.musicEnabled)a.play().catch(e=>{});else a.pause();}, toggleSFX:function(v){this.sfxEnabled=v;localStorage.setItem('voidstorm_settings',JSON.stringify({sfx:v,music:this.musicEnabled}));}, play:function(t){if(!this.sfxEnabled)return;if(this.ctx.state==='suspended')this.ctx.resume();const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.connect(g);g.connect(this.ctx.destination);const n=this.ctx.currentTime;if(t==='shoot'){o.type='square';o.frequency.setValueAtTime(600,n);o.frequency.exponentialRampToValueAtTime(100,n+0.1);g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.1);o.start(n);o.stop(n+0.1);}else if(t==='enemy_shoot'){o.type='sawtooth';o.frequency.setValueAtTime(300,n);o.frequency.exponentialRampToValueAtTime(50,n+0.2);g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.2);o.start(n);o.stop(n+0.2);}else if(t==='hit'){o.type='triangle';o.frequency.setValueAtTime(100,n);g.gain.setValueAtTime(0.1,n);g.gain.linearRampToValueAtTime(0,n+0.05);o.start(n);o.stop(n+0.05);}else if(t==='explode'){o.type='sawtooth';o.frequency.setValueAtTime(100,n);o.frequency.exponentialRampToValueAtTime(10,n+0.3);g.gain.setValueAtTime(0.15,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.3);o.start(n);o.stop(n+0.3);}else if(t==='powerup'){o.type='sine';o.frequency.setValueAtTime(400,n);o.frequency.linearRampToValueAtTime(800,n+0.2);g.gain.setValueAtTime(0.1,n);g.gain.linearRampToValueAtTime(0,n+0.2);o.start(n);o.stop(n+0.2);}else if(t==='ui'){o.type='sine';o.frequency.setValueAtTime(800,n);g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.05);o.start(n);o.stop(n+0.05);}} };
 
-            const title = document.getElementById('resultTitle'), sub = document.getElementById('resultSub'), btn = document.getElementById('resActionBtn');
-            if(victory) { title.innerText = "ПОБЕДА"; title.className = "text-5xl font-black mb-2 text-green-500 neon-text italic uppercase"; sub.innerText = "СЕКТОР ЗАЧИЩЕН"; btn.innerText = "СЛЕД. УРОВЕНЬ"; btn.onclick = () => btnClick(() => initGame('CAMPAIGN')); } 
-            else { title.innerText = "УНИЧТОЖЕН"; title.className = "text-5xl font-black mb-2 text-red-500 neon-text italic uppercase"; sub.innerText = "КРИТИЧЕСКОЕ ПОВРЕЖДЕНИЕ"; btn.innerText = "ПОВТОРИТЬ"; btn.onclick = () => btnClick(() => initGame(gameState.mode === 'CAMPAIGN' ? 'CAMPAIGN' : 'ENDLESS')); }
-            document.getElementById('resScore').innerText = gameState.score; document.getElementById('resCredits').innerText = gameState.creditsGained;
+        // --- LOGIC ---
+        function endGame(v) {
+            gameState.active=false; gameState.mode='MENU'; document.getElementById('hud').classList.add('hidden'); document.getElementById('resultScreen').classList.remove('hidden');
+            saveSystem.data.credits+=gameState.creditsGained; if(v){saveSystem.data.campaignLevel++;VKManager.showInterstitial();}else{if(gameState.mode==='ENDLESS')VKManager.showInterstitial();} saveSystem.save();
+            const t=document.getElementById('resultTitle'),s=document.getElementById('resultSub'),b=document.getElementById('resActionBtn');
+            if(v){t.innerText="ПОБЕДА";t.className="text-5xl font-black mb-2 text-green-500 neon-text italic uppercase";s.innerText="СЕКТОР ЗАЧИЩЕН";b.innerText="СЛЕД. УРОВЕНЬ";b.onclick=()=>btnClick(()=>initGame('CAMPAIGN'));}
+            else{t.innerText="УНИЧТОЖЕН";t.className="text-5xl font-black mb-2 text-red-500 neon-text italic uppercase";s.innerText="КРИТИЧЕСКОЕ ПОВРЕЖДЕНИЕ";b.innerText="ПОВТОРИТЬ";b.onclick=()=>btnClick(()=>initGame(gameState.mode==='CAMPAIGN'?'CAMPAIGN':'ENDLESS'));}
+            document.getElementById('resScore').innerText=gameState.score; document.getElementById('resCredits').innerText=gameState.creditsGained;
         }
-
-        function initGame(mode) {
-            gameState.mode = mode; gameState.active = true; gameState.paused = false;
-            gameState.score = 0; gameState.creditsGained = 0; gameState.levelProgress = 0;
-            
-            if(mode === 'CAMPAIGN') {
-                const lvl = saveSystem.data.campaignLevel;
-                gameState.difficultyMult = 1.0 + (lvl * 0.1);
-                gameState.levelTarget = 500 + (lvl * 300);
-                document.getElementById('levelProgressContainer').classList.remove('hidden');
-            } else {
-                gameState.difficultyMult = 1;
-                document.getElementById('levelProgressContainer').classList.add('hidden');
-            }
-
-            player = new Player();
-            bullets = []; enemies = []; enemyBullets = []; particles = []; floatingTexts = []; powerups = [];
-            
-            ['mainMenu', 'shopMenu', 'pauseMenu', 'resultScreen', 'infoModal', 'settingsModal', 'dailyModal'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById('hud').classList.remove('hidden');
-            player.x = V_WIDTH/2; player.y = V_HEIGHT - 150; player.targetX = V_WIDTH/2; player.targetY = V_HEIGHT - 150;
-            gameState.enemySpawnTimer = 1000; // Slower start
-            updateHUD();
+        function initGame(m) {
+            gameState.mode=m; gameState.active=true; gameState.paused=false; gameState.score=0; gameState.creditsGained=0; gameState.levelProgress=0;
+            if(m==='CAMPAIGN'){const l=saveSystem.data.campaignLevel;gameState.difficultyMult=1.0+(l*0.1);gameState.levelTarget=500+(l*300);document.getElementById('levelProgressContainer').classList.remove('hidden');}
+            else{gameState.difficultyMult=1;document.getElementById('levelProgressContainer').classList.add('hidden');}
+            player=new Player(); bullets=[]; enemies=[]; enemyBullets=[]; particles=[]; floatingTexts=[]; powerups=[];
+            ['mainMenu','shopMenu','pauseMenu','resultScreen','infoModal','settingsModal','dailyModal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+            document.getElementById('hud').classList.remove('hidden'); player.x=V_WIDTH/2;player.y=V_HEIGHT-150;player.targetX=V_WIDTH/2;player.targetY=V_HEIGHT-150;gameState.enemySpawnTimer=1000;updateHUD();
         }
-
         function spawnLogic(dt) {
-            gameState.enemySpawnTimer -= dt;
-            if(gameState.enemySpawnTimer <= 0) {
-                const lvl = gameState.mode === 'CAMPAIGN' ? saveSystem.data.campaignLevel : Math.floor(gameState.score/1000)+1;
-                gameState.enemySpawnTimer = Math.max(500, 1800 - (lvl * 60));
-                
-                let types = ['drone'];
-                if(lvl >= 2) types.push('scout');
-                if(lvl >= 3) types.push('fighter');
-                if(lvl >= 5) types.push('tank', 'sniper');
-                if(lvl >= 7) types.push('elite');
-                const type = types[Math.floor(Math.random() * types.length)];
-                enemies.push(new Enemy(type, gameState.difficultyMult));
+            gameState.enemySpawnTimer-=dt;
+            if(gameState.enemySpawnTimer<=0) {
+                const lvl=gameState.mode==='CAMPAIGN'?saveSystem.data.campaignLevel:Math.floor(gameState.score/1000)+1;
+                gameState.enemySpawnTimer=Math.max(500,1800-(lvl*60));
+                let t=['drone'];
+                if(lvl>=2)t.push('scout'); if(lvl>=4)t.push('fighter'); if(lvl>=10)t.push('hunter'); if(lvl>=16)t.push('tank','sniper'); if(lvl>=20)t.push('elite');
+                enemies.push(new Enemy(t[Math.floor(Math.random()*t.length)],gameState.difficultyMult));
             }
         }
-
-        function loop(timestamp) {
-            const dt = timestamp - (gameState.lastTime || timestamp); gameState.lastTime = timestamp;
-            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
-            stars.forEach(s => { s.update(gameState.active ? (player ? player.speed * 30 : 5) : 2); s.draw(ctx); });
-
-            if(gameState.active && !gameState.paused) {
-                if(gameState.shake > 0) { ctx.save(); ctx.translate((Math.random()-0.5)*gameState.shake, (Math.random()-0.5)*gameState.shake); gameState.shake *= 0.9; }
-                spawnLogic(dt); player.update(dt, timestamp);
-                powerups.forEach(p => p.update()); powerups = powerups.filter(p => p.active);
-                [bullets, enemyBullets, enemies].forEach(arr => arr.forEach(e => e.update(dt)));
-                bullets = bullets.filter(b => b.active); enemyBullets = enemyBullets.filter(b => b.active); enemies = enemies.filter(e => e.active);
-
-                bullets.forEach(b => { enemies.forEach(e => { if(b.active && e.active && Math.hypot(b.x-e.x, b.y-e.y) < e.radius + b.w) { b.active = false; e.hit(b.dmg); }});});
-                enemyBullets.forEach(b => { if(b.active && Math.hypot(b.x-player.x, b.y-player.y) < 20) { b.active = false; player.hit(10); }});
-                enemies.forEach(e => { if(e.active && Math.hypot(e.x-player.x, e.y-player.y) < e.radius + 25) { e.hit(9999, false); player.hit(30); floatingTexts.push({x:player.x, y:player.y, text:"СТОЛКНОВЕНИЕ!", color:'#f00', life:1, vy:-1}); }});
-                powerups.forEach(p => { if(Math.hypot(p.x-player.x, p.y-player.y) < p.radius + 30) { p.active = false; player.applyPowerUp(p.type); }});
-
-                enemies.forEach(e => e.draw(ctx)); powerups.forEach(p => p.draw(ctx)); player.draw(ctx);
-                bullets.forEach(b => b.draw(ctx)); enemyBullets.forEach(b => b.draw(ctx));
-                if(gameState.shake > 0) ctx.restore();
+        function loop(ts) {
+            const dt=ts-(gameState.lastTime||ts);gameState.lastTime=ts;
+            ctx.fillStyle='#000';ctx.fillRect(0,0,V_WIDTH,V_HEIGHT);stars.forEach(s=>{s.update(gameState.active?(player?player.speed*30:5):2);s.draw(ctx);});
+            if(gameState.active&&!gameState.paused) {
+                if(gameState.shake>0){ctx.save();ctx.translate((Math.random()-0.5)*gameState.shake,(Math.random()-0.5)*gameState.shake);gameState.shake*=0.9;}
+                spawnLogic(dt);player.update(dt,ts);powerups.forEach(p=>p.update());powerups=powerups.filter(p=>p.active);
+                [bullets,enemyBullets,enemies].forEach(a=>a.forEach(e=>e.update(dt)));
+                bullets=bullets.filter(b=>b.active);enemyBullets=enemyBullets.filter(b=>b.active);enemies=enemies.filter(e=>e.active);
+                bullets.forEach(b=>{enemies.forEach(e=>{if(b.active&&e.active&&Math.hypot(b.x-e.x,b.y-e.y)<e.radius+b.w){b.active=false;e.hit(b.dmg);}});});
+                enemyBullets.forEach(b=>{if(b.active&&Math.hypot(b.x-player.x,b.y-player.y)<20){b.active=false;player.hit(10);}});
+                enemies.forEach(e=>{if(e.active&&Math.hypot(e.x-player.x,e.y-player.y)<e.radius+25){e.hit(9999,false);player.hit(30);floatingTexts.push({x:player.x,y:player.y,text:"СТОЛКНОВЕНИЕ!",color:'#f00',life:1,vy:-1});}});
+                powerups.forEach(p=>{if(Math.hypot(p.x-player.x,p.y-player.y)<p.radius+30){p.active=false;player.applyPowerUp(p.type);}});
+                enemies.forEach(e=>e.draw(ctx));powerups.forEach(p=>p.draw(ctx));player.draw(ctx);bullets.forEach(b=>b.draw(ctx));enemyBullets.forEach(b=>b.draw(ctx));
+                if(gameState.shake>0)ctx.restore();
             }
-            particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.04; ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 3, 3); }); particles = particles.filter(p => p.life > 0); ctx.globalAlpha = 1.0;
-            floatingTexts.forEach(t => { t.y += t.vy; t.life -= 0.02; ctx.globalAlpha = Math.max(0, t.life); ctx.fillStyle = t.color; ctx.font = "bold 20px Arial"; ctx.fillText(t.text, t.x, t.y); }); floatingTexts = floatingTexts.filter(t => t.life > 0); ctx.globalAlpha = 1.0;
+            particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=0.04;ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,3,3);});particles=particles.filter(p=>p.life>0);ctx.globalAlpha=1;
+            floatingTexts.forEach(t=>{t.y+=t.vy;t.life-=0.02;ctx.globalAlpha=Math.max(0,t.life);ctx.fillStyle=t.color;ctx.font="bold 20px Arial";ctx.fillText(t.text,t.x,t.y);});floatingTexts=floatingTexts.filter(t=>t.life>0);ctx.globalAlpha=1;
             requestAnimationFrame(loop);
         }
-
-        function resize() { canvas.width = V_WIDTH; canvas.height = V_HEIGHT; }
-        function handleInput(e) {
-            if(!gameState.active || gameState.paused) return; e.preventDefault();
-            const r = canvas.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY;
-            player.targetX = (cx - r.left) * (V_WIDTH/r.width); player.targetY = (cy - r.top) * (V_HEIGHT/r.height) - (e.touches?80:0);
-        }
-        canvas.addEventListener('mousemove', handleInput); canvas.addEventListener('touchmove', handleInput, {passive: false}); window.addEventListener('resize', resize);
-
-        function updateMenuStats() { document.getElementById('menuCredits').innerText = saveSystem.data.credits; document.getElementById('menuLevel').innerText = saveSystem.data.campaignLevel; }
-        function updateHUD() {
-            document.getElementById('scoreDisplay').innerText = gameState.score; document.getElementById('gameCredits').innerText = gameState.creditsGained;
-            const hpPct = Math.max(0, (player.hp / player.maxHp) * 100);
-            document.getElementById('healthBar').style.width = `${hpPct}%`; document.getElementById('healthBar').style.backgroundColor = hpPct < 30 ? '#f00' : '#0ff';
-            if(gameState.mode === 'CAMPAIGN') {
-                const prog = Math.min(100, (gameState.levelProgress / gameState.levelTarget) * 100);
-                document.getElementById('levelProgressBar').style.width = `${prog}%`;
-                if(gameState.levelProgress >= gameState.levelTarget) { SoundManager.play('powerup'); endGame(true); }
+        function resize(){canvas.width=V_WIDTH;canvas.height=V_HEIGHT;}
+        function handleInput(e){if(!gameState.active||gameState.paused)return;e.preventDefault();const r=canvas.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;player.targetX=(cx-r.left)*(V_WIDTH/r.width);player.targetY=(cy-r.top)*(V_HEIGHT/r.height)-(e.touches?80:0);}
+        canvas.addEventListener('mousemove',handleInput);canvas.addEventListener('touchmove',handleInput,{passive:false});window.addEventListener('resize',resize);
+        
+        // Draw Rules Icons
+        function drawRulesIcons() {
+            const draw = (id, color, text) => {
+                const c=document.getElementById(id),x=c.getContext('2d');
+                c.width=40;c.height=40;AssetDrawer.drawPowerUp(x, text==='+'?'health':(text==='⚡'?'overdrive':'multishot')); // Reuse asset drawer logic logic by mapping type
             }
+            // Hacky mapping to reuse drawPowerUp which expects 'health', 'overdrive' etc
+            const cH=document.getElementById('infoHealth').getContext('2d'); AssetDrawer.drawPowerUp(cH, 'health');
+            const cO=document.getElementById('infoOverdrive').getContext('2d'); AssetDrawer.drawPowerUp(cO, 'overdrive');
+            const cM=document.getElementById('infoMulti').getContext('2d'); AssetDrawer.drawPowerUp(cM, 'multishot');
         }
 
-        // UI BINDINGS
-        let shopIdx = 0;
-        function btnClick(cb) { SoundManager.play('ui'); cb(); }
-        
-        document.getElementById('campaignBtn').onclick = () => btnClick(() => initGame('CAMPAIGN'));
-        document.getElementById('endlessBtn').onclick = () => btnClick(() => initGame('ENDLESS'));
-        document.getElementById('shopBtn').onclick = () => btnClick(() => { document.getElementById('mainMenu').classList.add('hidden'); document.getElementById('shopMenu').classList.remove('hidden'); shopIdx = saveSystem.data.currentShip; updateShop(); });
-        
-        const backToMenu = () => btnClick(() => { gameState.active = false; gameState.mode = 'MENU'; document.getElementById('hud').classList.add('hidden'); document.getElementById('pauseMenu').classList.add('hidden'); document.getElementById('resultScreen').classList.add('hidden'); document.getElementById('mainMenu').classList.remove('hidden'); updateMenuStats(); });
-        document.getElementById('quitBtn').onclick = backToMenu; document.getElementById('resMenuBtn').onclick = backToMenu;
-        document.getElementById('closeShopBtn').onclick = () => btnClick(() => { document.getElementById('shopMenu').classList.add('hidden'); document.getElementById('mainMenu').classList.remove('hidden'); updateMenuStats(); });
+        let shopIdx=0; function btnClick(c){SoundManager.play('ui');c();}
+        document.getElementById('campaignBtn').onclick=()=>btnClick(()=>initGame('CAMPAIGN')); document.getElementById('endlessBtn').onclick=()=>btnClick(()=>initGame('ENDLESS'));
+        document.getElementById('shopBtn').onclick=()=>btnClick(()=>{document.getElementById('mainMenu').classList.add('hidden');document.getElementById('shopMenu').classList.remove('hidden');shopIdx=saveSystem.data.currentShip;updateShop();});
+        document.getElementById('quitBtn').onclick=document.getElementById('resMenuBtn').onclick=()=>btnClick(()=>{gameState.active=false;gameState.mode='MENU';document.getElementById('hud').classList.add('hidden');document.getElementById('pauseMenu').classList.add('hidden');document.getElementById('resultScreen').classList.add('hidden');document.getElementById('mainMenu').classList.remove('hidden');updateMenuStats();});
+        document.getElementById('closeShopBtn').onclick=()=>btnClick(()=>{document.getElementById('shopMenu').classList.add('hidden');document.getElementById('mainMenu').classList.remove('hidden');updateMenuStats();});
+        document.getElementById('prevShip').onclick=()=>btnClick(()=>{shopIdx=(shopIdx-1+SHIPS_DB.length)%SHIPS_DB.length;updateShop();}); document.getElementById('nextShip').onclick=()=>btnClick(()=>{shopIdx=(shopIdx+1)%SHIPS_DB.length;updateShop();});
+        document.getElementById('selectShipBtn').onclick=()=>btnClick(()=>{saveSystem.data.currentShip=SHIPS_DB[shopIdx].id;saveSystem.save();updateShop();});
+        document.getElementById('buyShipBtn').onclick=()=>btnClick(()=>{const s=SHIPS_DB[shopIdx];if(saveSystem.data.credits>=s.cost){saveSystem.data.credits-=s.cost;saveSystem.data.unlockedShips.push(s.id);saveSystem.data.currentShip=s.id;saveSystem.save();updateShop();}});
+        function hU(t){const id=SHIPS_DB[shopIdx].id,l=saveSystem.data.upgrades[id][t];if(l>=MAX_UPGRADE_LEVEL)return;const c=l*150;if(saveSystem.data.credits>=c){saveSystem.data.credits-=c;saveSystem.data.upgrades[id][t]++;saveSystem.save();updateShop();}}
+        document.getElementById('upgradeDmgBtn').onclick=()=>btnClick(()=>hU('dmg')); document.getElementById('upgradeHpBtn').onclick=()=>btnClick(()=>hU('hp')); document.getElementById('upgradeSpdBtn').onclick=()=>btnClick(()=>hU('spd'));
+        document.getElementById('pauseBtn').onclick=()=>btnClick(()=>{gameState.paused=true;document.getElementById('pauseMenu').classList.remove('hidden');}); document.getElementById('resumeBtn').onclick=()=>btnClick(()=>{gameState.paused=false;document.getElementById('pauseMenu').classList.add('hidden');});
+        document.getElementById('settingsBtn').onclick=()=>btnClick(()=>document.getElementById('settingsModal').classList.remove('hidden')); document.getElementById('closeSettingsBtn').onclick=()=>btnClick(()=>document.getElementById('settingsModal').classList.add('hidden'));
+        document.getElementById('sfxToggle').onchange=(e)=>SoundManager.toggleSFX(e.target.checked); document.getElementById('musicToggle').onchange=(e)=>SoundManager.toggleMusic(e.target.checked);
+        document.getElementById('rulesBtn').onclick=()=>btnClick(()=>{document.getElementById('infoModal').classList.remove('hidden');drawRulesIcons();}); document.getElementById('closeInfoBtn').onclick=document.getElementById('closeInfoBtn2').onclick=()=>btnClick(()=>document.getElementById('infoModal').classList.add('hidden'));
 
-        document.getElementById('prevShip').onclick = () => btnClick(() => { shopIdx = (shopIdx - 1 + SHIPS_DB.length) % SHIPS_DB.length; updateShop(); });
-        document.getElementById('nextShip').onclick = () => btnClick(() => { shopIdx = (shopIdx + 1) % SHIPS_DB.length; updateShop(); });
-        document.getElementById('selectShipBtn').onclick = () => btnClick(() => { saveSystem.data.currentShip = SHIPS_DB[shopIdx].id; saveSystem.save(); updateShop(); });
-        document.getElementById('buyShipBtn').onclick = () => btnClick(() => { const s = SHIPS_DB[shopIdx]; if(saveSystem.data.credits >= s.cost) { saveSystem.data.credits -= s.cost; saveSystem.data.unlockedShips.push(s.id); saveSystem.data.currentShip = s.id; saveSystem.save(); updateShop(); }});
-        
-        function handleUpgrade(type) {
-            const id = SHIPS_DB[shopIdx].id; const lvl = saveSystem.data.upgrades[id][type];
-            if (lvl >= MAX_UPGRADE_LEVEL) return;
-            const cost = lvl * 150;
-            if (saveSystem.data.credits >= cost) { saveSystem.data.credits -= cost; saveSystem.data.upgrades[id][type]++; saveSystem.save(); updateShop(); }
-        }
-        document.getElementById('upgradeDmgBtn').onclick = () => btnClick(() => handleUpgrade('dmg'));
-        document.getElementById('upgradeHpBtn').onclick = () => btnClick(() => handleUpgrade('hp'));
-        document.getElementById('upgradeSpdBtn').onclick = () => btnClick(() => handleUpgrade('spd'));
-
-        document.getElementById('pauseBtn').onclick = () => btnClick(() => { gameState.paused = true; document.getElementById('pauseMenu').classList.remove('hidden'); });
-        document.getElementById('resumeBtn').onclick = () => btnClick(() => { gameState.paused = false; document.getElementById('pauseMenu').classList.add('hidden'); });
-
-        document.getElementById('settingsBtn').onclick = () => btnClick(() => document.getElementById('settingsModal').classList.remove('hidden'));
-        document.getElementById('closeSettingsBtn').onclick = () => btnClick(() => document.getElementById('settingsModal').classList.add('hidden'));
-        document.getElementById('sfxToggle').onchange = (e) => SoundManager.toggleSFX(e.target.checked);
-        document.getElementById('musicToggle').onchange = (e) => SoundManager.toggleMusic(e.target.checked);
-
-        document.getElementById('rulesBtn').onclick = () => btnClick(() => document.getElementById('infoModal').classList.remove('hidden'));
-        document.getElementById('closeInfoBtn').onclick = () => btnClick(() => document.getElementById('infoModal').classList.add('hidden'));
-        document.getElementById('closeInfoBtn2').onclick = () => btnClick(() => document.getElementById('infoModal').classList.add('hidden'));
-
-        function updateShop() {
-            const s = SHIPS_DB[shopIdx]; const unlocked = saveSystem.data.unlockedShips.includes(s.id); const upg = saveSystem.data.upgrades[s.id];
-            document.getElementById('shopCredits').innerText = saveSystem.data.credits; 
-            document.getElementById('shipName').innerText = s.name; document.getElementById('shipDesc').innerText = s.desc; document.getElementById('shipCost').innerText = s.cost;
-            
-            const maxDmg = 100 + (MAX_UPGRADE_LEVEL * 20); const currDmg = s.stats.dmg * (1 + (upg.dmg-1)*0.25);
-            document.getElementById('statBarDmg').style.width = `${(currDmg/maxDmg)*100}%`; document.getElementById('statValDmg').innerText = Math.floor(currDmg);
-            const maxArm = 100 + (MAX_UPGRADE_LEVEL * 25); const currArm = s.stats.arm * (1 + (upg.hp-1)*0.25);
-            document.getElementById('statBarArmor').style.width = `${(currArm/maxArm)*100}%`; document.getElementById('statValArmor').innerText = Math.floor(currArm);
-            const maxSpd = 100; const currSpd = s.stats.spd * (1 + (upg.spd-1)*0.10);
-            document.getElementById('statBarSpeed').style.width = `${Math.min(100, currSpd)}%`; document.getElementById('statValSpeed').innerText = Math.floor(currSpd);
-
-            const buyBtn = document.getElementById('buyShipBtn'), selBtn = document.getElementById('selectShipBtn');
-            if(unlocked) {
-                buyBtn.classList.add('hidden'); selBtn.classList.remove('hidden');
-                selBtn.innerText = saveSystem.data.currentShip === s.id ? "ЭКИПИРОВАНО" : "ВЫБРАТЬ"; selBtn.disabled = saveSystem.data.currentShip === s.id;
-                const setBtnState = (type, val) => {
-                    const btn = document.getElementById(`upgrade${type}Btn`);
-                    const lvlTxt = document.getElementById(`${type.toLowerCase()}LvlText`), costTxt = document.getElementById(`${type.toLowerCase()}CostText`);
-                    if (val >= MAX_UPGRADE_LEVEL) { lvlTxt.innerText = "МАКС"; costTxt.innerText = "---"; btn.disabled = true; btn.classList.add('opacity-50'); } 
-                    else { const cost = val * 150; lvlTxt.innerText = `LVL ${val}`; costTxt.innerText = `${cost} CR`; btn.disabled = saveSystem.data.credits < cost; btn.classList.remove('opacity-50'); }
-                };
-                setBtnState('Dmg', upg.dmg); setBtnState('Hp', upg.hp); setBtnState('Spd', upg.spd);
-            } else {
-                selBtn.classList.add('hidden'); buyBtn.classList.remove('hidden'); buyBtn.disabled = saveSystem.data.credits < s.cost;
-                ['Dmg', 'Hp', 'Spd'].forEach(k => { document.getElementById(`upgrade${k}Btn`).disabled = true; document.getElementById(`${k.toLowerCase()}LvlText`).innerText = "-"; document.getElementById(`${k.toLowerCase()}CostText`).innerText = "ЗАКРЫТО"; });
+        function updateMenuStats(){document.getElementById('menuCredits').innerText=saveSystem.data.credits;document.getElementById('menuLevel').innerText=saveSystem.data.campaignLevel;}
+        function updateHUD(){document.getElementById('scoreDisplay').innerText=gameState.score;document.getElementById('gameCredits').innerText=gameState.creditsGained;const h=Math.max(0,(player.hp/player.maxHp)*100);document.getElementById('healthBar').style.width=`${h}%`;document.getElementById('healthBar').style.backgroundColor=h<30?'#f00':'#0ff';if(gameState.mode==='CAMPAIGN'){const p=Math.min(100,(gameState.levelProgress/gameState.levelTarget)*100);document.getElementById('levelProgressBar').style.width=`${p}%`;if(gameState.levelProgress>=gameState.levelTarget){SoundManager.play('powerup');endGame(true);}}}
+        function updateShop(){
+            const s=SHIPS_DB[shopIdx],u=saveSystem.data.unlockedShips.includes(s.id),up=saveSystem.data.upgrades[s.id];
+            document.getElementById('shopCredits').innerText=saveSystem.data.credits; document.getElementById('shipName').innerText=s.name; document.getElementById('shipDesc').innerText=s.desc; document.getElementById('shipCost').innerText=s.cost;
+            const mD=100+(MAX_UPGRADE_LEVEL*20),cD=s.stats.dmg*(1+(up.dmg-1)*0.25),mA=100+(MAX_UPGRADE_LEVEL*25),cA=s.stats.arm*(1+(up.hp-1)*0.25),mS=100,cS=s.stats.spd*(1+(up.spd-1)*0.10);
+            document.getElementById('statBarDmg').style.width=`${(cD/mD)*100}%`;document.getElementById('statValDmg').innerText=Math.floor(cD);
+            document.getElementById('statBarArmor').style.width=`${(cA/mA)*100}%`;document.getElementById('statValArmor').innerText=Math.floor(cA);
+            document.getElementById('statBarSpeed').style.width=`${Math.min(100,cS)}%`;document.getElementById('statValSpeed').innerText=Math.floor(cS);
+            const bB=document.getElementById('buyShipBtn'),sB=document.getElementById('selectShipBtn');
+            if(u){
+                bB.classList.add('hidden');sB.classList.remove('hidden');sB.innerText=saveSystem.data.currentShip===s.id?"ЭКИПИРОВАНО":"ВЫБРАТЬ";sB.disabled=saveSystem.data.currentShip===s.id;
+                const setB=(t,v)=>{const b=document.getElementById(`upgrade${t}Btn`),l=document.getElementById(`${t.toLowerCase()}LvlText`),c=document.getElementById(`${t.toLowerCase()}CostText`);if(v>=MAX_UPGRADE_LEVEL){l.innerText="МАКС";c.innerText="---";b.disabled=true;b.classList.add('opacity-50');}else{const cost=v*150;l.innerText=`LVL ${v}`;c.innerText=`${cost} CR`;b.disabled=saveSystem.data.credits<cost;b.classList.remove('opacity-50');}};
+                setB('Dmg',up.dmg);setB('Hp',up.hp);setB('Spd',up.spd);
+            }else{
+                sB.classList.add('hidden');bB.classList.remove('hidden');bB.disabled=saveSystem.data.credits<s.cost;
+                ['Dmg','Hp','Spd'].forEach(k=>{document.getElementById(`upgrade${k}Btn`).disabled=true;document.getElementById(`${k.toLowerCase()}LvlText`).innerText="-";document.getElementById(`${k.toLowerCase()}CostText`).innerText="ЗАКРЫТО";});
             }
-            shipCtx.clearRect(0,0,300,200); shipCtx.save(); shipCtx.translate(150, 100); shipCtx.scale(2.2, 2.2); AssetDrawer.drawShip(shipCtx, s.model, s.color, true); shipCtx.restore();
+            shipCtx.clearRect(0,0,300,200); shipCtx.save(); shipCtx.translate(150,100); shipCtx.scale(2.2,2.2); AssetDrawer.drawShip(shipCtx,s.model,s.color,true); shipCtx.restore();
         }
 
-        // Init
-        stars = Array(100).fill().map(() => new Star()); resize(); 
-        VKManager.init();
-        requestAnimationFrame(loop);
-
+        stars=Array(100).fill().map(()=>new Star()); resize(); VKManager.init(); requestAnimationFrame(loop);
     </script>
 </body>
 </html>
