@@ -1,171 +1,833 @@
-let board = [];
-let rows = 8;
-let columns = 8;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VOIDSTORM</title>
+    <!-- VK Bridge -->
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #0ff; --secondary: #d0f; --danger: #f00; --warn: #ffcc00; --bg-dark: #050505; }
+        * { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; overflow: hidden; background-color: var(--bg-dark); font-family: 'Orbitron', sans-serif; touch-action: none; display: flex; justify-content: center; align-items: center; height: 100dvh; width: 100vw; background: radial-gradient(circle at center, #111 0%, #000 100%); }
+        
+        #gameContainer { position: relative; width: 100%; height: 100%; max-width: 60vh; background: #000; box-shadow: 0 0 50px rgba(0, 255, 255, 0.05); overflow: hidden; display: flex; flex-direction: column; }
+        @media (min-aspect-ratio: 9/16) { #gameContainer { height: 95dvh; width: auto; aspect-ratio: 9/16; border: 1px solid #333; border-radius: 8px; } }
+        
+        canvas { display: block; width: 100%; height: 100%; }
+        .neon-text { text-shadow: 0 0 10px currentColor; }
+        
+        .neon-btn { background: rgba(0, 255, 255, 0.05); border: 2px solid var(--primary); border-radius: 4px; color: var(--primary); box-shadow: 0 0 15px rgba(0, 255, 255, 0.1); transition: all 0.1s; text-transform: uppercase; letter-spacing: 1px; position: relative; overflow: hidden; font-weight: bold; cursor: pointer; font-family: 'Orbitron', sans-serif; }
+        .neon-btn:active { transform: scale(0.96); background: rgba(0, 255, 255, 0.2); }
+        .neon-btn:disabled { opacity: 0.4; filter: grayscale(1); cursor: default; transform: none !important; box-shadow: none !important; }
+        
+        .neon-btn-purple { border-color: var(--secondary); color: var(--secondary); box-shadow: 0 0 15px rgba(200, 0, 255, 0.1); }
+        .neon-btn-red { border-color: var(--danger); color: var(--danger); box-shadow: 0 0 15px rgba(255, 0, 0, 0.1); }
+        .neon-btn-warn { border-color: var(--warn); color: var(--warn); box-shadow: 0 0 15px rgba(255, 200, 0, 0.1); }
+        .neon-btn-gray { border-color: #666; color: #aaa; box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
 
-let minesCount = 10;
-let minesLocation = []; // "2-2", "3-4", "2-1"
+        /* Settings Toggle */
+        .toggle-checkbox:checked { right: 0; border-color: var(--primary); }
+        .toggle-checkbox:checked + .toggle-label { background-color: var(--primary); }
+        
+        #damageOverlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 15; background: radial-gradient(circle, transparent 50%, rgba(255, 0, 0, 0.5) 100%); opacity: 0; transition: opacity 0.1s; }
+        .scanlines { background: linear-gradient(to bottom, rgba(255,255,255,0) 50%, rgba(0,0,0,0.05) 50%); background-size: 100% 3px; position: absolute; inset: 0; pointer-events: none; z-index: 50; opacity: 0.4; }
+        .modal-backdrop { background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); }
+        .stat-track { background: #222; height: 4px; border-radius: 2px; width: 100%; margin-top: 4px; overflow: hidden; }
+        .stat-fill { height: 100%; transition: width 0.3s ease; box-shadow: 0 0 8px currentColor; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; } .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-let tilesClicked = 0; //goal to click all tiles except the ones containing mines
-let flagEnabled = false;
+        /* Daily Reward Grid */
+        .daily-item { border: 1px solid #333; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; opacity: 0.5; }
+        .daily-item.active { border-color: var(--warn); background: rgba(255, 200, 0, 0.1); opacity: 1; box-shadow: 0 0 15px rgba(255,200,0,0.2); transform: scale(1.05); }
+        .daily-item.claimed { border-color: var(--primary); background: rgba(0, 255, 255, 0.1); opacity: 0.8; }
+    </style>
+</head>
+<body>
 
-let gameOver = false;
+    <div id="gameContainer">
+        <div class="scanlines"></div>
+        <div id="damageOverlay"></div>
+        <canvas id="gameCanvas"></canvas>
 
-window.onload = function () {
-  startGame();
-};
+        <audio id="bgMusic" src="music.mp3" loop></audio>
 
-function setMines() {
-  // minesLocation.push("2-2");
-  // minesLocation.push("2-3");
-  // minesLocation.push("5-6");
-  // minesLocation.push("3-4");
-  // minesLocation.push("1-1");
+        <!-- HUD -->
+        <div id="hud" class="absolute inset-0 hidden z-10 pointer-events-none flex flex-col justify-between p-3">
+            <div class="flex justify-between items-start w-full">
+                <div class="flex flex-col">
+                    <div class="text-[10px] text-cyan-600 font-bold tracking-widest">СЧЁТ</div>
+                    <div class="text-2xl text-cyan-400 font-bold leading-none neon-text" id="scoreDisplay">0</div>
+                </div>
+                <div id="levelProgressContainer" class="absolute left-1/2 -translate-x-1/2 top-4 w-1/3 hidden">
+                    <div class="text-[8px] text-center text-cyan-600 mb-1 tracking-widest">ПРОГРЕСС</div>
+                    <div class="h-1.5 bg-gray-900 border border-cyan-800 rounded-full overflow-hidden">
+                        <div id="levelProgressBar" class="h-full bg-gradient-to-r from-cyan-600 to-cyan-300 w-0 transition-all duration-300 shadow-[0_0_10px_#0ff]"></div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end gap-1">
+                    <div class="w-32 h-4 bg-gray-900 border border-cyan-600 transform -skew-x-12 overflow-hidden relative">
+                         <div id="healthBar" class="h-full bg-cyan-400 shadow-[0_0_10px_#0ff] w-full transition-all duration-200"></div>
+                    </div>
+                    <div class="text-xs text-yellow-400 font-mono font-bold"><i class="fas fa-bolt mr-1"></i><span id="gameCredits">0</span></div>
+                </div>
+            </div>
+            <button id="pauseBtn" class="pointer-events-auto absolute top-16 right-2 text-cyan-600 hover:text-white transition p-2 font-[Orbitron] text-xl shadow-[0_0_10px_rgba(0,255,255,0.3)] rounded border border-cyan-900/50 bg-black/50 w-10 h-10 flex items-center justify-center">
+                II
+            </button>
+        </div>
 
-  let minesLeft = minesCount;
-  while (minesLeft > 0) {
-    let r = Math.floor(Math.random() * rows);
-    let c = Math.floor(Math.random() * columns);
-    let id = r.toString() + "-" + c.toString();
+        <!-- MAIN MENU -->
+        <div id="mainMenu" class="absolute inset-0 z-20 flex flex-col items-center justify-center">
+            <div class="relative mb-6 text-center z-30">
+                <h1 class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-200 to-cyan-600 neon-text italic tracking-tighter leading-none filter drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]">
+                    VOID<br>STORM
+                </h1>
+                <div class="text-center text-cyan-600 text-[10px] tracking-[1em] mt-3 animate-pulse font-bold">ARCADE SHOOTER</div>
+            </div>
+            
+            <div class="flex gap-8 mb-8 text-sm border-y border-cyan-900/50 py-3 bg-black/40 backdrop-blur w-full justify-center z-30">
+                <div class="text-yellow-400 font-bold flex items-center"><i class="fas fa-bolt mr-2"></i> <span id="menuCredits">0</span></div>
+                <div class="text-cyan-400 font-bold flex items-center"><i class="fas fa-star mr-2"></i> УР. <span id="menuLevel">1</span></div>
+            </div>
 
-    if (!minesLocation.includes(id)) {
-      minesLocation.push(id);
-      minesLeft -= 1;
-    }
-  }
-}
+            <div class="flex flex-col gap-4 w-64 z-30">
+                <button id="campaignBtn" class="neon-btn py-4 text-sm tracking-widest"><i class="fas fa-play mr-2"></i> КАМПАНИЯ</button>
+                <button id="endlessBtn" class="neon-btn neon-btn-purple py-4 text-sm tracking-widest"><i class="fas fa-infinity mr-2"></i> ВЫЖИВАНИЕ</button>
+                <button id="shopBtn" class="neon-btn neon-btn-warn py-4 text-sm tracking-widest"><i class="fas fa-wrench mr-2"></i> АНГАР</button>
+                
+                <div class="flex gap-4 mt-2">
+                    <button id="settingsBtn" class="neon-btn neon-btn-gray flex-1 py-3 text-xl"><i class="fas fa-cog"></i></button>
+                    <button id="rulesBtn" class="neon-btn neon-btn-gray flex-1 py-3 text-xl"><i class="fas fa-info"></i></button>
+                </div>
+            </div>
+        </div>
 
-function startGame() {
-  document.getElementById("mines-count").innerText = minesCount;
-  document.getElementById("flag-button").addEventListener("click", setFlag);
-  setMines();
+        <!-- DAILY REWARD MODAL -->
+        <div id="dailyModal" class="absolute inset-0 z-50 hidden bg-black/95 flex flex-col items-center justify-center p-4">
+            <h2 class="text-3xl text-yellow-400 font-black mb-2 italic tracking-widest">ЕЖЕДНЕВНАЯ НАГРАДА</h2>
+            <p class="text-gray-400 text-xs mb-8 uppercase tracking-widest">ЗАХОДИ КАЖДЫЙ ДЕНЬ</p>
+            
+            <div class="grid grid-cols-4 gap-2 mb-8 w-full max-w-xs" id="dailyGrid">
+                <!-- Generated via JS -->
+            </div>
 
-  //populate our board
-  for (let r = 0; r < rows; r++) {
-    let row = [];
-    for (let c = 0; c < columns; c++) {
-      //<div id="0-0"></div>
-      let tile = document.createElement("div");
-      tile.id = r.toString() + "-" + c.toString();
-      tile.addEventListener("click", clickTile);
-      document.getElementById("board").append(tile);
-      row.push(tile);
-    }
-    board.push(row);
-  }
+            <button id="claimDailyBtn" class="neon-btn neon-btn-warn w-64 py-4 font-bold text-lg">ЗАБРАТЬ</button>
+        </div>
 
-  console.log(board);
-}
+        <!-- SETTINGS -->
+        <div id="settingsModal" class="absolute inset-0 z-50 hidden bg-black/95 flex flex-col items-center justify-center p-6">
+            <h2 class="text-3xl text-white font-black mb-10 tracking-widest italic">НАСТРОЙКИ</h2>
+            <div class="w-64 space-y-6">
+                <div class="flex justify-between items-center">
+                    <span class="text-cyan-400 font-bold tracking-wider">ЗВУКИ</span>
+                    <div class="relative inline-block w-12 h-6 align-middle select-none">
+                        <input type="checkbox" id="sfxToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 right-6 border-gray-600"/>
+                        <label for="sfxToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-900 border border-gray-600 cursor-pointer"></label>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-purple-400 font-bold tracking-wider">МУЗЫКА</span>
+                    <div class="relative inline-block w-12 h-6 align-middle select-none">
+                        <input type="checkbox" id="musicToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 right-6 border-gray-600"/>
+                        <label for="musicToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-900 border border-gray-600 cursor-pointer"></label>
+                    </div>
+                </div>
+            </div>
+            <button id="closeSettingsBtn" class="neon-btn w-64 py-4 mt-12 font-bold">СОХРАНИТЬ</button>
+        </div>
 
-function setFlag() {
-  if (flagEnabled) {
-    flagEnabled = false;
-    document.getElementById("flag-button").style.backgroundColor = "lightgray";
-  } else {
-    flagEnabled = true;
-    document.getElementById("flag-button").style.backgroundColor = "darkgray";
-  }
-}
+        <!-- SHOP -->
+        <div id="shopMenu" class="absolute inset-0 z-30 hidden bg-black flex flex-col">
+            <div class="p-4 border-b border-cyan-900 flex justify-between items-center bg-gray-900/50">
+                <h2 class="text-xl text-cyan-400 font-black italic tracking-wider">АНГАР</h2>
+                <div class="text-yellow-400 font-mono font-bold"><i class="fas fa-bolt"></i> <span id="shopCredits">0</span></div>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 pb-24 space-y-6 hide-scrollbar">
+                <div class="relative h-48 border border-cyan-900 bg-gray-900/30 rounded-lg flex items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
+                    <canvas id="shipPreviewCanvas" width="300" height="200" class="absolute"></canvas>
+                    <div class="absolute bottom-3 w-full text-center pointer-events-none">
+                        <div id="shipName" class="text-white font-black text-xl tracking-widest uppercase drop-shadow-lg">NAME</div>
+                        <div id="shipDesc" class="text-[10px] text-cyan-300 uppercase tracking-wider">Description</div>
+                    </div>
+                    <button id="prevShip" class="absolute left-0 h-full w-16 flex items-center justify-center text-cyan-600 hover:text-white hover:bg-white/5 transition"><i class="fas fa-chevron-left text-2xl"></i></button>
+                    <button id="nextShip" class="absolute right-0 h-full w-16 flex items-center justify-center text-cyan-600 hover:text-white hover:bg-white/5 transition"><i class="fas fa-chevron-right text-2xl"></i></button>
+                </div>
+                <div class="bg-gray-900/50 p-4 rounded border border-gray-800">
+                    <div class="flex justify-between text-[10px] text-gray-400 mb-1 font-bold"><span>УРОН</span> <span id="statValDmg" class="text-white"></span></div>
+                    <div class="stat-track"><div id="statBarDmg" class="stat-fill bg-purple-500" style="width: 0%"></div></div>
+                    <div class="flex justify-between text-[10px] text-gray-400 mt-3 mb-1 font-bold"><span>БРОНЯ</span> <span id="statValArmor" class="text-white"></span></div>
+                    <div class="stat-track"><div id="statBarArmor" class="stat-fill bg-green-500" style="width: 0%"></div></div>
+                    <div class="flex justify-between text-[10px] text-gray-400 mt-3 mb-1 font-bold"><span>СКОРОСТЬ</span> <span id="statValSpeed" class="text-white"></span></div>
+                    <div class="stat-track"><div id="statBarSpeed" class="stat-fill bg-cyan-500" style="width: 0%"></div></div>
+                </div>
+                <div class="flex justify-center">
+                    <button id="selectShipBtn" class="neon-btn w-full py-4 bg-cyan-900/20">ВЫБРАТЬ</button>
+                    <button id="buyShipBtn" class="hidden neon-btn neon-btn-warn w-full py-4">КУПИТЬ (<span id="shipCost">0</span>)</button>
+                </div>
+                <div class="space-y-2 border-t border-gray-800 pt-4">
+                    <div class="text-[10px] text-gray-500 uppercase tracking-[0.2em] mb-2 text-center font-bold">СИСТЕМЫ</div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button id="upgradeDmgBtn" class="neon-btn border-purple-500 text-purple-400 py-2 text-xs flex flex-col items-center justify-center h-16">
+                            <span class="font-bold mb-1">УРОН</span>
+                            <span class="text-[10px]" id="dmgLvlText">LVL 1</span>
+                            <span class="text-[9px] opacity-70" id="dmgCostText">100 CR</span>
+                        </button>
+                        <button id="upgradeHpBtn" class="neon-btn border-green-500 text-green-400 py-2 text-xs flex flex-col items-center justify-center h-16">
+                            <span class="font-bold mb-1">БРОНЯ</span>
+                            <span class="text-[10px]" id="hpLvlText">LVL 1</span>
+                            <span class="text-[9px] opacity-70" id="hpCostText">100 CR</span>
+                        </button>
+                        <button id="upgradeSpdBtn" class="neon-btn border-cyan-500 text-cyan-400 py-2 text-xs flex flex-col items-center justify-center h-16">
+                            <span class="font-bold mb-1">СКОР</span>
+                            <span class="text-[10px]" id="spdLvlText">LVL 1</span>
+                            <span class="text-[9px] opacity-70" id="spdCostText">100 CR</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-cyan-900 bg-black absolute bottom-0 w-full">
+                <button id="closeShopBtn" class="neon-btn neon-btn-red w-full py-3 font-bold">НАЗАД</button>
+            </div>
+        </div>
 
-function clickTile() {
-  if (gameOver || this.classList.contains("tile-clicked")) {
-    return;
-  }
+        <!-- INFO MODAL -->
+        <div id="infoModal" class="absolute inset-0 z-50 hidden bg-black/95 flex flex-col p-6">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                <h2 class="text-2xl text-white font-black italic">БАЗА ДАННЫХ</h2>
+                <button id="closeInfoBtn" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="space-y-6 text-sm text-gray-300 overflow-y-auto flex-1 hide-scrollbar">
+                <div class="bg-gray-900/50 p-4 rounded border-l-4 border-yellow-500 shadow-lg">
+                    <h3 class="text-yellow-400 font-bold mb-3 uppercase tracking-wider">МОДУЛИ</h3>
+                    <div class="flex items-center gap-4 mb-3">
+                         <div class="w-10 h-10 rounded-full border-2 border-green-500 flex items-center justify-center text-green-500 font-bold bg-green-500/10 text-xl">+</div>
+                         <div><strong class="text-green-400 block">РЕМОНТ</strong><span class="text-xs text-gray-400">Восстанавливает 30% структуры.</span></div>
+                    </div>
+                    <div class="flex items-center gap-4 mb-3">
+                         <div class="w-10 h-10 rounded-full border-2 border-purple-500 flex items-center justify-center text-purple-500 font-bold bg-purple-500/10 text-xl"><i class="fas fa-bolt"></i></div>
+                         <div><strong class="text-purple-400 block">ОВЕРДРАЙВ</strong><span class="text-xs text-gray-400">Максимальная скорострельность (5 сек).</span></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full border-2 border-cyan-400 flex items-center justify-center text-cyan-400 font-bold bg-cyan-400/10 text-xl">M</div>
+                        <div><strong class="text-cyan-400 block">МУЛЬТИ-ЗАЛП</strong><span class="text-xs text-gray-400">Дополнительные боковые орудия.</span></div>
+                   </div>
+                </div>
+                <div class="bg-gray-900/50 p-4 rounded border-l-4 border-cyan-500 shadow-lg">
+                    <h3 class="text-cyan-400 font-bold mb-2 uppercase tracking-wider">ТАКТИКА</h3>
+                    <ul class="list-disc pl-4 space-y-2 text-xs text-gray-300">
+                        <li><strong>Не врезайтесь!</strong> Таран не дает очков.</li>
+                        <li><strong>Копите кредиты.</strong> Покупайте новые корабли для выживания.</li>
+                        <li><strong>Комбо.</strong> Мульти-залп + Овердрайв = Победа.</li>
+                    </ul>
+                </div>
+            </div>
+            <button id="closeInfoBtn2" class="neon-btn w-full py-4 mt-4 font-bold tracking-widest">ПРИНЯТО</button>
+        </div>
 
-  let tile = this;
-  if (flagEnabled) {
-    if (tile.innerText == "") {
-      tile.innerText = "🚩";
-    } else if (tile.innerText == "🚩") {
-      tile.innerText = "";
-    }
-    return;
-  }
+        <!-- PAUSE -->
+        <div id="pauseMenu" class="absolute inset-0 z-40 hidden modal-backdrop flex flex-col items-center justify-center">
+            <h2 class="text-5xl text-white font-black mb-8 tracking-widest italic">ПАУЗА</h2>
+            <div class="flex flex-col gap-4 w-64">
+                <button id="resumeBtn" class="neon-btn py-4 font-bold border-green-500 text-green-400">ПРОДОЛЖИТЬ</button>
+                <button id="quitBtn" class="neon-btn neon-btn-red py-4 font-bold">СДАТЬСЯ</button>
+            </div>
+        </div>
 
-  if (minesLocation.includes(tile.id)) {
-    // alert("GAME OVER");
-    gameOver = true;
-    revealMines();
-    return;
-  }
+        <!-- RESULT -->
+        <div id="resultScreen" class="absolute inset-0 z-40 hidden modal-backdrop flex flex-col items-center justify-center p-6 text-center">
+            <h2 id="resultTitle" class="text-5xl font-black mb-2 neon-text italic uppercase"></h2>
+            <p id="resultSub" class="text-gray-400 text-xs mb-8 uppercase tracking-[0.3em]"></p>
+            <div class="bg-gray-900/90 border border-cyan-900 p-6 rounded-lg w-full max-w-xs mb-8 backdrop-blur-xl shadow-2xl">
+                <div class="flex justify-between mb-3 border-b border-gray-700 pb-3">
+                    <span class="text-gray-400 text-sm font-bold">СЧЁТ ЗА МИССИЮ</span>
+                    <span class="text-white font-bold text-xl" id="resScore">0</span>
+                </div>
+                <div class="flex justify-between text-yellow-400">
+                    <span class="text-sm font-bold">ДОХОД</span>
+                    <span class="font-bold text-xl">+<span id="resCredits">0</span></span>
+                </div>
+            </div>
+            <div class="flex flex-col gap-3 w-64">
+                <button id="resActionBtn" class="neon-btn py-4 rounded font-bold text-lg tracking-wider hover:bg-cyan-500/20 transition">ДАЛЕЕ</button>
+                <button id="resMenuBtn" class="neon-btn neon-btn-red py-3 rounded text-sm font-bold">ГЛАВНОЕ МЕНЮ</button>
+            </div>
+        </div>
+    </div>
 
-  let coords = tile.id.split("-"); // "0-0" -> ["0", "0"]
-  let r = parseInt(coords[0]);
-  let c = parseInt(coords[1]);
-  checkMine(r, c);
-}
+    <script>
+        /**
+         * VOIDSTORM ENGINE v8.0
+         * - VK Bridge Integration (Storage, Ads, Music)
+         * - Daily Rewards
+         * - Fixed EndGame & Orientation
+         * - Restored Detailed Player Ships
+         */
 
-function revealMines() {
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < columns; c++) {
-      let tile = board[r][c];
-      if (minesLocation.includes(tile.id)) {
-        tile.innerText = "💣";
-        tile.style.backgroundColor = "red";
-      }
-    }
-  }
-}
+        const V_WIDTH = 600;
+        const V_HEIGHT = 1066;
+        const MAX_UPGRADE_LEVEL = 5;
+        
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const shipPreviewCanvas = document.getElementById('shipPreviewCanvas');
+        const shipCtx = shipPreviewCanvas.getContext('2d');
 
-function checkMine(r, c) {
-  if (r < 0 || r >= rows || c < 0 || c >= columns) {
-    return;
-  }
-  if (board[r][c].classList.contains("tile-clicked")) {
-    return;
-  }
+        // --- VK & DATA MANAGER ---
+        const VKManager = {
+            userId: null,
+            isInit: false,
+            adsCounter: 0,
+            
+            init: async function() {
+                try {
+                    const res = await vkBridge.send('VKWebAppInit');
+                    this.isInit = true;
+                    
+                    // Music handling for background/minimize
+                    vkBridge.subscribe((e) => {
+                        if(e.detail.type === 'VKWebAppViewHide') SoundManager.toggleMusic(false, true);
+                        if(e.detail.type === 'VKWebAppViewRestore') SoundManager.toggleMusic(true, true);
+                    });
 
-  board[r][c].classList.add("tile-clicked");
-  tilesClicked += 1;
+                    // Get User
+                    const user = await vkBridge.send('VKWebAppGetUserInfo');
+                    this.userId = user.id;
+                    
+                    // Load Data
+                    await saveSystem.load();
+                    
+                    // Show Banner
+                    vkBridge.send('VKWebAppShowBannerAd', { banner_location: 'bottom' }).catch(e=>{});
+                    
+                    // Daily Check
+                    DailyManager.check();
+                    
+                } catch(e) { console.log('VK Init Error (Local Mode)', e); saveSystem.load(); DailyManager.check(); }
+            },
+            
+            showInterstitial: function() {
+                this.adsCounter++;
+                if(this.adsCounter >= 3 || gameState.mode === 'ENDLESS') {
+                    this.adsCounter = 0;
+                    vkBridge.send('VKWebAppShowInterstitialAd').catch(e=>{});
+                }
+            }
+        };
 
-  let minesFound = 0;
+        // --- SAVE SYSTEM ---
+        const saveSystem = {
+            data: { credits: 0, campaignLevel: 1, unlockedShips: [0], currentShip: 0, upgrades: {}, highScore: 0, daily: { last: null, streak: 0 } },
+            
+            load: async function() {
+                const key = VKManager.userId ? `voidstorm_data_${VKManager.userId}` : 'voidstorm_save';
+                try {
+                    let loaded = null;
+                    if(VKManager.userId) {
+                        const r = await vkBridge.send('VKWebAppStorageGet', { keys: [key] });
+                        if(r.keys[0].value) loaded = JSON.parse(r.keys[0].value);
+                    } else {
+                        loaded = JSON.parse(localStorage.getItem(key));
+                    }
+                    
+                    if(loaded) this.data = { ...this.data, ...loaded };
+                    // Fix upgrades structure if new ships added
+                    SHIPS_DB.forEach(s => { if(!this.data.upgrades[s.id]) this.data.upgrades[s.id] = {dmg:1, hp:1, spd:1}; });
+                    
+                    // Init settings
+                    const settings = JSON.parse(localStorage.getItem('voidstorm_settings') || '{"sfx":true,"music":true}');
+                    SoundManager.sfxEnabled = settings.sfx;
+                    SoundManager.musicEnabled = settings.music;
+                    document.getElementById('sfxToggle').checked = settings.sfx;
+                    document.getElementById('musicToggle').checked = settings.music;
+                    SoundManager.updateMusicState();
+                    updateMenuStats();
 
-  //top 3
-  minesFound += checkTile(r - 1, c - 1); //top left
-  minesFound += checkTile(r - 1, c); //top
-  minesFound += checkTile(r - 1, c + 1); //top right
+                } catch(e) { console.error("Load error", e); }
+            },
+            
+            save: async function() {
+                const key = VKManager.userId ? `voidstorm_data_${VKManager.userId}` : 'voidstorm_save';
+                const val = JSON.stringify(this.data);
+                try {
+                    if(VKManager.userId) await vkBridge.send('VKWebAppStorageSet', { key: key, value: val });
+                    else localStorage.setItem(key, val);
+                } catch(e) {}
+                updateMenuStats();
+            }
+        };
 
-  //left and right
-  minesFound += checkTile(r, c - 1); //left
-  minesFound += checkTile(r, c + 1); //right
+        // --- DAILY REWARDS ---
+        const DailyManager = {
+            rewards: [100, 200, 300, 400, 500, 750, 1000],
+            check: function() {
+                const today = new Date().toDateString();
+                const last = saveSystem.data.daily.last;
+                
+                if(last !== today) {
+                    // New Day
+                    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+                    if(last !== yesterday.toDateString()) saveSystem.data.daily.streak = 0; // Reset if missed
+                    
+                    this.showModal();
+                }
+            },
+            showModal: function() {
+                const modal = document.getElementById('dailyModal');
+                const grid = document.getElementById('dailyGrid');
+                const streak = saveSystem.data.daily.streak;
+                
+                grid.innerHTML = '';
+                this.rewards.forEach((amt, i) => {
+                    const div = document.createElement('div');
+                    div.className = `daily-item ${i < streak ? 'claimed' : ''} ${i === streak ? 'active' : ''}`;
+                    div.innerHTML = `<div class="text-xs text-gray-400">ДЕНЬ ${i+1}</div><div class="text-yellow-400 font-bold text-lg">${amt}</div>`;
+                    grid.appendChild(div);
+                });
+                
+                modal.classList.remove('hidden');
+            },
+            claim: function() {
+                const streak = saveSystem.data.daily.streak;
+                const reward = this.rewards[Math.min(streak, 6)];
+                
+                saveSystem.data.credits += reward;
+                saveSystem.data.daily.last = new Date().toDateString();
+                saveSystem.data.daily.streak = (streak + 1) % 7;
+                saveSystem.save();
+                
+                document.getElementById('dailyModal').classList.add('hidden');
+                SoundManager.play('powerup');
+            }
+        };
+        document.getElementById('claimDailyBtn').onclick = () => DailyManager.claim();
 
-  //bottom 3
-  minesFound += checkTile(r + 1, c - 1); //bottom left
-  minesFound += checkTile(r + 1, c); //bottom
-  minesFound += checkTile(r + 1, c + 1); //bottom right
+        // --- AUDIO ---
+        const SoundManager = {
+            ctx: new (window.AudioContext || window.webkitAudioContext)(),
+            sfxEnabled: true,
+            musicEnabled: true,
+            
+            updateMusicState: function() {
+                const audio = document.getElementById('bgMusic');
+                if(this.musicEnabled) audio.play().catch(e=>{});
+                else audio.pause();
+            },
+            toggleMusic: function(v, temp=false) {
+                if(!temp) { this.musicEnabled = v; localStorage.setItem('voidstorm_settings', JSON.stringify({sfx: this.sfxEnabled, music: v})); }
+                const audio = document.getElementById('bgMusic');
+                if(v && this.musicEnabled) audio.play().catch(e=>{}); else audio.pause();
+            },
+            toggleSFX: function(v) { this.sfxEnabled = v; localStorage.setItem('voidstorm_settings', JSON.stringify({sfx: v, music: this.musicEnabled})); },
+            
+            play: function(type) {
+                if(!this.sfxEnabled) return;
+                if(this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                const now = this.ctx.currentTime;
 
-  if (minesFound > 0) {
-    board[r][c].innerText = minesFound;
-    board[r][c].classList.add("x" + minesFound.toString());
-  } else {
-    board[r][c].innerText = "";
+                if (type === 'shoot') { osc.type = 'square'; osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(100, now+0.1); gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.1); osc.start(now); osc.stop(now+0.1); }
+                else if (type === 'enemy_shoot') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(50, now+0.2); gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.2); osc.start(now); osc.stop(now+0.2); }
+                else if (type === 'hit') { osc.type = 'triangle'; osc.frequency.setValueAtTime(100, now); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.05); osc.start(now); osc.stop(now+0.05); }
+                else if (type === 'explode') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(100, now); osc.frequency.exponentialRampToValueAtTime(10, now+0.3); gain.gain.setValueAtTime(0.15, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.3); osc.start(now); osc.stop(now+0.3); }
+                else if (type === 'powerup') { osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.linearRampToValueAtTime(800, now+0.2); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.2); osc.start(now); osc.stop(now+0.2); }
+                else if (type === 'ui') { osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.05); osc.start(now); osc.stop(now+0.05); }
+            }
+        };
 
-    //top 3
-    checkMine(r - 1, c - 1); //top left
-    checkMine(r - 1, c); //top
-    checkMine(r - 1, c + 1); //top right
+        // --- ASSETS (High Detail Player Ships) ---
+        const AssetDrawer = {
+            drawShip: function(c, model, color, isMoving) {
+                c.save();
+                c.shadowBlur = 15; c.shadowColor = color; c.fillStyle = '#000'; c.strokeStyle = color; c.lineWidth = 2;
+                
+                // Thrusters
+                c.beginPath(); c.fillStyle = '#fff'; c.globalAlpha = isMoving ? 0.8 : 0.4;
+                const t = isMoving ? 30 : 10;
+                if(model==='tank') { c.rect(-12,25,6,t); c.rect(6,25,6,t); }
+                else c.rect(-4,25,8,t); 
+                c.fill(); c.globalAlpha = 1.0; c.fillStyle = '#000';
 
-    //left and right
-    checkMine(r, c - 1); //left
-    checkMine(r, c + 1); //right
+                c.beginPath();
+                if (model === 'interceptor') {
+                    // Classic detailed fighter
+                    c.moveTo(0, -30); c.lineTo(8, -10); c.lineTo(25, 20); c.lineTo(10, 15); c.lineTo(0, 25); c.lineTo(-10, 15); c.lineTo(-25, 20); c.lineTo(-8, -10);
+                    c.closePath(); c.moveTo(0, -10); c.lineTo(0, 15); // Spine
+                } else if (model === 'tank') {
+                    // Heavy double-hull
+                    c.moveTo(-10,-30); c.lineTo(10,-30); c.lineTo(15,-10); c.lineTo(25,0); c.lineTo(25,20); c.lineTo(10,20); c.lineTo(10,10); c.lineTo(-10,10); c.lineTo(-10,20); c.lineTo(-25,20); c.lineTo(-25,0); c.lineTo(-15,-10);
+                    c.closePath(); c.rect(-8,-20,16,20); // Armor plate
+                } else if (model === 'wing') {
+                    // Swept wing
+                    c.moveTo(0, -30); c.lineTo(5, -5); c.lineTo(35, 15); c.lineTo(35, 25); c.lineTo(5, 10); c.lineTo(0, 20); c.lineTo(-5, 10); c.lineTo(-35, 25); c.lineTo(-35, 15); c.lineTo(-5, -5);
+                } else if (model === 'needle') {
+                    // Long sniper
+                    c.moveTo(0, -40); c.lineTo(5, 20); c.lineTo(12, 25); c.lineTo(0, 30); c.lineTo(-12, 25); c.lineTo(-5, 20);
+                    c.moveTo(0, -40); c.lineTo(0, 20); // Barrel
+                } else if (model === 'wide') {
+                    // Wide spread
+                    c.moveTo(0,-20); c.lineTo(15,-10); c.lineTo(35,10); c.lineTo(20,20); c.lineTo(0,10); c.lineTo(-20,20); c.lineTo(-35,10); c.lineTo(-15,-10);
+                    c.moveTo(-25,10); c.lineTo(-25,-5); c.moveTo(25,10); c.lineTo(25,-5); // Guns
+                } else if (model === 'alien') {
+                    c.arc(0,0,15,0,Math.PI*2); c.moveTo(-15,0); c.bezierCurveTo(-25,-20,-10,-30,0,-35); c.bezierCurveTo(10,-30,25,-20,15,0);
+                } else if (model === 'elite') {
+                    c.moveTo(0,-40); c.lineTo(10,-15); c.lineTo(30,10); c.lineTo(20,25); c.lineTo(0,15); c.lineTo(-20,25); c.lineTo(-30,10); c.lineTo(-10,-15);
+                    c.moveTo(0,-15); c.lineTo(0,15); c.moveTo(-30,10); c.lineTo(-10,10); c.moveTo(30,10); c.lineTo(10,10);
+                }
+                c.stroke(); c.fill();
+                
+                // Cockpit
+                c.fillStyle = '#fff'; c.shadowBlur = 20; c.beginPath(); c.arc(0, -5, 3, 0, Math.PI*2); c.fill();
+                c.restore();
+            },
+            drawEnemy: function(c, type, color) {
+                c.save();
+                c.shadowBlur = 10; c.shadowColor = color; c.strokeStyle = color; c.lineWidth = 2; c.fillStyle = 'rgba(20,20,20,0.9)';
+                c.beginPath();
+                // Fixed: Triangles point DOWN
+                if(type==='drone') { c.moveTo(0,25); c.lineTo(15,-15); c.lineTo(-15,-15); }
+                else if(type==='scout') { c.moveTo(0,30); c.lineTo(8,-20); c.lineTo(0,-10); c.lineTo(-8,-20); }
+                else if(type==='tank') { c.rect(-25,-25,50,50); c.moveTo(-25,0); c.lineTo(-35,20); c.moveTo(25,0); c.lineTo(35,20); } // With Cannons
+                else if(type==='sniper') { c.moveTo(0,35); c.lineTo(12,-15); c.lineTo(0,-5); c.lineTo(-12,-15); }
+                else { c.arc(0,0,20,0,Math.PI*2); c.moveTo(0,-20); c.lineTo(0,20); c.moveTo(-20,0); c.lineTo(20,0); }
+                c.closePath(); c.fill(); c.stroke();
+                c.fillStyle = color; c.shadowBlur=15; c.beginPath(); c.arc(0,0,4,0,Math.PI*2); c.fill();
+                c.restore();
+            },
+            drawPowerUp: function(c, type) {
+                c.save();
+                const color = type === 'health' ? '#0f0' : (type === 'overdrive' ? '#d0f' : '#0ff');
+                c.shadowBlur = 20; c.shadowColor = color; c.strokeStyle = color; c.fillStyle = '#000'; c.lineWidth = 3;
+                c.beginPath(); c.arc(0,0,20,0,Math.PI*2); c.stroke(); c.fill();
+                c.fillStyle = color; c.font = "bold 20px Arial"; c.textAlign = "center"; c.textBaseline = "middle";
+                c.fillText(type==='health'?"+":(type==='overdrive'?"⚡":"M"), 0, 2);
+                c.restore();
+            }
+        };
 
-    //bottom 3
-    checkMine(r + 1, c - 1); //bottom left
-    checkMine(r + 1, c); //bottom
-    checkMine(r + 1, c + 1); //bottom right
-  }
+        // --- GAME OBJECTS ---
+        const SHIPS_DB = [
+            { id: 0, name: "ПЕРЕХВАТЧИК", desc: "Баланс.", cost: 0, hp: 100, speed: 0.15, color: '#0ff', weapon: 'single', model: 'interceptor', stats: {dmg: 20, arm: 30, spd: 40} },
+            { id: 1, name: "ДЖАГГЕРНАУТ", desc: "Танк.", cost: 1500, hp: 250, speed: 0.10, color: '#0f0', weapon: 'double', model: 'tank', stats: {dmg: 40, arm: 80, spd: 15} },
+            { id: 2, name: "ПРИЗРАК", desc: "Скорость.", cost: 4000, hp: 80, speed: 0.20, color: '#d0f', weapon: 'spread', model: 'wing', stats: {dmg: 35, arm: 20, spd: 80} },
+            { id: 3, name: "РЕЛЬСОТРОН", desc: "Снайпер.", cost: 8000, hp: 120, speed: 0.14, color: '#f00', weapon: 'sniper', model: 'needle', stats: {dmg: 85, arm: 40, spd: 35} },
+            { id: 4, name: "ШКВАЛ", desc: "Пулемет.", cost: 15000, hp: 180, speed: 0.12, color: '#ff0', weapon: 'rapid', model: 'wide', stats: {dmg: 55, arm: 50, spd: 30} },
+            { id: 5, name: "КСЕНОС", desc: "Чужой.", cost: 25000, hp: 150, speed: 0.18, color: '#0ff', weapon: 'homing', model: 'alien', stats: {dmg: 50, arm: 45, spd: 70} },
+            { id: 6, name: "ОМЕГА", desc: "Элита.", cost: 50000, hp: 400, speed: 0.22, color: '#ffd700', weapon: 'omega', model: 'elite', stats: {dmg: 100, arm: 100, spd: 90} }
+        ];
 
-  if (tilesClicked == rows * columns - minesCount) {
-    document.getElementById("mines-count").innerText = "Cleared";
-    gameOver = true;
-  }
-}
+        let gameState = { mode: 'MENU', active: false, paused: false, score: 0, creditsGained: 0, levelProgress: 0, levelTarget: 100, enemySpawnTimer: 0, difficultyMult: 1, shake: 0, lastTime: 0 };
+        let player, bullets = [], enemies = [], enemyBullets = [], particles = [], floatingTexts = [], stars = [], powerups = [];
 
-function checkTile(r, c) {
-  if (r < 0 || r >= rows || c < 0 || c >= columns) {
-    return 0;
-  }
-  if (minesLocation.includes(r.toString() + "-" + c.toString())) {
-    return 1;
-  }
-  return 0;
-}
+        // --- CLASSES ---
+        class Star {
+            constructor() { this.reset(); }
+            reset() { this.x = Math.random() * V_WIDTH; this.y = Math.random() * V_HEIGHT; this.z = Math.random() * 2 + 0.5; this.size = Math.random() * 1.5; this.alpha = Math.random() * 0.5 + 0.3; }
+            update(speed) { this.y += speed * this.z; if(this.y > V_HEIGHT) { this.y = 0; this.x = Math.random() * V_WIDTH; } }
+            draw(c) { c.fillStyle = `rgba(255,255,255,${this.alpha})`; c.fillRect(this.x, this.y, this.size, this.size); }
+        }
+
+        class PowerUp {
+            constructor(x, y) { this.x = x; this.y = y; this.type = Math.random() < 0.3 ? 'health' : (Math.random() < 0.6 ? 'overdrive' : 'multishot'); this.active = true; this.radius = 25; this.vy = 2; }
+            update() { this.y += this.vy; if(this.y > V_HEIGHT+50) this.active = false; }
+            draw(c) { c.save(); c.translate(this.x, this.y); AssetDrawer.drawPowerUp(c, this.type); c.restore(); }
+        }
+
+        class Player {
+            constructor() {
+                const s = SHIPS_DB[saveSystem.data.currentShip]; const u = saveSystem.data.upgrades[s.id];
+                this.maxHp = s.hp * (1+(u.hp-1)*0.25); this.hp = this.maxHp;
+                this.dmgMult = 1+(u.dmg-1)*0.25; this.speed = s.speed * (1+(u.spd-1)*0.10);
+                this.color = s.color; this.model = s.model; this.weaponType = s.weapon;
+                this.x = V_WIDTH/2; this.y = V_HEIGHT-150; this.targetX = this.x; this.targetY = this.y;
+                this.radius = 30; this.iframe = 0; this.lastShot = 0; this.overdriveTimer = 0; this.multishotTimer = 0;
+            }
+            update(dt, time) {
+                if (isNaN(this.targetX)) this.targetX = V_WIDTH/2; if (isNaN(this.targetY)) this.targetY = V_HEIGHT-150;
+                const dx = this.targetX - this.x; const dy = this.targetY - this.y;
+                this.x += dx * this.speed; this.y += dy * this.speed;
+                this.x = Math.max(30, Math.min(V_WIDTH-30, this.x)); this.y = Math.max(50, Math.min(V_HEIGHT-50, this.y));
+                
+                let fireRate = 200;
+                if (this.weaponType === 'sniper') fireRate = 700; else if (this.weaponType === 'rapid') fireRate = 80; else if (this.weaponType === 'omega') fireRate = 120;
+                if (this.overdriveTimer > 0) { fireRate /= 2; this.overdriveTimer -= dt; }
+                if (this.multishotTimer > 0) this.multishotTimer -= dt;
+                
+                if(time - this.lastShot > fireRate) this.shoot(time);
+                if(this.iframe > 0) this.iframe -= dt;
+            }
+            shoot(time) {
+                this.lastShot = time; SoundManager.play('shoot');
+                const y = this.y - 30; const dmg = 1 * this.dmgMult; const c = this.overdriveTimer > 0 ? '#fff' : this.color;
+                this.firePattern(this.weaponType, 0, y, c, dmg);
+                if (this.multishotTimer > 0) { this.firePattern(this.weaponType, -25, y+15, '#0ff', dmg); this.firePattern(this.weaponType, 25, y+15, '#0ff', dmg); }
+            }
+            firePattern(w, xOff, y, c, dmg) {
+                const x = this.x + xOff;
+                if(w==='single') bullets.push(new Bullet(x,y,0,-15,c,dmg));
+                else if(w==='double') { bullets.push(new Bullet(x-10,y,0,-15,c,dmg)); bullets.push(new Bullet(x+10,y,0,-15,c,dmg)); }
+                else if(w==='spread') { bullets.push(new Bullet(x,y,0,-15,c,dmg)); bullets.push(new Bullet(x,y,-4,-14,c,dmg)); bullets.push(new Bullet(x,y,4,-14,c,dmg)); }
+                else if(w==='sniper') bullets.push(new Bullet(x,y,0,-25,c,dmg*5,8,50));
+                else if(w==='rapid') bullets.push(new Bullet(x+(Math.random()-0.5)*10,y,(Math.random()-0.5)*2,-18,c,dmg*0.5));
+                else if(w==='homing') bullets.push(new Bullet(x,y,0,-10,c,dmg,5,15,true));
+                else if(w==='omega') { bullets.push(new Bullet(x-15,y,0,-18,c,dmg)); bullets.push(new Bullet(x+15,y,0,-18,c,dmg)); }
+            }
+            hit(dmg) {
+                if(this.iframe > 0) return;
+                SoundManager.play('hit'); this.hp -= dmg; this.iframe = 500; gameState.shake = 20;
+                document.getElementById('damageOverlay').style.opacity = '1'; setTimeout(()=>document.getElementById('damageOverlay').style.opacity='0', 300);
+                updateHUD(); if(this.hp <= 0) { SoundManager.play('explode'); endGame(false); }
+            }
+            applyPowerUp(type) {
+                SoundManager.play('powerup');
+                if(type==='health') { this.hp = Math.min(this.maxHp, this.hp + this.maxHp*0.3); floatingTexts.push({x:this.x, y:this.y-50, text:"РЕМОНТ", color:'#0f0', life:1.5, vy:-1}); }
+                else if(type==='overdrive') { this.overdriveTimer = 5000; floatingTexts.push({x:this.x, y:this.y-50, text:"ОВЕРДРАЙВ", color:'#d0f', life:1.5, vy:-1}); }
+                else { this.multishotTimer = 5000; floatingTexts.push({x:this.x, y:this.y-50, text:"МУЛЬТИ", color:'#0ff', life:1.5, vy:-1}); }
+                updateHUD();
+            }
+            draw(c) { c.save(); c.translate(this.x, this.y); AssetDrawer.drawShip(c, this.model, this.color, true); c.restore(); }
+        }
+
+        class Bullet {
+            constructor(x,y,vx,vy,c,d,w=4,h=16,homing=false){this.x=x;this.y=y;this.vx=vx;this.vy=vy;this.color=c;this.dmg=d;this.active=true;this.w=w;this.h=h;this.homing=homing;}
+            update(){
+                if(this.homing && enemies.length>0) {
+                    let target = enemies[0], minD = 9999;
+                    enemies.forEach(e=>{const d=Math.hypot(e.x-this.x, e.y-this.y); if(d<minD && e.y>0){minD=d; target=e;}});
+                    if(target) {
+                        const a = Math.atan2(target.y-this.y, target.x-this.x);
+                        this.vx += Math.cos(a)*0.8; this.vy += Math.sin(a)*0.8;
+                        const s = Math.hypot(this.vx, this.vy); if(s>14) { this.vx*=14/s; this.vy*=14/s; }
+                    }
+                }
+                this.x+=this.vx; this.y+=this.vy; if(this.y<-50||this.y>V_HEIGHT+50) this.active=false;
+            }
+            draw(c){ c.save(); c.translate(this.x, this.y); c.rotate(Math.atan2(this.vy,this.vx)+Math.PI/2); c.fillStyle=this.color; c.shadowBlur=5; c.shadowColor=this.color; c.fillRect(-this.w/2,-this.h/2,this.w,this.h); c.restore(); }
+        }
+
+        class Enemy {
+            constructor(type, diff) {
+                this.type = type; this.active = true; this.y = -50; this.x = Math.random()*(V_WIDTH-60)+30; this.timer = 0;
+                const stats = { 'drone':{hp:3,spd:2.5,sc:50,r:25,c:'#f00'}, 'scout':{hp:4,spd:5,sc:80,r:20,c:'#ff0'}, 'fighter':{hp:8,spd:2,sc:100,r:30,c:'#0ff'}, 'tank':{hp:30,spd:0.8,sc:300,r:45,c:'#a52a2a'}, 'sniper':{hp:12,spd:1.5,sc:200,r:30,c:'#0f0'}, 'elite':{hp:50,spd:1,sc:500,r:50,c:'#fff'} };
+                const s = stats[type] || stats['drone'];
+                this.hp = s.hp * diff; this.baseSpeed = s.spd; this.radius = s.r; this.color = s.c; this.score = s.sc;
+            }
+            update(dt) {
+                this.timer += dt; this.y += this.baseSpeed;
+                if(this.type==='drone') this.x += Math.sin(this.y*0.02)*2;
+                if(['fighter','tank','elite','sniper'].includes(this.type)) {
+                    let rate = this.type==='sniper'?3000:(this.type==='tank'?1500:2000);
+                    if(this.timer > rate) {
+                        this.timer = 0;
+                        this.shoot(this.type==='sniper'?10:5, this.type==='sniper'?'#0f0':'#ff0');
+                    }
+                }
+                if(this.y > V_HEIGHT+50) this.active=false;
+            }
+            shoot(spd, c) { SoundManager.play('enemy_shoot'); const a = Math.atan2(player.y-this.y, player.x-this.x); enemyBullets.push(new Bullet(this.x, this.y+30, Math.cos(a)*spd, Math.sin(a)*spd, c, 1)); }
+            hit(dmg, score=true) {
+                this.hp -= dmg;
+                if(this.hp <= 0) {
+                    this.active=false; SoundManager.play('explode');
+                    if(score) {
+                        gameState.score += this.score; gameState.levelProgress += this.score;
+                        if(Math.random()<0.25) powerups.push(new PowerUp(this.x, this.y));
+                        if(Math.random()>0.8) { const a=Math.floor(Math.random()*6)+2; gameState.creditsGained+=a; floatingTexts.push({x:this.x,y:this.y,text:`+${a}`,color:'#ff0',life:1,vy:-2}); }
+                    }
+                    createExplosion(this.x, this.y, 15, this.color); updateHUD();
+                } else createExplosion(this.x, this.y, 2, '#fff');
+            }
+            draw(c) { c.save(); c.translate(this.x, this.y); c.rotate(Math.PI); AssetDrawer.drawEnemy(c, this.type, this.color); c.restore(); }
+        }
+
+        function createExplosion(x,y,c,col) { for(let i=0;i<c;i++) particles.push({x:x,y:y,vx:(Math.random()-0.5)*10,vy:(Math.random()-0.5)*10,life:1,color:col}); }
+
+        // --- GAME FUNCTIONS ---
+        // DEFINED GLOBALLY TO FIX REFERENCE ERROR
+        function endGame(victory) {
+            gameState.active = false; gameState.mode = 'MENU';
+            document.getElementById('hud').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+            
+            saveSystem.data.credits += gameState.creditsGained;
+            if(victory) {
+                saveSystem.data.campaignLevel++;
+                VKManager.showInterstitial(); // Ads on level clear (every 3rd)
+            } else {
+                if(gameState.mode === 'ENDLESS') VKManager.showInterstitial(); // Ads on death in endless
+            }
+            saveSystem.save();
+
+            const title = document.getElementById('resultTitle'), sub = document.getElementById('resultSub'), btn = document.getElementById('resActionBtn');
+            if(victory) { title.innerText = "ПОБЕДА"; title.className = "text-5xl font-black mb-2 text-green-500 neon-text italic uppercase"; sub.innerText = "СЕКТОР ЗАЧИЩЕН"; btn.innerText = "СЛЕД. УРОВЕНЬ"; btn.onclick = () => btnClick(() => initGame('CAMPAIGN')); } 
+            else { title.innerText = "УНИЧТОЖЕН"; title.className = "text-5xl font-black mb-2 text-red-500 neon-text italic uppercase"; sub.innerText = "КРИТИЧЕСКОЕ ПОВРЕЖДЕНИЕ"; btn.innerText = "ПОВТОРИТЬ"; btn.onclick = () => btnClick(() => initGame(gameState.mode === 'CAMPAIGN' ? 'CAMPAIGN' : 'ENDLESS')); }
+            document.getElementById('resScore').innerText = gameState.score; document.getElementById('resCredits').innerText = gameState.creditsGained;
+        }
+
+        function initGame(mode) {
+            gameState.mode = mode; gameState.active = true; gameState.paused = false;
+            gameState.score = 0; gameState.creditsGained = 0; gameState.levelProgress = 0;
+            
+            if(mode === 'CAMPAIGN') {
+                const lvl = saveSystem.data.campaignLevel;
+                gameState.difficultyMult = 1.0 + (lvl * 0.1);
+                gameState.levelTarget = 500 + (lvl * 300);
+                document.getElementById('levelProgressContainer').classList.remove('hidden');
+            } else {
+                gameState.difficultyMult = 1;
+                document.getElementById('levelProgressContainer').classList.add('hidden');
+            }
+
+            player = new Player();
+            bullets = []; enemies = []; enemyBullets = []; particles = []; floatingTexts = []; powerups = [];
+            
+            ['mainMenu', 'shopMenu', 'pauseMenu', 'resultScreen', 'infoModal', 'settingsModal', 'dailyModal'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('hud').classList.remove('hidden');
+            player.x = V_WIDTH/2; player.y = V_HEIGHT - 150; player.targetX = V_WIDTH/2; player.targetY = V_HEIGHT - 150;
+            gameState.enemySpawnTimer = 1000; // Slower start
+            updateHUD();
+        }
+
+        function spawnLogic(dt) {
+            gameState.enemySpawnTimer -= dt;
+            if(gameState.enemySpawnTimer <= 0) {
+                const lvl = gameState.mode === 'CAMPAIGN' ? saveSystem.data.campaignLevel : Math.floor(gameState.score/1000)+1;
+                gameState.enemySpawnTimer = Math.max(500, 1800 - (lvl * 60));
+                
+                let types = ['drone'];
+                if(lvl >= 2) types.push('scout');
+                if(lvl >= 3) types.push('fighter');
+                if(lvl >= 5) types.push('tank', 'sniper');
+                if(lvl >= 7) types.push('elite');
+                const type = types[Math.floor(Math.random() * types.length)];
+                enemies.push(new Enemy(type, gameState.difficultyMult));
+            }
+        }
+
+        function loop(timestamp) {
+            const dt = timestamp - (gameState.lastTime || timestamp); gameState.lastTime = timestamp;
+            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+            stars.forEach(s => { s.update(gameState.active ? (player ? player.speed * 30 : 5) : 2); s.draw(ctx); });
+
+            if(gameState.active && !gameState.paused) {
+                if(gameState.shake > 0) { ctx.save(); ctx.translate((Math.random()-0.5)*gameState.shake, (Math.random()-0.5)*gameState.shake); gameState.shake *= 0.9; }
+                spawnLogic(dt); player.update(dt, timestamp);
+                powerups.forEach(p => p.update()); powerups = powerups.filter(p => p.active);
+                [bullets, enemyBullets, enemies].forEach(arr => arr.forEach(e => e.update(dt)));
+                bullets = bullets.filter(b => b.active); enemyBullets = enemyBullets.filter(b => b.active); enemies = enemies.filter(e => e.active);
+
+                bullets.forEach(b => { enemies.forEach(e => { if(b.active && e.active && Math.hypot(b.x-e.x, b.y-e.y) < e.radius + b.w) { b.active = false; e.hit(b.dmg); }});});
+                enemyBullets.forEach(b => { if(b.active && Math.hypot(b.x-player.x, b.y-player.y) < 20) { b.active = false; player.hit(10); }});
+                enemies.forEach(e => { if(e.active && Math.hypot(e.x-player.x, e.y-player.y) < e.radius + 25) { e.hit(9999, false); player.hit(30); floatingTexts.push({x:player.x, y:player.y, text:"СТОЛКНОВЕНИЕ!", color:'#f00', life:1, vy:-1}); }});
+                powerups.forEach(p => { if(Math.hypot(p.x-player.x, p.y-player.y) < p.radius + 30) { p.active = false; player.applyPowerUp(p.type); }});
+
+                enemies.forEach(e => e.draw(ctx)); powerups.forEach(p => p.draw(ctx)); player.draw(ctx);
+                bullets.forEach(b => b.draw(ctx)); enemyBullets.forEach(b => b.draw(ctx));
+                if(gameState.shake > 0) ctx.restore();
+            }
+            particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.04; ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 3, 3); }); particles = particles.filter(p => p.life > 0); ctx.globalAlpha = 1.0;
+            floatingTexts.forEach(t => { t.y += t.vy; t.life -= 0.02; ctx.globalAlpha = Math.max(0, t.life); ctx.fillStyle = t.color; ctx.font = "bold 20px Arial"; ctx.fillText(t.text, t.x, t.y); }); floatingTexts = floatingTexts.filter(t => t.life > 0); ctx.globalAlpha = 1.0;
+            requestAnimationFrame(loop);
+        }
+
+        function resize() { canvas.width = V_WIDTH; canvas.height = V_HEIGHT; }
+        function handleInput(e) {
+            if(!gameState.active || gameState.paused) return; e.preventDefault();
+            const r = canvas.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            player.targetX = (cx - r.left) * (V_WIDTH/r.width); player.targetY = (cy - r.top) * (V_HEIGHT/r.height) - (e.touches?80:0);
+        }
+        canvas.addEventListener('mousemove', handleInput); canvas.addEventListener('touchmove', handleInput, {passive: false}); window.addEventListener('resize', resize);
+
+        function updateMenuStats() { document.getElementById('menuCredits').innerText = saveSystem.data.credits; document.getElementById('menuLevel').innerText = saveSystem.data.campaignLevel; }
+        function updateHUD() {
+            document.getElementById('scoreDisplay').innerText = gameState.score; document.getElementById('gameCredits').innerText = gameState.creditsGained;
+            const hpPct = Math.max(0, (player.hp / player.maxHp) * 100);
+            document.getElementById('healthBar').style.width = `${hpPct}%`; document.getElementById('healthBar').style.backgroundColor = hpPct < 30 ? '#f00' : '#0ff';
+            if(gameState.mode === 'CAMPAIGN') {
+                const prog = Math.min(100, (gameState.levelProgress / gameState.levelTarget) * 100);
+                document.getElementById('levelProgressBar').style.width = `${prog}%`;
+                if(gameState.levelProgress >= gameState.levelTarget) { SoundManager.play('powerup'); endGame(true); }
+            }
+        }
+
+        // UI BINDINGS
+        let shopIdx = 0;
+        function btnClick(cb) { SoundManager.play('ui'); cb(); }
+        
+        document.getElementById('campaignBtn').onclick = () => btnClick(() => initGame('CAMPAIGN'));
+        document.getElementById('endlessBtn').onclick = () => btnClick(() => initGame('ENDLESS'));
+        document.getElementById('shopBtn').onclick = () => btnClick(() => { document.getElementById('mainMenu').classList.add('hidden'); document.getElementById('shopMenu').classList.remove('hidden'); shopIdx = saveSystem.data.currentShip; updateShop(); });
+        
+        const backToMenu = () => btnClick(() => { gameState.active = false; gameState.mode = 'MENU'; document.getElementById('hud').classList.add('hidden'); document.getElementById('pauseMenu').classList.add('hidden'); document.getElementById('resultScreen').classList.add('hidden'); document.getElementById('mainMenu').classList.remove('hidden'); updateMenuStats(); });
+        document.getElementById('quitBtn').onclick = backToMenu; document.getElementById('resMenuBtn').onclick = backToMenu;
+        document.getElementById('closeShopBtn').onclick = () => btnClick(() => { document.getElementById('shopMenu').classList.add('hidden'); document.getElementById('mainMenu').classList.remove('hidden'); updateMenuStats(); });
+
+        document.getElementById('prevShip').onclick = () => btnClick(() => { shopIdx = (shopIdx - 1 + SHIPS_DB.length) % SHIPS_DB.length; updateShop(); });
+        document.getElementById('nextShip').onclick = () => btnClick(() => { shopIdx = (shopIdx + 1) % SHIPS_DB.length; updateShop(); });
+        document.getElementById('selectShipBtn').onclick = () => btnClick(() => { saveSystem.data.currentShip = SHIPS_DB[shopIdx].id; saveSystem.save(); updateShop(); });
+        document.getElementById('buyShipBtn').onclick = () => btnClick(() => { const s = SHIPS_DB[shopIdx]; if(saveSystem.data.credits >= s.cost) { saveSystem.data.credits -= s.cost; saveSystem.data.unlockedShips.push(s.id); saveSystem.data.currentShip = s.id; saveSystem.save(); updateShop(); }});
+        
+        function handleUpgrade(type) {
+            const id = SHIPS_DB[shopIdx].id; const lvl = saveSystem.data.upgrades[id][type];
+            if (lvl >= MAX_UPGRADE_LEVEL) return;
+            const cost = lvl * 150;
+            if (saveSystem.data.credits >= cost) { saveSystem.data.credits -= cost; saveSystem.data.upgrades[id][type]++; saveSystem.save(); updateShop(); }
+        }
+        document.getElementById('upgradeDmgBtn').onclick = () => btnClick(() => handleUpgrade('dmg'));
+        document.getElementById('upgradeHpBtn').onclick = () => btnClick(() => handleUpgrade('hp'));
+        document.getElementById('upgradeSpdBtn').onclick = () => btnClick(() => handleUpgrade('spd'));
+
+        document.getElementById('pauseBtn').onclick = () => btnClick(() => { gameState.paused = true; document.getElementById('pauseMenu').classList.remove('hidden'); });
+        document.getElementById('resumeBtn').onclick = () => btnClick(() => { gameState.paused = false; document.getElementById('pauseMenu').classList.add('hidden'); });
+
+        document.getElementById('settingsBtn').onclick = () => btnClick(() => document.getElementById('settingsModal').classList.remove('hidden'));
+        document.getElementById('closeSettingsBtn').onclick = () => btnClick(() => document.getElementById('settingsModal').classList.add('hidden'));
+        document.getElementById('sfxToggle').onchange = (e) => SoundManager.toggleSFX(e.target.checked);
+        document.getElementById('musicToggle').onchange = (e) => SoundManager.toggleMusic(e.target.checked);
+
+        document.getElementById('rulesBtn').onclick = () => btnClick(() => document.getElementById('infoModal').classList.remove('hidden'));
+        document.getElementById('closeInfoBtn').onclick = () => btnClick(() => document.getElementById('infoModal').classList.add('hidden'));
+        document.getElementById('closeInfoBtn2').onclick = () => btnClick(() => document.getElementById('infoModal').classList.add('hidden'));
+
+        function updateShop() {
+            const s = SHIPS_DB[shopIdx]; const unlocked = saveSystem.data.unlockedShips.includes(s.id); const upg = saveSystem.data.upgrades[s.id];
+            document.getElementById('shopCredits').innerText = saveSystem.data.credits; 
+            document.getElementById('shipName').innerText = s.name; document.getElementById('shipDesc').innerText = s.desc; document.getElementById('shipCost').innerText = s.cost;
+            
+            const maxDmg = 100 + (MAX_UPGRADE_LEVEL * 20); const currDmg = s.stats.dmg * (1 + (upg.dmg-1)*0.25);
+            document.getElementById('statBarDmg').style.width = `${(currDmg/maxDmg)*100}%`; document.getElementById('statValDmg').innerText = Math.floor(currDmg);
+            const maxArm = 100 + (MAX_UPGRADE_LEVEL * 25); const currArm = s.stats.arm * (1 + (upg.hp-1)*0.25);
+            document.getElementById('statBarArmor').style.width = `${(currArm/maxArm)*100}%`; document.getElementById('statValArmor').innerText = Math.floor(currArm);
+            const maxSpd = 100; const currSpd = s.stats.spd * (1 + (upg.spd-1)*0.10);
+            document.getElementById('statBarSpeed').style.width = `${Math.min(100, currSpd)}%`; document.getElementById('statValSpeed').innerText = Math.floor(currSpd);
+
+            const buyBtn = document.getElementById('buyShipBtn'), selBtn = document.getElementById('selectShipBtn');
+            if(unlocked) {
+                buyBtn.classList.add('hidden'); selBtn.classList.remove('hidden');
+                selBtn.innerText = saveSystem.data.currentShip === s.id ? "ЭКИПИРОВАНО" : "ВЫБРАТЬ"; selBtn.disabled = saveSystem.data.currentShip === s.id;
+                const setBtnState = (type, val) => {
+                    const btn = document.getElementById(`upgrade${type}Btn`);
+                    const lvlTxt = document.getElementById(`${type.toLowerCase()}LvlText`), costTxt = document.getElementById(`${type.toLowerCase()}CostText`);
+                    if (val >= MAX_UPGRADE_LEVEL) { lvlTxt.innerText = "МАКС"; costTxt.innerText = "---"; btn.disabled = true; btn.classList.add('opacity-50'); } 
+                    else { const cost = val * 150; lvlTxt.innerText = `LVL ${val}`; costTxt.innerText = `${cost} CR`; btn.disabled = saveSystem.data.credits < cost; btn.classList.remove('opacity-50'); }
+                };
+                setBtnState('Dmg', upg.dmg); setBtnState('Hp', upg.hp); setBtnState('Spd', upg.spd);
+            } else {
+                selBtn.classList.add('hidden'); buyBtn.classList.remove('hidden'); buyBtn.disabled = saveSystem.data.credits < s.cost;
+                ['Dmg', 'Hp', 'Spd'].forEach(k => { document.getElementById(`upgrade${k}Btn`).disabled = true; document.getElementById(`${k.toLowerCase()}LvlText`).innerText = "-"; document.getElementById(`${k.toLowerCase()}CostText`).innerText = "ЗАКРЫТО"; });
+            }
+            shipCtx.clearRect(0,0,300,200); shipCtx.save(); shipCtx.translate(150, 100); shipCtx.scale(2.2, 2.2); AssetDrawer.drawShip(shipCtx, s.model, s.color, true); shipCtx.restore();
+        }
+
+        // Init
+        stars = Array(100).fill().map(() => new Star()); resize(); 
+        VKManager.init();
+        requestAnimationFrame(loop);
+
+    </script>
+</body>
+</html>
