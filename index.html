@@ -20,9 +20,19 @@
         canvas { display: block; width: 100%; height: 100%; }
         .neon-text { text-shadow: 0 0 10px currentColor; }
         
-        .neon-btn { background: rgba(0, 255, 255, 0.05); border: 2px solid var(--primary); border-radius: 4px; color: var(--primary); box-shadow: 0 0 15px rgba(0, 255, 255, 0.1); transition: all 0.1s; text-transform: uppercase; letter-spacing: 1px; position: relative; overflow: hidden; font-weight: bold; cursor: pointer; font-family: 'Orbitron', sans-serif; }
+        /* Buttons */
+        .neon-btn { background: rgba(0, 255, 255, 0.05); border: 2px solid var(--primary); border-radius: 4px; color: var(--primary); box-shadow: 0 0 15px rgba(0, 255, 255, 0.1); transition: transform 0.1s, background 0.2s; text-transform: uppercase; letter-spacing: 1px; position: relative; overflow: hidden; font-weight: bold; cursor: pointer; font-family: 'Orbitron', sans-serif; }
         .neon-btn:active { transform: scale(0.96); background: rgba(0, 255, 255, 0.2); }
         .neon-btn:disabled { opacity: 0.4; filter: grayscale(1); cursor: default; transform: none !important; box-shadow: none !important; }
+        
+        /* Hover effects only on devices that support hover (prevents sticky mobile hover) */
+        @media (hover: hover) {
+            .neon-btn:hover { background: rgba(0, 255, 255, 0.2); box-shadow: 0 0 20px var(--primary); }
+            .neon-btn-purple:hover { background: rgba(200, 0, 255, 0.2); box-shadow: 0 0 20px var(--secondary); }
+            .neon-btn-red:hover { background: rgba(255, 0, 0, 0.2); box-shadow: 0 0 20px var(--danger); }
+            .neon-btn-warn:hover { background: rgba(255, 200, 0, 0.2); box-shadow: 0 0 20px var(--warn); }
+            .nav-arrow:hover { color: white; background: rgba(255,255,255,0.1); }
+        }
         
         .neon-btn-purple { border-color: var(--secondary); color: var(--secondary); box-shadow: 0 0 15px rgba(200, 0, 255, 0.1); }
         .neon-btn-red { border-color: var(--danger); color: var(--danger); box-shadow: 0 0 15px rgba(255, 0, 0, 0.1); }
@@ -44,9 +54,13 @@
         .daily-item { border: 1px solid #333; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; opacity: 0.5; }
         .daily-item.active { border-color: var(--warn); background: rgba(255, 200, 0, 0.1); opacity: 1; box-shadow: 0 0 15px rgba(255,200,0,0.2); transform: scale(1.05); }
         .daily-item.claimed { border-color: var(--primary); background: rgba(0, 255, 255, 0.1); opacity: 0.8; }
-        
-        /* Full screen overlay for daily to hide menu */
-        #dailyModal { background-color: #000; }
+        #dailyModal { background-color: #000; } /* Opaque BG */
+
+        /* Mission Item */
+        .mission-item { background: rgba(0, 255, 255, 0.05); border: 1px solid #333; border-radius: 6px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .mission-progress { height: 4px; background: #333; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+        .mission-fill { height: 100%; background: var(--warn); width: 0%; transition: width 0.5s; }
+        .mission-btn { padding: 4px 12px; font-size: 10px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -100,24 +114,36 @@
             <div class="flex flex-col gap-4 w-64 z-30">
                 <button id="campaignBtn" class="neon-btn py-4 text-sm tracking-widest"><i class="fas fa-play mr-2"></i> КАМПАНИЯ</button>
                 <button id="endlessBtn" class="neon-btn neon-btn-purple py-4 text-sm tracking-widest"><i class="fas fa-infinity mr-2"></i> ВЫЖИВАНИЕ</button>
-                <button id="shopBtn" class="neon-btn neon-btn-warn py-4 text-sm tracking-widest"><i class="fas fa-wrench mr-2"></i> АНГАР</button>
                 
-                <div class="flex gap-4 mt-2">
+                <div class="flex gap-3">
+                    <button id="shopBtn" class="neon-btn neon-btn-warn flex-1 py-3 text-sm tracking-widest"><i class="fas fa-wrench mr-1"></i> АНГАР</button>
+                    <button id="missionsBtn" class="neon-btn flex-1 py-3 text-sm tracking-widest border-green-500 text-green-400"><i class="fas fa-clipboard-list mr-1"></i> ЗАДАНИЯ</button>
+                </div>
+                
+                <div class="flex gap-4 mt-1">
                     <button id="settingsBtn" class="neon-btn neon-btn-gray flex-1 py-3 text-xl"><i class="fas fa-cog"></i></button>
                     <button id="rulesBtn" class="neon-btn neon-btn-gray flex-1 py-3 text-xl"><i class="fas fa-info"></i></button>
                 </div>
             </div>
         </div>
 
-        <!-- DAILY REWARD MODAL (Opaque BG) -->
+        <!-- MISSIONS MODAL -->
+        <div id="missionsModal" class="absolute inset-0 z-50 hidden bg-black/95 flex flex-col p-4">
+            <div class="p-4 border-b border-cyan-900 flex justify-between items-center bg-gray-900/50">
+                <h2 class="text-xl text-green-400 font-black italic tracking-wider">ЕЖЕДНЕВНЫЕ МИССИИ</h2>
+                <div class="text-yellow-400 font-mono font-bold text-sm" id="missionTimer">24:00:00</div>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 hide-scrollbar" id="missionsList">
+                <!-- Injected via JS -->
+            </div>
+            <button id="closeMissionsBtn" class="neon-btn neon-btn-red w-full py-4 font-bold mt-auto">НАЗАД</button>
+        </div>
+
+        <!-- DAILY REWARD MODAL (Opaque) -->
         <div id="dailyModal" class="absolute inset-0 z-50 hidden flex flex-col items-center justify-center p-4">
             <h2 class="text-3xl text-yellow-400 font-black mb-2 italic tracking-widest">ЕЖЕДНЕВНАЯ НАГРАДА</h2>
             <p class="text-gray-400 text-xs mb-8 uppercase tracking-widest">ЗАХОДИ КАЖДЫЙ ДЕНЬ</p>
-            
-            <div class="grid grid-cols-4 gap-2 mb-8 w-full max-w-xs" id="dailyGrid">
-                <!-- Generated via JS -->
-            </div>
-
+            <div class="grid grid-cols-4 gap-2 mb-8 w-full max-w-xs" id="dailyGrid"></div>
             <button id="claimDailyBtn" class="neon-btn neon-btn-warn w-64 py-4 font-bold text-lg">ЗАБРАТЬ</button>
         </div>
 
@@ -156,8 +182,8 @@
                         <div id="shipName" class="text-white font-black text-xl tracking-widest uppercase drop-shadow-lg">NAME</div>
                         <div id="shipDesc" class="text-[10px] text-cyan-300 uppercase tracking-wider">Description</div>
                     </div>
-                    <button id="prevShip" class="absolute left-0 h-full w-16 flex items-center justify-center text-cyan-600 hover:text-white hover:bg-white/5 transition"><i class="fas fa-chevron-left text-2xl"></i></button>
-                    <button id="nextShip" class="absolute right-0 h-full w-16 flex items-center justify-center text-cyan-600 hover:text-white hover:bg-white/5 transition"><i class="fas fa-chevron-right text-2xl"></i></button>
+                    <button id="prevShip" class="nav-arrow absolute left-0 h-full w-16 flex items-center justify-center text-cyan-600 transition"><i class="fas fa-chevron-left text-2xl"></i></button>
+                    <button id="nextShip" class="nav-arrow absolute right-0 h-full w-16 flex items-center justify-center text-cyan-600 transition"><i class="fas fa-chevron-right text-2xl"></i></button>
                 </div>
                 <div class="bg-gray-900/50 p-4 rounded border border-gray-800">
                     <div class="flex justify-between text-[10px] text-gray-400 mb-1 font-bold"><span>УРОН</span> <span id="statValDmg" class="text-white"></span></div>
@@ -208,15 +234,15 @@
                     <h3 class="text-yellow-400 font-bold mb-3 uppercase tracking-wider">МОДУЛИ</h3>
                     <div class="grid grid-cols-3 gap-4 text-center">
                         <div class="flex flex-col items-center">
-                            <canvas id="infoHealth" width="40" height="40" class="mb-2"></canvas>
+                            <div class="w-12 h-12 flex items-center justify-center mb-2"><canvas id="infoHealth" width="40" height="40"></canvas></div>
                             <strong class="text-green-400 text-[10px]">РЕМОНТ</strong>
                         </div>
                         <div class="flex flex-col items-center">
-                            <canvas id="infoOverdrive" width="40" height="40" class="mb-2"></canvas>
+                            <div class="w-12 h-12 flex items-center justify-center mb-2"><canvas id="infoOverdrive" width="40" height="40"></canvas></div>
                             <strong class="text-purple-400 text-[10px]">ОВЕРДРАЙВ</strong>
                         </div>
                         <div class="flex flex-col items-center">
-                            <canvas id="infoMulti" width="40" height="40" class="mb-2"></canvas>
+                            <div class="w-12 h-12 flex items-center justify-center mb-2"><canvas id="infoMulti" width="40" height="40"></canvas></div>
                             <strong class="text-cyan-400 text-[10px]">МУЛЬТИ</strong>
                         </div>
                     </div>
@@ -265,11 +291,10 @@
 
     <script>
         /**
-         * VOIDSTORM ENGINE v9.0 FINAL
-         * - Advanced Ship Geometry (Neon style, high detail)
-         * - Correct Enemy Orientation (Pointing Down)
-         * - Non-linear Campaign Progression
-         * - UI Polish (Opaque Daily, Icons)
+         * VOIDSTORM ENGINE v10.0
+         * - Missions System (Daily)
+         * - Correct Interstitial Ads (NativeAds)
+         * - Visual Enhancements (Fixed Rule Icons, Ships)
          */
 
         const V_WIDTH = 600;
@@ -281,9 +306,8 @@
         const shipPreviewCanvas = document.getElementById('shipPreviewCanvas');
         const shipCtx = shipPreviewCanvas.getContext('2d');
 
-        // --- ASSET DRAWER (HIGH QUALITY) ---
+        // --- ASSET DRAWER ---
         const AssetDrawer = {
-            // Helpers
             neonPath: function(c, pathFn, color, blur=15, width=2) {
                 c.save();
                 c.lineJoin = 'round'; c.lineCap = 'round';
@@ -291,93 +315,52 @@
                 c.fillStyle = '#000';
                 c.beginPath(); pathFn(c); c.closePath();
                 c.fill(); c.stroke();
-                // Inner Highlight
-                c.shadowBlur = 0; c.strokeStyle = '#fff'; c.lineWidth = 1; c.globalAlpha = 0.5;
-                c.stroke();
+                c.shadowBlur = 0; c.strokeStyle = '#fff'; c.lineWidth = 1; c.globalAlpha = 0.5; c.stroke(); // Inner Highlight
                 c.restore();
             },
-
             drawShip: function(c, model, color, isMoving) {
                 c.save();
-                
-                // Thrusters
                 c.fillStyle = '#fff'; c.shadowBlur = 20; c.shadowColor = color; c.globalAlpha = isMoving ? 0.8 : 0.4;
                 const t = isMoving ? (30 + Math.random()*10) : 10;
                 c.beginPath();
-                if(model === 'tank') { c.rect(-15, 25, 8, t); c.rect(7, 25, 8, t); }
-                else c.rect(-5, 28, 10, t);
+                if(model === 'tank') { c.rect(-15, 25, 8, t); c.rect(7, 25, 8, t); } else c.rect(-5, 28, 10, t);
                 c.fill(); c.globalAlpha = 1.0;
 
-                // Detailed Geometry
                 this.neonPath(c, (ctx) => {
-                    if (model === 'interceptor') {
-                        ctx.moveTo(0, -35); ctx.lineTo(5, -10); ctx.lineTo(25, 15); ctx.lineTo(25, 25); ctx.lineTo(10, 15); ctx.lineTo(0, 25); ctx.lineTo(-10, 15); ctx.lineTo(-25, 25); ctx.lineTo(-25, 15); ctx.lineTo(-5, -10);
-                    } else if (model === 'tank') {
-                        ctx.moveTo(-15,-30); ctx.lineTo(15,-30); ctx.lineTo(20,-10); ctx.lineTo(30,0); ctx.lineTo(30,25); ctx.lineTo(10,25); ctx.lineTo(10,10); ctx.lineTo(-10,10); ctx.lineTo(-10,25); ctx.lineTo(-30,25); ctx.lineTo(-30,0); ctx.lineTo(-20,-10);
-                    } else if (model === 'wing') {
-                        ctx.moveTo(0,-30); ctx.lineTo(10,0); ctx.lineTo(40,10); ctx.lineTo(30,30); ctx.lineTo(10,15); ctx.lineTo(0,25); ctx.lineTo(-10,15); ctx.lineTo(-30,30); ctx.lineTo(-40,10); ctx.lineTo(-10,0);
-                    } else if (model === 'needle') {
-                        ctx.moveTo(0,-45); ctx.lineTo(5,0); ctx.lineTo(12,25); ctx.lineTo(0,30); ctx.lineTo(-12,25); ctx.lineTo(-5,0);
-                    } else if (model === 'wide') {
-                        ctx.moveTo(0,-20); ctx.lineTo(15,-5); ctx.lineTo(35,5); ctx.lineTo(35,20); ctx.lineTo(15,10); ctx.lineTo(0,20); ctx.lineTo(-15,10); ctx.lineTo(-35,20); ctx.lineTo(-35,5); ctx.lineTo(-15,-5);
-                    } else if (model === 'alien') {
-                        ctx.moveTo(0,-35); ctx.bezierCurveTo(20,-20, 30,10, 0,30); ctx.bezierCurveTo(-30,10, -20,-20, 0,-35);
-                    } else if (model === 'elite') {
-                        ctx.moveTo(0,-45); ctx.lineTo(10,-10); ctx.lineTo(30,0); ctx.lineTo(20,30); ctx.lineTo(0,15); ctx.lineTo(-20,30); ctx.lineTo(-30,0); ctx.lineTo(-10,-10);
-                    }
+                    if (model === 'interceptor') { ctx.moveTo(0, -35); ctx.lineTo(5, -10); ctx.lineTo(25, 15); ctx.lineTo(25, 25); ctx.lineTo(10, 15); ctx.lineTo(0, 25); ctx.lineTo(-10, 15); ctx.lineTo(-25, 25); ctx.lineTo(-25, 15); ctx.lineTo(-5, -10); } 
+                    else if (model === 'tank') { ctx.moveTo(-15,-30); ctx.lineTo(15,-30); ctx.lineTo(20,-10); ctx.lineTo(30,0); ctx.lineTo(30,25); ctx.lineTo(10,25); ctx.lineTo(10,10); ctx.lineTo(-10,10); ctx.lineTo(-10,25); ctx.lineTo(-30,25); ctx.lineTo(-30,0); ctx.lineTo(-20,-10); } 
+                    else if (model === 'wing') { ctx.moveTo(0,-30); ctx.lineTo(10,0); ctx.lineTo(40,10); ctx.lineTo(30,30); ctx.lineTo(10,15); ctx.lineTo(0,25); ctx.lineTo(-10,15); ctx.lineTo(-30,30); ctx.lineTo(-40,10); ctx.lineTo(-10,0); } 
+                    else if (model === 'needle') { ctx.moveTo(0,-45); ctx.lineTo(5,0); ctx.lineTo(12,25); ctx.lineTo(0,30); ctx.lineTo(-12,25); ctx.lineTo(-5,0); } 
+                    else if (model === 'wide') { ctx.moveTo(0,-20); ctx.lineTo(15,-5); ctx.lineTo(35,5); ctx.lineTo(35,20); ctx.lineTo(15,10); ctx.lineTo(0,20); ctx.lineTo(-15,10); ctx.lineTo(-35,20); ctx.lineTo(-35,5); ctx.lineTo(-15,-5); } 
+                    else if (model === 'alien') { ctx.moveTo(0,-35); ctx.bezierCurveTo(20,-20, 30,10, 0,30); ctx.bezierCurveTo(-30,10, -20,-20, 0,-35); } 
+                    else if (model === 'elite') { ctx.moveTo(0,-45); ctx.lineTo(10,-10); ctx.lineTo(30,0); ctx.lineTo(20,30); ctx.lineTo(0,15); ctx.lineTo(-20,30); ctx.lineTo(-30,0); ctx.lineTo(-10,-10); }
                 }, color, 20, 2.5);
-
-                // Cockpit
-                c.fillStyle = '#fff'; c.shadowBlur = 15; c.shadowColor = '#fff'; c.beginPath();
-                c.arc(0, -5, 3, 0, Math.PI*2); c.fill();
                 
+                c.fillStyle = '#fff'; c.shadowBlur = 15; c.shadowColor = '#fff'; c.beginPath(); c.arc(0, -5, 3, 0, Math.PI*2); c.fill();
                 c.restore();
             },
-
             drawEnemy: function(c, type, color) {
                 c.save();
-                // Draw enemies facing DOWN (Positive Y)
                 this.neonPath(c, (ctx) => {
-                    if(type==='drone') {
-                        ctx.moveTo(0, 25); ctx.lineTo(15, -15); ctx.lineTo(0, -5); ctx.lineTo(-15, -15);
-                    } 
-                    else if(type==='scout') {
-                        ctx.moveTo(0, 30); ctx.lineTo(8, -20); ctx.lineTo(0, -10); ctx.lineTo(-8, -20);
-                    }
-                    else if(type==='fighter') {
-                        ctx.moveTo(0, 25); ctx.lineTo(20, -5); ctx.lineTo(20, -15); ctx.lineTo(5, -5); ctx.lineTo(5, -20); ctx.lineTo(-5, -20); ctx.lineTo(-5, -5); ctx.lineTo(-20, -15); ctx.lineTo(-20, -5);
-                    }
-                    else if(type==='hunter') {
-                        ctx.moveTo(0, 30); ctx.bezierCurveTo(15, 10, 20, -20, 5, -10); ctx.lineTo(0, -5); ctx.lineTo(-5, -10); ctx.bezierCurveTo(-20, -20, -15, 10, 0, 30);
-                    }
-                    else if(type==='tank') {
-                        ctx.rect(-20, -20, 40, 40); 
-                        ctx.moveTo(-20, -10); ctx.lineTo(-35, 20); // Cannon L
-                        ctx.moveTo(20, -10); ctx.lineTo(35, 20);   // Cannon R
-                    }
-                    else if(type==='sniper') {
-                        ctx.moveTo(0, 35); ctx.lineTo(5, -20); ctx.lineTo(15, -25); ctx.lineTo(0, -15); ctx.lineTo(-15, -25); ctx.lineTo(-5, -20);
-                    }
-                    else if(type==='elite') {
-                        ctx.moveTo(0, 45); ctx.lineTo(25, 0); ctx.lineTo(15, -30); ctx.lineTo(0, -10); ctx.lineTo(-15, -30); ctx.lineTo(-25, 0);
-                    }
-                    else { // Round
-                        ctx.arc(0,0,20,0,Math.PI*2); 
-                    }
+                    if(type==='drone') { ctx.moveTo(0, 25); ctx.lineTo(15, -15); ctx.lineTo(0, -5); ctx.lineTo(-15, -15); } 
+                    else if(type==='scout') { ctx.moveTo(0, 30); ctx.lineTo(8, -20); ctx.lineTo(0, -10); ctx.lineTo(-8, -20); }
+                    else if(type==='fighter') { ctx.moveTo(0, 25); ctx.lineTo(20, -5); ctx.lineTo(20, -15); ctx.lineTo(5, -5); ctx.lineTo(5, -20); ctx.lineTo(-5, -20); ctx.lineTo(-5, -5); ctx.lineTo(-20, -15); ctx.lineTo(-20, -5); }
+                    else if(type==='hunter') { ctx.moveTo(0, 30); ctx.bezierCurveTo(15, 10, 20, -20, 5, -10); ctx.lineTo(0, -5); ctx.lineTo(-5, -10); ctx.bezierCurveTo(-20, -20, -15, 10, 0, 30); }
+                    else if(type==='tank') { ctx.rect(-20, -20, 40, 40); ctx.moveTo(-20, -10); ctx.lineTo(-35, 20); ctx.moveTo(20, -10); ctx.lineTo(35, 20); }
+                    else if(type==='sniper') { ctx.moveTo(0, 35); ctx.lineTo(5, -20); ctx.lineTo(15, -25); ctx.lineTo(0, -15); ctx.lineTo(-15, -25); ctx.lineTo(-5, -20); }
+                    else if(type==='elite') { ctx.moveTo(0, 45); ctx.lineTo(25, 0); ctx.lineTo(15, -30); ctx.lineTo(0, -10); ctx.lineTo(-15, -30); ctx.lineTo(-25, 0); }
+                    else { ctx.arc(0,0,20,0,Math.PI*2); }
                 }, color, 15, 2);
-                
-                // Core/Eye
                 c.fillStyle = color; c.shadowBlur = 20; c.beginPath(); c.arc(0, 0, 4, 0, Math.PI*2); c.fill();
                 c.restore();
             },
-
             drawPowerUp: function(c, type) {
                 c.save();
                 const color = type === 'health' ? '#0f0' : (type === 'overdrive' ? '#d0f' : '#0ff');
-                c.shadowBlur = 20; c.shadowColor = color; c.strokeStyle = color; c.fillStyle = '#000'; c.lineWidth = 2;
-                c.beginPath(); c.arc(0, 0, 20, 0, Math.PI*2); c.fill(); c.stroke();
-                c.fillStyle = color; c.font = "bold 18px Arial"; c.textAlign = "center"; c.textBaseline = "middle";
-                c.fillText(type==='health'?"+":(type==='overdrive'?"⚡":"M"), 0, 2);
+                c.shadowBlur = 10; c.shadowColor = color; c.strokeStyle = color; c.fillStyle = '#000'; c.lineWidth = 2;
+                c.beginPath(); c.arc(0, 0, 15, 0, Math.PI*2); c.fill(); c.stroke();
+                c.fillStyle = color; c.font = "bold 14px Arial"; c.textAlign = "center"; c.textBaseline = "middle";
+                c.fillText(type==='health'?"+":(type==='overdrive'?"⚡":"M"), 0, 1);
                 c.restore();
             }
         };
@@ -394,7 +377,7 @@
         ];
 
         const saveSystem = {
-            data: { credits: 0, campaignLevel: 1, unlockedShips: [0], currentShip: 0, upgrades: {}, highScore: 0, daily: { last: null, streak: 0 } },
+            data: { credits: 0, campaignLevel: 1, unlockedShips: [0], currentShip: 0, upgrades: {}, highScore: 0, daily: { last: null, streak: 0 }, missions: { lastGen: 0, list: [] } },
             load: async function() {
                 const key = VKManager.userId ? `voidstorm_data_${VKManager.userId}` : 'voidstorm_save';
                 try {
@@ -405,7 +388,8 @@
                     SHIPS_DB.forEach(s => { if(!this.data.upgrades[s.id]) this.data.upgrades[s.id] = {dmg:1, hp:1, spd:1}; });
                     const s = JSON.parse(localStorage.getItem('voidstorm_settings')||'{"sfx":true,"music":true}');
                     SoundManager.sfxEnabled=s.sfx; SoundManager.musicEnabled=s.music; document.getElementById('sfxToggle').checked=s.sfx; document.getElementById('musicToggle').checked=s.music;
-                    SoundManager.updateMusicState(); updateMenuStats();
+                    SoundManager.updateMusicState(); 
+                    DailyManager.check(); MissionManager.check(); updateMenuStats();
                 } catch(e) {}
             },
             save: async function() {
@@ -415,13 +399,81 @@
             }
         };
 
-        let gameState = { mode: 'MENU', active: false, paused: false, score: 0, creditsGained: 0, levelProgress: 0, levelTarget: 100, enemySpawnTimer: 0, difficultyMult: 1, shake: 0, lastTime: 0 };
+        let gameState = { mode: 'MENU', active: false, paused: false, score: 0, creditsGained: 0, levelProgress: 0, levelTarget: 100, enemySpawnTimer: 0, difficultyMult: 1, shake: 0, lastTime: 0, timeSurvived: 0 };
         let player, bullets = [], enemies = [], enemyBullets = [], particles = [], floatingTexts = [], stars = [], powerups = [];
 
-        // --- ENTITIES ---
+        // --- MANAGERS ---
+        const VKManager = { userId:null, init:async function(){try{await vkBridge.send('VKWebAppInit');vkBridge.subscribe((e)=>{if(e.detail.type==='VKWebAppViewHide')SoundManager.toggleMusic(false,true);if(e.detail.type==='VKWebAppViewRestore')SoundManager.toggleMusic(true,true);});const u=await vkBridge.send('VKWebAppGetUserInfo');this.userId=u.id;await saveSystem.load();vkBridge.send('VKWebAppShowBannerAd',{banner_location:'bottom'}).catch(e=>{});}catch(e){console.log('Local');saveSystem.load();}}, 
+            showInterstitial:function(){this.ac++;if(this.ac>=3||gameState.mode==='ENDLESS'){this.ac=0;vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'interstitial' }).catch(e=>{});}}, ac:0 
+        };
+        const DailyManager = { rewards:[100,200,300,400,500,750,1000], check:function(){const t=new Date().toDateString(),l=saveSystem.data.daily.last;if(l!==t){const y=new Date();y.setDate(y.getDate()-1);if(l!==y.toDateString())saveSystem.data.daily.streak=0;this.show();}}, show:function(){const m=document.getElementById('dailyModal'),g=document.getElementById('dailyGrid'),s=saveSystem.data.daily.streak;g.innerHTML='';this.rewards.forEach((a,i)=>{const d=document.createElement('div');d.className=`daily-item ${i<s?'claimed':''} ${i===s?'active':''}`;d.innerHTML=`<div class="text-xs text-gray-400">ДЕНЬ ${i+1}</div><div class="text-yellow-400 font-bold text-lg">${a}</div>`;g.appendChild(d);});m.classList.remove('hidden');}, claim:function(){const s=saveSystem.data.daily.streak,r=this.rewards[Math.min(s,6)];saveSystem.data.credits+=r;saveSystem.data.daily.last=new Date().toDateString();saveSystem.data.daily.streak=(s+1)%7;saveSystem.save();document.getElementById('dailyModal').classList.add('hidden');SoundManager.play('powerup');} };
+        
+        const MissionManager = {
+            targets: [
+                {id: 'kill_drone', desc: 'Уничтожить Дронов', reqLvl: 1, base: 20},
+                {id: 'kill_fighter', desc: 'Уничтожить Истребителей', reqLvl: 4, base: 15},
+                {id: 'score', desc: 'Набрать очки в Выживании', reqLvl: 1, base: 2000},
+                {id: 'survive', desc: 'Выжить (секунды)', reqLvl: 1, base: 120}
+            ],
+            check: function() {
+                const now = new Date().getTime();
+                if (now - saveSystem.data.missions.lastGen > 86400000) {
+                    this.generate();
+                }
+            },
+            generate: function() {
+                const lvl = saveSystem.data.campaignLevel;
+                const pool = this.targets.filter(t => t.reqLvl <= lvl);
+                const list = [];
+                for(let i=0; i<3; i++) {
+                    const t = pool[Math.floor(Math.random() * pool.length)];
+                    list.push({ id: t.id, desc: t.desc, target: t.base + Math.floor(Math.random()*t.base), current: 0, reward: 200 + (lvl*50), claimed: false });
+                }
+                saveSystem.data.missions = { lastGen: new Date().getTime(), list: list };
+                saveSystem.save();
+            },
+            update: function(type, val) {
+                let save = false;
+                saveSystem.data.missions.list.forEach(m => {
+                    if (!m.claimed && m.id === type) {
+                        m.current = Math.min(m.target, m.current + val);
+                        save = true;
+                    }
+                });
+                if(save) saveSystem.save();
+            },
+            render: function() {
+                const c = document.getElementById('missionsList'); c.innerHTML = '';
+                saveSystem.data.missions.list.forEach((m, idx) => {
+                    const pct = Math.min(100, (m.current/m.target)*100);
+                    const div = document.createElement('div');
+                    div.className = 'mission-item';
+                    div.innerHTML = `
+                        <div class="flex-1">
+                            <div class="flex justify-between text-xs text-gray-300"><span>${m.desc}</span><span>${m.current}/${m.target}</span></div>
+                            <div class="mission-progress"><div class="mission-fill" style="width:${pct}%"></div></div>
+                        </div>
+                        <div class="ml-3 flex flex-col items-end">
+                            <span class="text-yellow-400 text-xs font-bold mb-1">+${m.reward}</span>
+                            ${m.claimed ? '<span class="text-gray-500 text-[10px]">ГОТОВО</span>' : (pct>=100 ? `<button onclick="MissionManager.claim(${idx})" class="mission-btn bg-green-500 text-black font-bold">ЗАБРАТЬ</button>` : '<span class="text-gray-600 text-[10px]">В ПРОЦЕССЕ</span>')}
+                        </div>`;
+                    c.appendChild(div);
+                });
+            },
+            claim: function(idx) {
+                const m = saveSystem.data.missions.list[idx];
+                if(m && !m.claimed && m.current >= m.target) {
+                    m.claimed = true; saveSystem.data.credits += m.reward; saveSystem.save();
+                    SoundManager.play('powerup'); this.render(); updateMenuStats();
+                }
+            }
+        };
+
+        const SoundManager = { ctx:new(window.AudioContext||window.webkitAudioContext)(), sfxEnabled:true, musicEnabled:true, updateMusicState:function(){const a=document.getElementById('bgMusic');if(this.musicEnabled)a.play().catch(e=>{});else a.pause();}, toggleMusic:function(v,t=false){if(!t){this.musicEnabled=v;localStorage.setItem('voidstorm_settings',JSON.stringify({sfx:this.sfxEnabled,music:v}));} const a=document.getElementById('bgMusic');if(v&&this.musicEnabled)a.play().catch(e=>{});else a.pause();}, toggleSFX:function(v){this.sfxEnabled=v;localStorage.setItem('voidstorm_settings',JSON.stringify({sfx:v,music:this.musicEnabled}));}, play:function(t){if(!this.sfxEnabled)return;if(this.ctx.state==='suspended')this.ctx.resume();const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.connect(g);g.connect(this.ctx.destination);const n=this.ctx.currentTime;if(t==='shoot'){o.type='square';o.frequency.setValueAtTime(600,n);o.frequency.exponentialRampToValueAtTime(100,n+0.1);g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.1);o.start(n);o.stop(n+0.1);}else if(t==='enemy_shoot'){o.type='sawtooth';o.frequency.setValueAtTime(300,n);o.frequency.exponentialRampToValueAtTime(50,n+0.2);g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.2);o.start(n);o.stop(n+0.2);}else if(t==='hit'){o.type='triangle';o.frequency.setValueAtTime(100,n);g.gain.setValueAtTime(0.1,n);g.gain.linearRampToValueAtTime(0,n+0.05);o.start(n);o.stop(n+0.05);}else if(t==='explode'){o.type='sawtooth';o.frequency.setValueAtTime(100,n);o.frequency.exponentialRampToValueAtTime(10,n+0.3);g.gain.setValueAtTime(0.15,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.3);o.start(n);o.stop(n+0.3);}else if(t==='powerup'){o.type='sine';o.frequency.setValueAtTime(400,n);o.frequency.linearRampToValueAtTime(800,n+0.2);g.gain.setValueAtTime(0.1,n);g.gain.linearRampToValueAtTime(0,n+0.2);o.start(n);o.stop(n+0.2);}else if(t==='ui'){o.type='sine';o.frequency.setValueAtTime(800,n);g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.05);o.start(n);o.stop(n+0.05);}} };
+
+        // --- GAME ENTITIES ---
         class Star { constructor() { this.reset(); } reset() { this.x = Math.random() * V_WIDTH; this.y = Math.random() * V_HEIGHT; this.z = Math.random() * 2 + 0.5; this.size = Math.random() * 1.5; this.alpha = Math.random() * 0.5 + 0.3; } update(speed) { this.y += speed * this.z; if(this.y > V_HEIGHT) { this.y = 0; this.x = Math.random() * V_WIDTH; } } draw(c) { c.fillStyle = `rgba(255,255,255,${this.alpha})`; c.fillRect(this.x, this.y, this.size, this.size); } }
         class PowerUp { constructor(x, y) { this.x = x; this.y = y; this.type = Math.random()<0.33?'health':(Math.random()<0.5?'overdrive':'multishot'); this.active=true; this.radius=25; this.vy=2; } update(){ this.y+=this.vy; if(this.y>V_HEIGHT+50)this.active=false; } draw(c){ c.save(); c.translate(this.x,this.y); AssetDrawer.drawPowerUp(c,this.type); c.restore(); } }
-
         class Player {
             constructor() {
                 const s = SHIPS_DB[saveSystem.data.currentShip]; const u = saveSystem.data.upgrades[s.id];
@@ -430,12 +482,13 @@
                 this.radius=30; this.iframe=0; this.lastShot=0; this.overdriveTimer=0; this.multishotTimer=0;
             }
             update(dt, time) {
-                if(isNaN(this.targetX)) this.targetX=V_WIDTH/2; if(isNaN(this.targetY)) this.targetY=V_HEIGHT-150;
-                this.x += (this.targetX - this.x) * this.speed; this.y += (this.targetY - this.y) * this.speed;
+                if (isNaN(this.targetX)) this.targetX = V_WIDTH/2; if (isNaN(this.targetY)) this.targetY = V_HEIGHT-150;
+                const dx = this.targetX - this.x; const dy = this.targetY - this.y;
+                this.x += dx * this.speed; this.y += dy * this.speed;
                 this.x = Math.max(30, Math.min(V_WIDTH-30, this.x)); this.y = Math.max(50, Math.min(V_HEIGHT-50, this.y));
-                let fr = 200; if(this.weaponType==='sniper') fr=700; else if(this.weaponType==='rapid') fr=80; else if(this.weaponType==='omega') fr=120;
-                if(this.overdriveTimer>0) { fr/=2; this.overdriveTimer-=dt; } if(this.multishotTimer>0) this.multishotTimer-=dt;
-                if(time-this.lastShot>fr) this.shoot(time); if(this.iframe>0) this.iframe-=dt;
+                let fr = 200; if (this.weaponType === 'sniper') fr = 700; else if (this.weaponType === 'rapid') fr = 80; else if (this.weaponType === 'omega') fr = 120;
+                if (this.overdriveTimer > 0) { fr /= 2; this.overdriveTimer -= dt; } if (this.multishotTimer > 0) this.multishotTimer -= dt;
+                if(time - this.lastShot > fr) this.shoot(time); if(this.iframe>0) this.iframe -= dt;
             }
             shoot(time) {
                 this.lastShot=time; SoundManager.play('shoot'); const y=this.y-30; const d=this.dmgMult; const c=this.overdriveTimer>0?'#fff':this.color;
@@ -455,9 +508,7 @@
             applyPowerUp(t) { SoundManager.play('powerup'); if(t==='health'){this.hp=Math.min(this.maxHp,this.hp+this.maxHp*0.3);floatingTexts.push({x:this.x,y:this.y-50,text:"РЕМОНТ",color:'#0f0',life:1.5,vy:-1});} else if(t==='overdrive'){this.overdriveTimer=5000;floatingTexts.push({x:this.x,y:this.y-50,text:"ОВЕРДРАЙВ",color:'#d0f',life:1.5,vy:-1});} else {this.multishotTimer=5000;floatingTexts.push({x:this.x,y:this.y-50,text:"МУЛЬТИ",color:'#0ff',life:1.5,vy:-1});} updateHUD(); }
             draw(c) { c.save(); c.translate(this.x, this.y); AssetDrawer.drawShip(c, this.model, this.color, true); c.restore(); }
         }
-
         class Bullet { constructor(x,y,vx,vy,c,d,w=4,h=16,homing=false){this.x=x;this.y=y;this.vx=vx;this.vy=vy;this.color=c;this.dmg=d;this.active=true;this.w=w;this.h=h;this.homing=homing;} update(){ if(this.homing&&enemies.length>0){let t=enemies[0],m=9999;enemies.forEach(e=>{const d=Math.hypot(e.x-this.x,e.y-this.y);if(d<m&&e.y>0){m=d;t=e;}});if(t){const a=Math.atan2(t.y-this.y,t.x-this.x);this.vx+=Math.cos(a)*0.8;this.vy+=Math.sin(a)*0.8;const s=Math.hypot(this.vx,this.vy);if(s>14){this.vx*=14/s;this.vy*=14/s;}}} this.x+=this.vx;this.y+=this.vy;if(this.y<-50||this.y>V_HEIGHT+50)this.active=false; } draw(c){c.save();c.translate(this.x,this.y);c.rotate(Math.atan2(this.vy,this.vx)+Math.PI/2);c.fillStyle=this.color;c.shadowBlur=5;c.shadowColor=this.color;c.fillRect(-this.w/2,-this.h/2,this.w,this.h);c.restore();} }
-
         class Enemy {
             constructor(type, diff) {
                 this.type=type; this.active=true; this.y=-50; this.x=Math.random()*(V_WIDTH-60)+30; this.timer=0;
@@ -476,20 +527,14 @@
             shoot(s,c,aO=0){ SoundManager.play('enemy_shoot'); const a=Math.atan2(player.y-this.y,player.x-this.x)+aO; enemyBullets.push(new Bullet(this.x,this.y+30,Math.cos(a)*s,Math.sin(a)*s,c,1)); }
             hit(d,sc=true){
                 this.hp-=d; if(this.hp<=0){
-                    this.active=false; SoundManager.play('explode'); if(sc){ gameState.score+=this.score; gameState.levelProgress+=this.score; if(Math.random()<0.25)powerups.push(new PowerUp(this.x,this.y)); if(Math.random()>0.7){const a=Math.floor(Math.random()*6)+2;gameState.creditsGained+=a;floatingTexts.push({x:this.x,y:this.y,text:`+${a}`,color:'#ff0',life:1,vy:-2});} } createExplosion(this.x,this.y,15,this.color); updateHUD();
+                    this.active=false; SoundManager.play('explode'); if(sc){ MissionManager.update('kill_'+this.type, 1); gameState.score+=this.score; gameState.levelProgress+=this.score; if(Math.random()<0.25)powerups.push(new PowerUp(this.x,this.y)); if(Math.random()>0.7){const a=Math.floor(Math.random()*6)+2;gameState.creditsGained+=a;floatingTexts.push({x:this.x,y:this.y,text:`+${a}`,color:'#ff0',life:1,vy:-2});} } createExplosion(this.x,this.y,15,this.color); updateHUD();
                 } else createExplosion(this.x,this.y,2,'#fff');
             }
-            draw(c){ c.save(); c.translate(this.x,this.y); AssetDrawer.drawEnemy(c,this.type,this.color); c.restore(); }
+            draw(c){ c.save(); c.translate(this.x,this.y); c.rotate(Math.PI); AssetDrawer.drawEnemy(c,this.type,this.color); c.restore(); }
         }
         function createExplosion(x,y,c,col) { for(let i=0;i<c;i++) particles.push({x:x,y:y,vx:(Math.random()-0.5)*10,vy:(Math.random()-0.5)*10,life:1,color:col}); }
 
-        // --- MANAGERS ---
-        const VKManager = { userId:null, init:async function(){try{await vkBridge.send('VKWebAppInit');vkBridge.subscribe((e)=>{if(e.detail.type==='VKWebAppViewHide')SoundManager.toggleMusic(false,true);if(e.detail.type==='VKWebAppViewRestore')SoundManager.toggleMusic(true,true);});const u=await vkBridge.send('VKWebAppGetUserInfo');this.userId=u.id;await saveSystem.load();vkBridge.send('VKWebAppShowBannerAd',{banner_location:'bottom'}).catch(e=>{});DailyManager.check();}catch(e){console.log('Local');saveSystem.load();DailyManager.check();}}, showInterstitial:function(){this.ac++;if(this.ac>=3||gameState.mode==='ENDLESS'){this.ac=0;vkBridge.send('VKWebAppShowInterstitialAd').catch(e=>{});}}, ac:0 };
-        const DailyManager = { rewards:[100,200,300,400,500,750,1000], check:function(){const t=new Date().toDateString(),l=saveSystem.data.daily.last;if(l!==t){const y=new Date();y.setDate(y.getDate()-1);if(l!==y.toDateString())saveSystem.data.daily.streak=0;this.show();}}, show:function(){const m=document.getElementById('dailyModal'),g=document.getElementById('dailyGrid'),s=saveSystem.data.daily.streak;g.innerHTML='';this.rewards.forEach((a,i)=>{const d=document.createElement('div');d.className=`daily-item ${i<s?'claimed':''} ${i===s?'active':''}`;d.innerHTML=`<div class="text-xs text-gray-400">ДЕНЬ ${i+1}</div><div class="text-yellow-400 font-bold text-lg">${a}</div>`;g.appendChild(d);});m.classList.remove('hidden');}, claim:function(){const s=saveSystem.data.daily.streak,r=this.rewards[Math.min(s,6)];saveSystem.data.credits+=r;saveSystem.data.daily.last=new Date().toDateString();saveSystem.data.daily.streak=(s+1)%7;saveSystem.save();document.getElementById('dailyModal').classList.add('hidden');SoundManager.play('powerup');} };
-        document.getElementById('claimDailyBtn').onclick=()=>DailyManager.claim();
-        const SoundManager = { ctx:new(window.AudioContext||window.webkitAudioContext)(), sfxEnabled:true, musicEnabled:true, updateMusicState:function(){const a=document.getElementById('bgMusic');if(this.musicEnabled)a.play().catch(e=>{});else a.pause();}, toggleMusic:function(v,t=false){if(!t){this.musicEnabled=v;localStorage.setItem('voidstorm_settings',JSON.stringify({sfx:this.sfxEnabled,music:v}));} const a=document.getElementById('bgMusic');if(v&&this.musicEnabled)a.play().catch(e=>{});else a.pause();}, toggleSFX:function(v){this.sfxEnabled=v;localStorage.setItem('voidstorm_settings',JSON.stringify({sfx:v,music:this.musicEnabled}));}, play:function(t){if(!this.sfxEnabled)return;if(this.ctx.state==='suspended')this.ctx.resume();const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.connect(g);g.connect(this.ctx.destination);const n=this.ctx.currentTime;if(t==='shoot'){o.type='square';o.frequency.setValueAtTime(600,n);o.frequency.exponentialRampToValueAtTime(100,n+0.1);g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.1);o.start(n);o.stop(n+0.1);}else if(t==='enemy_shoot'){o.type='sawtooth';o.frequency.setValueAtTime(300,n);o.frequency.exponentialRampToValueAtTime(50,n+0.2);g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.2);o.start(n);o.stop(n+0.2);}else if(t==='hit'){o.type='triangle';o.frequency.setValueAtTime(100,n);g.gain.setValueAtTime(0.1,n);g.gain.linearRampToValueAtTime(0,n+0.05);o.start(n);o.stop(n+0.05);}else if(t==='explode'){o.type='sawtooth';o.frequency.setValueAtTime(100,n);o.frequency.exponentialRampToValueAtTime(10,n+0.3);g.gain.setValueAtTime(0.15,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.3);o.start(n);o.stop(n+0.3);}else if(t==='powerup'){o.type='sine';o.frequency.setValueAtTime(400,n);o.frequency.linearRampToValueAtTime(800,n+0.2);g.gain.setValueAtTime(0.1,n);g.gain.linearRampToValueAtTime(0,n+0.2);o.start(n);o.stop(n+0.2);}else if(t==='ui'){o.type='sine';o.frequency.setValueAtTime(800,n);g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.05);o.start(n);o.stop(n+0.05);}} };
-
-        // --- LOGIC ---
+        // --- GAME LOOP & LOGIC ---
         function endGame(v) {
             gameState.active=false; gameState.mode='MENU'; document.getElementById('hud').classList.add('hidden'); document.getElementById('resultScreen').classList.remove('hidden');
             saveSystem.data.credits+=gameState.creditsGained; if(v){saveSystem.data.campaignLevel++;VKManager.showInterstitial();}else{if(gameState.mode==='ENDLESS')VKManager.showInterstitial();} saveSystem.save();
@@ -499,11 +544,11 @@
             document.getElementById('resScore').innerText=gameState.score; document.getElementById('resCredits').innerText=gameState.creditsGained;
         }
         function initGame(m) {
-            gameState.mode=m; gameState.active=true; gameState.paused=false; gameState.score=0; gameState.creditsGained=0; gameState.levelProgress=0;
+            gameState.mode=m; gameState.active=true; gameState.paused=false; gameState.score=0; gameState.creditsGained=0; gameState.levelProgress=0; gameState.timeSurvived=0;
             if(m==='CAMPAIGN'){const l=saveSystem.data.campaignLevel;gameState.difficultyMult=1.0+(l*0.1);gameState.levelTarget=500+(l*300);document.getElementById('levelProgressContainer').classList.remove('hidden');}
             else{gameState.difficultyMult=1;document.getElementById('levelProgressContainer').classList.add('hidden');}
             player=new Player(); bullets=[]; enemies=[]; enemyBullets=[]; particles=[]; floatingTexts=[]; powerups=[];
-            ['mainMenu','shopMenu','pauseMenu','resultScreen','infoModal','settingsModal','dailyModal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+            ['mainMenu','shopMenu','pauseMenu','resultScreen','infoModal','settingsModal','dailyModal', 'missionsModal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
             document.getElementById('hud').classList.remove('hidden'); player.x=V_WIDTH/2;player.y=V_HEIGHT-150;player.targetX=V_WIDTH/2;player.targetY=V_HEIGHT-150;gameState.enemySpawnTimer=1000;updateHUD();
         }
         function spawnLogic(dt) {
@@ -511,8 +556,7 @@
             if(gameState.enemySpawnTimer<=0) {
                 const lvl=gameState.mode==='CAMPAIGN'?saveSystem.data.campaignLevel:Math.floor(gameState.score/1000)+1;
                 gameState.enemySpawnTimer=Math.max(500,1800-(lvl*60));
-                let t=['drone'];
-                if(lvl>=2)t.push('scout'); if(lvl>=4)t.push('fighter'); if(lvl>=10)t.push('hunter'); if(lvl>=16)t.push('tank','sniper'); if(lvl>=20)t.push('elite');
+                let t=['drone']; if(lvl>=2)t.push('scout'); if(lvl>=4)t.push('fighter'); if(lvl>=10)t.push('hunter'); if(lvl>=16)t.push('tank','sniper'); if(lvl>=20)t.push('elite');
                 enemies.push(new Enemy(t[Math.floor(Math.random()*t.length)],gameState.difficultyMult));
             }
         }
@@ -522,6 +566,7 @@
             if(gameState.active&&!gameState.paused) {
                 if(gameState.shake>0){ctx.save();ctx.translate((Math.random()-0.5)*gameState.shake,(Math.random()-0.5)*gameState.shake);gameState.shake*=0.9;}
                 spawnLogic(dt);player.update(dt,ts);powerups.forEach(p=>p.update());powerups=powerups.filter(p=>p.active);
+                gameState.timeSurvived += dt; if(gameState.mode==='ENDLESS') MissionManager.update('score', 0); // Check updates later
                 [bullets,enemyBullets,enemies].forEach(a=>a.forEach(e=>e.update(dt)));
                 bullets=bullets.filter(b=>b.active);enemyBullets=enemyBullets.filter(b=>b.active);enemies=enemies.filter(e=>e.active);
                 bullets.forEach(b=>{enemies.forEach(e=>{if(b.active&&e.active&&Math.hypot(b.x-e.x,b.y-e.y)<e.radius+b.w){b.active=false;e.hit(b.dmg);}});});
@@ -529,6 +574,13 @@
                 enemies.forEach(e=>{if(e.active&&Math.hypot(e.x-player.x,e.y-player.y)<e.radius+25){e.hit(9999,false);player.hit(30);floatingTexts.push({x:player.x,y:player.y,text:"СТОЛКНОВЕНИЕ!",color:'#f00',life:1,vy:-1});}});
                 powerups.forEach(p=>{if(Math.hypot(p.x-player.x,p.y-player.y)<p.radius+30){p.active=false;player.applyPowerUp(p.type);}});
                 enemies.forEach(e=>e.draw(ctx));powerups.forEach(p=>p.draw(ctx));player.draw(ctx);bullets.forEach(b=>b.draw(ctx));enemyBullets.forEach(b=>b.draw(ctx));
+                
+                // Mission Updates every 1s
+                if(Math.floor(ts/1000) > Math.floor((ts-dt)/1000)) {
+                    MissionManager.update('survive', 1);
+                    if(gameState.mode==='ENDLESS') MissionManager.update('score', gameState.score - (MissionManager.lastScoreCheck||0));
+                    MissionManager.lastScoreCheck = gameState.score;
+                }
                 if(gameState.shake>0)ctx.restore();
             }
             particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=0.04;ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,3,3);});particles=particles.filter(p=>p.life>0);ctx.globalAlpha=1;
@@ -538,18 +590,7 @@
         function resize(){canvas.width=V_WIDTH;canvas.height=V_HEIGHT;}
         function handleInput(e){if(!gameState.active||gameState.paused)return;e.preventDefault();const r=canvas.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;player.targetX=(cx-r.left)*(V_WIDTH/r.width);player.targetY=(cy-r.top)*(V_HEIGHT/r.height)-(e.touches?80:0);}
         canvas.addEventListener('mousemove',handleInput);canvas.addEventListener('touchmove',handleInput,{passive:false});window.addEventListener('resize',resize);
-        
-        // Draw Rules Icons
-        function drawRulesIcons() {
-            const draw = (id, color, text) => {
-                const c=document.getElementById(id),x=c.getContext('2d');
-                c.width=40;c.height=40;AssetDrawer.drawPowerUp(x, text==='+'?'health':(text==='⚡'?'overdrive':'multishot')); // Reuse asset drawer logic logic by mapping type
-            }
-            // Hacky mapping to reuse drawPowerUp which expects 'health', 'overdrive' etc
-            const cH=document.getElementById('infoHealth').getContext('2d'); AssetDrawer.drawPowerUp(cH, 'health');
-            const cO=document.getElementById('infoOverdrive').getContext('2d'); AssetDrawer.drawPowerUp(cO, 'overdrive');
-            const cM=document.getElementById('infoMulti').getContext('2d'); AssetDrawer.drawPowerUp(cM, 'multishot');
-        }
+        function drawRulesIcons(){const d=(i,t,c)=>{const cv=document.getElementById(i),x=cv.getContext('2d');AssetDrawer.drawPowerUp(x,t);};d('infoHealth','health');d('infoOverdrive','overdrive');d('infoMulti','multishot');}
 
         let shopIdx=0; function btnClick(c){SoundManager.play('ui');c();}
         document.getElementById('campaignBtn').onclick=()=>btnClick(()=>initGame('CAMPAIGN')); document.getElementById('endlessBtn').onclick=()=>btnClick(()=>initGame('ENDLESS'));
@@ -565,6 +606,8 @@
         document.getElementById('settingsBtn').onclick=()=>btnClick(()=>document.getElementById('settingsModal').classList.remove('hidden')); document.getElementById('closeSettingsBtn').onclick=()=>btnClick(()=>document.getElementById('settingsModal').classList.add('hidden'));
         document.getElementById('sfxToggle').onchange=(e)=>SoundManager.toggleSFX(e.target.checked); document.getElementById('musicToggle').onchange=(e)=>SoundManager.toggleMusic(e.target.checked);
         document.getElementById('rulesBtn').onclick=()=>btnClick(()=>{document.getElementById('infoModal').classList.remove('hidden');drawRulesIcons();}); document.getElementById('closeInfoBtn').onclick=document.getElementById('closeInfoBtn2').onclick=()=>btnClick(()=>document.getElementById('infoModal').classList.add('hidden'));
+        document.getElementById('missionsBtn').onclick=()=>btnClick(()=>{document.getElementById('missionsModal').classList.remove('hidden');MissionManager.render();}); document.getElementById('closeMissionsBtn').onclick=()=>btnClick(()=>document.getElementById('missionsModal').classList.add('hidden'));
+        document.getElementById('claimDailyBtn').onclick=()=>btnClick(()=>DailyManager.claim());
 
         function updateMenuStats(){document.getElementById('menuCredits').innerText=saveSystem.data.credits;document.getElementById('menuLevel').innerText=saveSystem.data.campaignLevel;}
         function updateHUD(){document.getElementById('scoreDisplay').innerText=gameState.score;document.getElementById('gameCredits').innerText=gameState.creditsGained;const h=Math.max(0,(player.hp/player.maxHp)*100);document.getElementById('healthBar').style.width=`${h}%`;document.getElementById('healthBar').style.backgroundColor=h<30?'#f00':'#0ff';if(gameState.mode==='CAMPAIGN'){const p=Math.min(100,(gameState.levelProgress/gameState.levelTarget)*100);document.getElementById('levelProgressBar').style.width=`${p}%`;if(gameState.levelProgress>=gameState.levelTarget){SoundManager.play('powerup');endGame(true);}}}
