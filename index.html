@@ -52,7 +52,7 @@
         .mission-progress { height: 4px; background: #333; border-radius: 2px; margin-top: 6px; overflow: hidden; }
         .mission-fill { height: 100%; background: var(--warn); width: 0%; transition: width 0.5s; }
         .mission-btn { padding: 6px 14px; font-size: 10px; border-radius: 4px; z-index: 10; position: relative; }
-        .mission-done-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; color: #0f0; font-weight: 900; font-style: italic; letter-spacing: 2px; font-size: 14px; z-index: 5; }
+        .mission-done-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; color: #0f0; font-weight: 900; font-style: italic; letter-spacing: 2px; font-size: 14px; z-index: 5; }
         
         .daily-item { border: 1px solid #333; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; opacity: 0.5; }
         .daily-item.active { border-color: var(--warn); background: rgba(255, 200, 0, 0.1); opacity: 1; box-shadow: 0 0 15px rgba(255,200,0,0.2); transform: scale(1.05); }
@@ -186,7 +186,7 @@
                     <div class="stat-track"><div id="statBarDmg" class="stat-fill bg-purple-500" style="width: 0%"></div></div>
                     <div class="flex justify-between text-[10px] text-gray-400 mt-3 mb-1 font-bold"><span>БРОНЯ</span> <span id="statValArmor" class="text-white"></span></div>
                     <div class="stat-track"><div id="statBarArmor" class="stat-fill bg-green-500" style="width: 0%"></div></div>
-                    <div class="flex justify-between text-[10px] text-gray-400 mt-3 mb-1 font-bold"><span>СКОРОСТЬ</span> <span id="statValSpeed" class="text-white"></span></div>
+                    <div class="flex justify-between text-[10px] text-gray-400 mt-3 mb-1 font-bold"><span>МАНЕВР</span> <span id="statValSpeed" class="text-white"></span></div>
                     <div class="stat-track"><div id="statBarSpeed" class="stat-fill bg-cyan-500" style="width: 0%"></div></div>
                 </div>
                 <div class="flex justify-center">
@@ -207,7 +207,7 @@
                             <span class="text-[9px] opacity-70" id="hpCostText">100 CR</span>
                         </button>
                         <button id="upgradeSpdBtn" class="neon-btn border-cyan-500 text-cyan-400 py-2 text-xs flex flex-col items-center justify-center h-16">
-                            <span class="font-bold mb-1">СКОР</span>
+                            <span class="font-bold mb-1">МАНЕВР</span>
                             <span class="text-[10px]" id="spdLvlText">LVL 1</span>
                             <span class="text-[9px] opacity-70" id="spdCostText">100 CR</span>
                         </button>
@@ -230,15 +230,15 @@
                     <h3 class="text-yellow-400 font-bold mb-3 uppercase tracking-wider">МОДУЛИ</h3>
                     <div class="grid grid-cols-3 gap-4 text-center">
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 flex items-center justify-center mb-2"><canvas id="infoHealth" width="40" height="40"></canvas></div>
+                            <div class="w-12 h-12 flex items-center justify-center mb-2 bg-black/50 rounded-full border border-gray-800"><canvas id="infoHealth" width="40" height="40"></canvas></div>
                             <strong class="text-green-400 text-[10px]">РЕМОНТ</strong>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 flex items-center justify-center mb-2"><canvas id="infoOverdrive" width="40" height="40"></canvas></div>
+                            <div class="w-12 h-12 flex items-center justify-center mb-2 bg-black/50 rounded-full border border-gray-800"><canvas id="infoOverdrive" width="40" height="40"></canvas></div>
                             <strong class="text-purple-400 text-[10px]">ОВЕРДРАЙВ</strong>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="w-12 h-12 flex items-center justify-center mb-2"><canvas id="infoMulti" width="40" height="40"></canvas></div>
+                            <div class="w-12 h-12 flex items-center justify-center mb-2 bg-black/50 rounded-full border border-gray-800"><canvas id="infoMulti" width="40" height="40"></canvas></div>
                             <strong class="text-cyan-400 text-[10px]">МУЛЬТИ</strong>
                         </div>
                     </div>
@@ -246,8 +246,8 @@
                 <div class="bg-gray-900/50 p-4 rounded border-l-4 border-cyan-500 shadow-lg">
                     <h3 class="text-cyan-400 font-bold mb-2 uppercase tracking-wider">ТАКТИКА</h3>
                     <ul class="list-disc pl-4 space-y-2 text-xs text-gray-300">
+                        <li><strong>Скорость = Маневр.</strong> Низкая скорость делает корабль "тяжелым" в управлении. Высокая - резким.</li>
                         <li><strong>Не врезайтесь!</strong> Таран не дает очков и наносит урон.</li>
-                        <li><strong>Кампания.</strong> Новые враги появляются только на высоких уровнях. Не расслабляйтесь!</li>
                         <li><strong>Комбо.</strong> Мульти-залп + Овердрайв = Победа.</li>
                     </ul>
                 </div>
@@ -295,7 +295,7 @@
         const shipPreviewCanvas = document.getElementById('shipPreviewCanvas');
         const shipCtx = shipPreviewCanvas.getContext('2d');
 
-        // --- ASSETS ---
+        // --- ASSET DRAWER ---
         const AssetDrawer = {
             neonPath: function(c, pathFn, color, blur=15, width=2) {
                 c.save(); c.lineJoin = 'round'; c.lineCap = 'round'; c.shadowBlur = blur; c.shadowColor = color; c.strokeStyle = color; c.lineWidth = width; c.fillStyle = '#000';
@@ -365,7 +365,7 @@
                     if(VKManager.userId) { const r = await vkBridge.send('VKWebAppStorageGet', { keys: [key] }); if(r.keys[0].value) loaded = JSON.parse(r.keys[0].value); } 
                     else loaded = JSON.parse(localStorage.getItem(key));
                     if(loaded) this.data = { ...this.data, ...loaded };
-                    if(!this.data.stats) this.data.stats = { totalPlayTime: 0 }; // Migration
+                    if(!this.data.stats) this.data.stats = { totalPlayTime: 0 }; 
                     SHIPS_DB.forEach(s => { if(!this.data.upgrades[s.id]) this.data.upgrades[s.id] = {dmg:1, hp:1, spd:1}; });
                     const s = JSON.parse(localStorage.getItem('voidstorm_settings')||'{"sfx":true,"music":true}');
                     SoundManager.sfxEnabled=s.sfx; SoundManager.musicEnabled=s.music; document.getElementById('sfxToggle').checked=s.sfx; document.getElementById('musicToggle').checked=s.music;
@@ -391,8 +391,7 @@
                 this.ac++; 
                 if(this.ac>=3 || gameState.mode==='ENDLESS'){
                     this.ac=0; 
-                    // Надежный вызов по образцу
-                    vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'interstitial' }).catch(e=>{ console.log("Ad Error", e); });
+                    vkBridge.send('VKWebAppShowInterstitialAd').catch(e=>{ console.log("Ad Error", e); });
                 }
             }, 
             ac:0 
@@ -402,7 +401,7 @@
         const MissionManager = {
             targets: [
                 {id: 'kill_drone', desc: 'Уничтожить Дронов', reqLvl: 1, base: 15, unit: ''},
-                {id: 'kill_fighter', desc: 'Уничтожить Истребителей', reqLvl: 3, base: 10, unit: ''},
+                {id: 'kill_fighter', desc: 'Уничтожить Истребителей', reqLvl: 4, base: 10, unit: ''},
                 {id: 'score_run', desc: 'Очки за полет', reqLvl: 1, base: 1500, unit: ''},
                 {id: 'play_time', desc: 'Время в игре', reqLvl: 1, base: 5, unit: ' мин'},
                 {id: 'collect_money', desc: 'Собрать кредиты', reqLvl: 1, base: 100, unit: ''}
@@ -432,13 +431,8 @@
                 let save = false;
                 saveSystem.data.missions.list.forEach(m => {
                     if (!m.claimed && m.id === type) {
-                        if (type === 'score_run') {
-                            // Highscore style check
-                            if (val > m.current) { m.current = Math.min(m.target, val); save = true; }
-                        } else {
-                            // Cumulative
-                            m.current = Math.min(m.target, m.current + val); save = true;
-                        }
+                        if (type === 'score_run') { if (val > m.current) { m.current = Math.min(m.target, val); save = true; } }
+                        else { m.current = Math.min(m.target, m.current + val); save = true; }
                     }
                 });
                 if(save) saveSystem.save();
@@ -451,10 +445,7 @@
                     div.className = 'mission-item';
                     
                     let curTxt = m.current, tarTxt = m.target;
-                    // Format time missions to minutes
-                    if(m.unit === ' мин') {
-                        curTxt = Math.floor(m.current); // stored as minutes in updates
-                    }
+                    if(m.unit === ' мин') { curTxt = Math.floor(m.current); }
 
                     div.innerHTML = `
                         ${m.claimed ? '<div class="mission-done-overlay">ВЫПОЛНЕНО</div>' : ''}
@@ -566,16 +557,17 @@
         function spawnLogic(dt) {
             gameState.enemySpawnTimer-=dt;
             if(gameState.enemySpawnTimer<=0) {
-                // ENDLESS BALANCE: SLOWER RAMP (3000 points per level instead of 1000)
+                // FIXED SPAWN LOGIC: SPLIT TANKS (16) AND SNIPERS (18)
                 const lvl=gameState.mode==='CAMPAIGN'?saveSystem.data.campaignLevel:Math.floor(gameState.score/3000)+1;
                 gameState.enemySpawnTimer=Math.max(500,1800-(lvl*60));
                 
                 let t=['drone'];
-                if(lvl>=2)t.push('scout'); if(lvl>=4)t.push('fighter'); if(lvl>=10)t.push('hunter'); if(lvl>=16)t.push('tank','sniper'); if(lvl>=20)t.push('elite');
+                if(lvl>=2)t.push('scout'); if(lvl>=4)t.push('fighter'); if(lvl>=10)t.push('hunter');
+                if(lvl>=16)t.push('tank'); // Tanks at 16
+                if(lvl>=18)t.push('sniper'); // Snipers at 18
+                if(lvl>=22)t.push('elite'); // Elites at 22
                 
-                // Weighting for Endless
                 if (gameState.mode === 'ENDLESS') {
-                    // Reduce chance of high tier enemies appearing immediately
                     if (Math.random() > 0.8) enemies.push(new Enemy(t[Math.floor(Math.random()*t.length)], gameState.difficultyMult));
                     else enemies.push(new Enemy('drone', gameState.difficultyMult));
                 } else {
@@ -597,16 +589,11 @@
                 enemies.forEach(e=>{if(e.active&&Math.hypot(e.x-player.x,e.y-player.y)<e.radius+25){e.hit(9999,false);player.hit(30);floatingTexts.push({x:player.x,y:player.y,text:"СТОЛКНОВЕНИЕ!",color:'#f00',life:1,vy:-1});}});
                 powerups.forEach(p=>{if(Math.hypot(p.x-player.x,p.y-player.y)<p.radius+30){p.active=false;player.applyPowerUp(p.type);}});
                 enemies.forEach(e=>e.draw(ctx));powerups.forEach(p=>p.draw(ctx));player.draw(ctx);bullets.forEach(b=>b.draw(ctx));enemyBullets.forEach(b=>b.draw(ctx));
-                
-                // Track play time properly
                 saveSystem.data.stats.totalPlayTime += dt;
-                
-                // Check Missions periodically
                 if(Math.floor(ts/1000) > Math.floor((ts-dt)/1000)) {
-                    MissionManager.update('play_time', 1/60); // Add 1 sec converted to minutes
+                    MissionManager.update('play_time', 1/60);
                     if(gameState.mode==='ENDLESS') MissionManager.update('score_run', gameState.score);
                 }
-                
                 if(gameState.shake>0)ctx.restore();
             }
             particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=0.04;ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,3,3);});particles=particles.filter(p=>p.life>0);ctx.globalAlpha=1;
@@ -616,7 +603,7 @@
         function resize(){canvas.width=V_WIDTH;canvas.height=V_HEIGHT;}
         function handleInput(e){if(!gameState.active||gameState.paused)return;e.preventDefault();const r=canvas.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;player.targetX=(cx-r.left)*(V_WIDTH/r.width);player.targetY=(cy-r.top)*(V_HEIGHT/r.height)-(e.touches?80:0);}
         canvas.addEventListener('mousemove',handleInput);canvas.addEventListener('touchmove',handleInput,{passive:false});window.addEventListener('resize',resize);
-        function drawRulesIcons(){const d=(i,t,c)=>{const cv=document.getElementById(i),x=cv.getContext('2d');AssetDrawer.drawPowerUp(x,t);};d('infoHealth','health');d('infoOverdrive','overdrive');d('infoMulti','multishot');}
+        function drawRulesIcons(){const d=(i,t)=>{const cv=document.getElementById(i),x=cv.getContext('2d');x.save();x.translate(20,20);AssetDrawer.drawPowerUp(x,t);x.restore();};d('infoHealth','health');d('infoOverdrive','overdrive');d('infoMulti','multishot');}
 
         let shopIdx=0; function btnClick(c){SoundManager.play('ui');c();}
         document.getElementById('campaignBtn').onclick=()=>btnClick(()=>initGame('CAMPAIGN')); document.getElementById('endlessBtn').onclick=()=>btnClick(()=>initGame('ENDLESS'));
