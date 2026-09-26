@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070d19">
+  <title>VOIDSTORM — За пределами пустоты</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="js/balance.js" defer></script>
+  <script src="js/game.js" defer></script>
+</head>
+<body>
+  <main id="gameContainer" aria-label="VOIDSTORM">
+    <canvas id="gameCanvas" width="600" height="1066" aria-label="Игровое поле. Двигайте корабль мышью, пальцем или клавишами WASD. Стрельба автоматическая."></canvas>
+    <audio id="bgMusic" src="music.mp3" loop preload="none"></audio>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div id="damageOverlay" aria-hidden="true"></div>
+    <div id="toast" role="status" class="hidden"></div>
+
+    <section id="mainMenu" class="screen menu-screen">
+      <div class="eyebrow"><span class="status-dot"></span> DEEP SPACE DIVISION <span>02.0</span></div>
+      <div class="brand"><div class="brand-kicker">ЗА ПРЕДЕЛАМИ ПУСТОТЫ</div><h1>VOID<span>STORM</span></h1><div class="brand-line"><span></span> ПРОТОКОЛ ВЫЖИВАНИЯ <span></span></div></div>
+      <div class="menu-ship"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><canvas id="menuShipCanvas" width="500" height="230"></canvas><div class="ship-coordinate">VS / <span id="menuShipCode">01</span></div><div class="ship-caption" id="menuShipName">ПЕРЕХВАТЧИК</div></div>
+      <div class="pilot-strip"><div><small>БАЛАНС</small><strong class="gold"><span class="credit-symbol">◈</span> <span id="menuCredits">0</span></strong></div><div><small>СЕКТОР</small><strong><span id="menuLevel">01</span><em> / 40</em></strong></div><div><small>РЕКОРД</small><strong id="menuRecord">0</strong></div></div>
+      <div class="menu-actions">
+        <button id="campaignBtn" class="btn btn-primary launch-btn"><span><small>ПРОДОЛЖИТЬ ПОЛЁТ</small><b>КАМПАНИЯ</b></span><span class="button-arrow">↗</span></button>
+        <button id="endlessBtn" class="btn btn-violet launch-btn"><span><small>БЕСКОНЕЧНЫЕ ВОЛНЫ</small><b>ВЫЖИВАНИЕ</b></span><span class="button-arrow">∞</span></button>
+        <div class="menu-nav"><button id="shopBtn" class="btn"><span>⌁</span> АНГАР</button><button id="missionsBtn" class="btn"><span>≡</span> ЗАДАНИЯ</button><button id="settingsBtn" class="btn icon-btn" aria-label="Настройки">⚙</button></div>
+      </div>
+      <button id="rulesBtn" class="text-btn">КАК ИГРАТЬ <span>↗</span></button>
+      <div class="menu-footer"><span>10 КОРАБЛЕЙ · 40 СЕКТОРОВ</span><span id="assetStatus">ЗАГРУЗКА АТЛАСА…</span></div>
+    </section>
+
+    <section id="sectorMenu" class="screen panel-screen hidden" aria-labelledby="sectorTitle">
+      <header class="screen-header"><div><div class="eyebrow">НАВИГАЦИЯ / 01</div><h2 id="sectorTitle">КАРТА СЕКТОРОВ</h2></div><button class="close-btn" data-close="sectorMenu" aria-label="Назад">×</button></header>
+      <div class="scroll-area"><div id="sectorSummary" class="notice"></div><div id="sectorGrid"></div></div>
+      <footer class="panel-footer"><button id="launchSectorBtn" class="btn btn-primary full">НАЧАТЬ ПОЛЁТ</button></footer>
+    </section>
+
+    <section id="shopMenu" class="screen panel-screen hidden" aria-labelledby="hangarTitle">
+      <header class="screen-header"><div><div class="eyebrow">ФЛОТ / <span id="shipNumber">01</span></div><h2 id="hangarTitle">АНГАР</h2></div><strong class="gold">◈ <span id="shopCredits">0</span></strong><button class="close-btn" data-close="shopMenu" aria-label="Назад">×</button></header>
+      <div class="scroll-area hangar-content">
+        <div class="ship-preview"><div class="preview-grid"></div><canvas id="shipPreviewCanvas" width="500" height="280"></canvas><button id="prevShip" class="nav-arrow prev" aria-label="Предыдущий корабль">‹</button><button id="nextShip" class="nav-arrow next" aria-label="Следующий корабль">›</button><div class="tier-label" id="shipTier">КЛАСС I</div></div>
+        <div class="ship-heading"><h3 id="shipName"></h3><p id="shipDesc"></p></div><div id="shipDots" class="ship-dots"></div>
+        <div class="stats-panel">
+          <div class="stat"><div><span>МОЩНОСТЬ</span><strong id="statValDmg"></strong></div><div class="stat-track"><i id="statBarDmg" class="violet-fill"></i></div></div>
+          <div class="stat"><div><span>БРОНЯ</span><strong id="statValArmor"></strong></div><div class="stat-track"><i id="statBarArmor" class="green-fill"></i></div></div>
+          <div class="stat"><div><span>СКОРОСТЬ</span><strong id="statValSpeed"></strong></div><div class="stat-track"><i id="statBarSpeed"></i></div></div>
+        </div>
+        <div id="shipComparison" class="comparison"></div>
+        <button id="selectShipBtn" class="btn btn-primary full">ВЫБРАТЬ</button><button id="buyShipBtn" class="btn btn-gold full hidden">КУПИТЬ · <span id="shipCost">0</span> ◈</button>
+        <div class="section-label">ОБЩИЕ СИСТЕМЫ ФЛОТА <span>ПЕРЕНОСЯТСЯ НА ВСЕ КОРАБЛИ</span></div>
+        <div class="upgrade-grid">
+          <button id="upgradeDmgBtn" class="upgrade-btn"><span class="upgrade-symbol violet">⌁</span><b>ОРУДИЯ</b><small id="dmgLvlText"></small><strong id="dmgCostText"></strong></button>
+          <button id="upgradeHpBtn" class="upgrade-btn"><span class="upgrade-symbol green">⬡</span><b>БРОНЯ</b><small id="hpLvlText"></small><strong id="hpCostText"></strong></button>
+          <button id="upgradeSpdBtn" class="upgrade-btn"><span class="upgrade-symbol">»</span><b>ДВИГАТЕЛЬ</b><small id="spdLvlText"></small><strong id="spdCostText"></strong></button>
+        </div>
+        <p class="fine-print">Новый корпус сильнее предыдущего по всем трём параметрам. Орудия +12%, броня +14%, скорость +4,5% от базовых за ранг.</p>
+      </div>
+      <footer class="panel-footer"><button class="btn full" data-close="shopMenu">НА БАЗУ</button></footer>
+    </section>
+
+    <section id="missionsModal" class="screen panel-screen hidden"><header class="screen-header"><div><div class="eyebrow">БОРТОВОЙ ЖУРНАЛ</div><h2>ЗАДАНИЯ</h2></div><button class="close-btn" data-close="missionsModal" aria-label="Назад">×</button></header><div class="scroll-area"><p class="muted">Три контракта на 24 часа. Прогресс учитывается в обоих режимах.</p><div id="missionsList"></div></div><footer class="panel-footer"><button class="btn full" data-close="missionsModal">НА БАЗУ</button></footer></section>
+
+    <section id="dailyModal" class="screen modal-screen hidden"><div class="eyebrow">СНАБЖЕНИЕ ВОССТАНОВЛЕНО</div><div class="daily-mark">◈</div><h2>ЕЖЕДНЕВНЫЙ ГРУЗ</h2><p class="muted">Возвращайтесь за новой наградой каждый день.</p><div id="dailyGrid" class="daily-grid"></div><button id="claimDailyBtn" class="btn btn-gold full">ПОЛУЧИТЬ ГРУЗ</button></section>
+
+    <section id="settingsModal" class="screen panel-screen hidden"><header class="screen-header"><div><div class="eyebrow">БОРТОВЫЕ СИСТЕМЫ</div><h2>НАСТРОЙКИ</h2></div><button class="close-btn" data-close="settingsModal" aria-label="Назад">×</button></header><div class="scroll-area"><label class="setting-row"><span><b>Звуковые эффекты</b><small>Оружие, попадания и интерфейс</small></span><input type="checkbox" id="sfxToggle" checked></label><label class="setting-row"><span><b>Музыка</b><small>Оригинальный саундтрек</small></span><input type="checkbox" id="musicToggle" checked></label><label class="setting-row"><span><b>Тряска экрана</b><small>Обратная связь при повреждении</small></span><input type="checkbox" id="shakeToggle" checked></label><div class="notice">При смене вкладки игра автоматически встаёт на паузу.</div></div><footer class="panel-footer"><button class="btn btn-primary full" data-close="settingsModal">ГОТОВО</button></footer></section>
+
+    <section id="infoModal" class="screen panel-screen hidden"><header class="screen-header"><div><div class="eyebrow">РУКОВОДСТВО ПИЛОТА</div><h2>БАЗА ДАННЫХ</h2></div><button class="close-btn" data-close="infoModal" aria-label="Назад">×</button></header><div class="scroll-area"><div class="section-label">УПРАВЛЕНИЕ</div><p>Мышь, WASD или стрелки — движение. На телефоне ведите пальцем в любой точке поля. Корабль стреляет автоматически.</p><p class="muted">Esc / P — пауза. Светящаяся точка в центре корабля — зона попадания. Красная линия предупреждает о прицельном выстреле.</p><div class="section-label">МОДУЛИ</div><div id="moduleGuide"></div><div class="section-label">ПРОГРЕССИЯ</div><p>В каждом секторе три конечные волны. Каждый пятый сектор охраняет босс. Между волнами есть передышка и небольшой ремонт. Уничтожайте минимум 60% обычных противников, чтобы открыть следующий сектор.</p><p class="muted">В выживании сложность растёт от номера волны. Число врагов и снарядов ограничено; каждая пятая волна — босс. Кредиты за уничтоженные корабли сохраняются даже при поражении.</p></div><footer class="panel-footer"><button class="btn btn-primary full" data-close="infoModal">ПРИНЯТО</button></footer></section>
+
+    <div id="hud" class="hidden" aria-label="Статус полёта"><div class="hud-top"><div><small>СЧЁТ</small><strong id="scoreDisplay">0</strong><span class="gold hud-credits">◈ <span id="gameCredits">0</span></span></div><div class="hud-center"><span id="runLabel">СЕКТОР 01</span><b id="waveLabel">ВОЛНА 1 / 3</b><div class="progress-track"><i id="levelProgressBar"></i></div></div><div class="hud-health"><small id="healthText">100 / 100</small><div class="health-track"><i id="healthBar"></i></div><button id="pauseBtn" class="pause-btn" aria-label="Пауза">Ⅱ</button></div></div><div id="bossHUD" class="hidden"><span>РАЗРУШИТЕЛЬ</span><div><i id="bossHealthBar"></i></div></div><div id="boostHUD"></div><div id="waveBanner" role="status"><b></b><span></span></div><div id="controlHint">WASD / СТРЕЛКИ / МЫШЬ · ОГОНЬ АВТОМАТИЧЕСКИЙ</div></div>
+
+    <section id="pauseMenu" class="screen modal-screen hidden"><div class="eyebrow">СИСТЕМЫ В РЕЖИМЕ ОЖИДАНИЯ</div><h2 class="large-title">ПАУЗА</h2><p class="muted">Космос подождёт.</p><button id="resumeBtn" class="btn btn-primary full">ПРОДОЛЖИТЬ ПОЛЁТ</button><button id="quitBtn" class="btn full">НА БАЗУ · СОХРАНИТЬ ДОХОД</button></section>
+
+    <section id="resultScreen" class="screen modal-screen hidden"><div class="eyebrow" id="resultEyebrow">ОТЧЁТ О ПОЛЁТЕ</div><div id="resultEmblem">✦</div><h2 id="resultTitle" class="large-title"></h2><p id="resultSub" class="muted"></p><div class="result-stats"><div><span>СЧЁТ</span><strong id="resScore">0</strong></div><div><span>ДОХОД</span><strong class="gold">+<span id="resCredits">0</span> ◈</strong></div><div><span id="resMetricLabel">УНИЧТОЖЕНО</span><strong id="resMetric">0</strong></div><div><span>ВРЕМЯ</span><strong id="resTime">00:00</strong></div></div><p id="resultTip" class="fine-print"></p><button id="resActionBtn" class="btn btn-primary full">ДАЛЕЕ</button><button id="resHangarBtn" class="btn full">В АНГАР</button><button id="resMenuBtn" class="text-btn">НА БАЗУ</button></section>
+  </main>
+</body>
+</html>
