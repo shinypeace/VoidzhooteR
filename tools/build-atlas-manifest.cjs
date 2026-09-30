@@ -2,7 +2,7 @@
 // This changes sprite metadata only; the generated PNG masters stay untouched.
 const sharp = require(process.env.SHARP_MODULE || 'C:/Users/pavel/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp');
 const fs = require('node:fs');
-const layouts = [['voidstorm-atlas',5,5],['expansion-atlas',4,4],['projectile-atlas',4,4],['reinforcements-atlas',2,4]];
+const layouts = [['voidstorm-atlas',5,5],['expansion-atlas',4,4],['projectile-atlas',4,4],['reinforcements-atlas',2,4],['frontier-atlas',4,3]];
 (async () => {
   const manifest = [];
   for (const [name, cols, rows] of layouts) {

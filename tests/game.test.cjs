@@ -32,10 +32,10 @@ test('boss has three phases, moving position, frequent patterns and bounded esco
 });
 test('selecting a system is free; separate purchase deducts exactly once and rank cap applies', () => {
   const r = game(); r.run('showMenu(); Save.data.credits=5000; renderShop();');
-  r.elements.get('upgradeHpBtn').onclick(); assert.equal(r.run('Save.data.credits'), 5000); assert.equal(r.run('Save.data.fleetUpgrades.hp'), 1);
-  r.elements.get('buyUpgradeBtn').onclick(); assert.equal(r.run('Save.data.credits'), 4800); assert.equal(r.run('Save.data.fleetUpgrades.hp'), 2);
-  r.run('Save.data.fleetUpgrades.hp=MAX_UPGRADE;renderShop()'); assert(r.elements.get('buyUpgradeBtn').disabled);
-  r.elements.get('buyUpgradeBtn').onclick(); assert.equal(r.run('Save.data.credits'), 4800);
+  r.elements.get('upgradeHpBtn').onclick(); assert.equal(r.run('Save.data.credits'), 5000); assert.equal(r.run('Save.data.upgrades[0].hp'), 1);
+  r.elements.get('buyUpgradeBtn').onclick(); assert.equal(r.run('Save.data.credits'), 4700); assert.equal(r.run('Save.data.upgrades[0].hp'), 2);
+  r.run('Save.data.upgrades[0].hp=MAX_UPGRADE;renderShop()'); assert(r.elements.get('buyUpgradeBtn').disabled);
+  r.elements.get('buyUpgradeBtn').onclick(); assert.equal(r.run('Save.data.credits'), 4700);
 });
 test('paused simulation does not move, shoot, or advance any timers', () => {
   const r = game(); r.run('simulate(1000); pauseGame()');
@@ -88,5 +88,5 @@ test('choosing an unaffordable system remains possible without enabling purchase
   const r = game(); r.run('showMenu();Save.data.credits=0;renderShop()');
   r.elements.get('upgradeRateBtn').onclick();
   assert.equal(r.elements.get('upgradeRateBtn').disabled, false); assert.equal(r.elements.get('buyUpgradeBtn').disabled, true);
-  assert.equal(r.run('Save.data.fleetUpgrades.rate'), 1); assert.equal(r.run('Save.data.credits'), 0);
+  assert.equal(r.run('Save.data.upgrades[0].rate'), 1); assert.equal(r.run('Save.data.credits'), 0);
 });

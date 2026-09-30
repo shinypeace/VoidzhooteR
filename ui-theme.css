@@ -114,3 +114,12 @@ h1 > span { color: #a7eaff; text-shadow: 0 0 30px #60c4ff26; }
   .menu-nav > .btn { min-height: 40px; padding: 8px 13px; }
   .menu-secondary > .btn { min-height: 34px; }
 }
+
+/* Keep both textures decoded; selection changes opacity without replacing images. */
+.upgrade-btn, .upgrade-btn::before, .upgrade-btn::after { transition: none; }
+.upgrade-btn.selected { --frame: url('assets/button-steel.webp'); }
+.upgrade-btn::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border: solid transparent; border-width: 14px 25px; border-image: url('assets/button-cyan.webp') 55 105 fill / 12px 20px / 0 stretch; opacity: 0; }
+.upgrade-btn.selected::after { opacity: 1; }
+.upgrade-btn:hover:not(:disabled)::before, .upgrade-btn.selected::before { filter: none; opacity: .55; }
+.ship-dots { flex-wrap: wrap; }
+.tier-label { font-size: 8px; letter-spacing: .5px; }

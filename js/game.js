@@ -1,4 +1,4 @@
-/* VOIDSTORM 4 — fixed-step simulation, bounded encounters, sprite atlas renderer. */
+/* VOIDSTORM 5 — fixed-step simulation, bounded encounters, sprite atlas renderer. */
 'use strict';
 const { SHIPS, ENEMIES, MODULES, MAX_LEVEL, MAX_UPGRADE, clamp } = Balance;
 const W = 600, H = 1066, STEP = 1000 / 60;
@@ -14,7 +14,17 @@ function localSet(key, value) { try { localStorage.setItem(key, value); return t
 let toastTimer;
 function toast(text) { $('toast').textContent = text; $('toast').classList.remove('hidden'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.add('hidden'), 3500); }
 
-const settings = { sfx: true, music: true, shake: !matchMedia('(prefers-reduced-motion: reduce)').matches, ...(safeParse(localGet('voidstorm_settings')) || {}) };
+const settings = { sfx: true, music: true, vibration: true, shake: !matchMedia('(prefers-reduced-motion: reduce)').matches, ...(safeParse(localGet('voidstorm_settings')) || {}) };
+const Haptics = {
+  hit() {
+    if (!settings.vibration) return;
+    try { if (typeof navigator !== 'undefined' && navigator.vibrate?.(45)) return; } catch { /* Unsupported host. */ }
+    const bridge = window.vkBridge;
+    if (VKAds.ready && bridge?.supports?.('VKWebAppTapticImpactOccurred')) {
+      Promise.resolve().then(() => bridge.send('VKWebAppTapticImpactOccurred', { style: 'medium' })).catch(() => {});
+    }
+  }
+};
 const Audio = {
   context: null, unlocked: false, lastShot: 0,
   unlock() { this.unlocked = true; this.music(); },
@@ -60,6 +70,7 @@ const Save = {
 // Keep an untouched legacy save once, in addition to the original source backup.
 if (!localGet('voidstorm_save_before_v2') && localGet('voidstorm_save')) localSet('voidstorm_save_before_v2', localGet('voidstorm_save'));
 if (!localGet('voidstorm_save_before_v4') && localGet('voidstorm_save')) localSet('voidstorm_save_before_v4', localGet('voidstorm_save'));
+if (!localGet('voidstorm_save_before_v5') && localGet('voidstorm_save')) localSet('voidstorm_save_before_v5', localGet('voidstorm_save'));
 const Atlas = {
   ready: false, error: false, cache: new Map(), sources: [],
   draw(c, index, x, y, size, rotation = 0) {
@@ -68,7 +79,7 @@ const Atlas = {
     const key = index + ':' + size + ':' + rotation;
     let sprite = this.cache.get(key);
     if (!sprite) {
-      const sourceId = index >= 300 ? 3 : index >= 200 ? 2 : index >= 100 ? 1 : 0, source = this.sources[sourceId];
+      const sourceId = Math.floor(index / 100), source = this.sources[sourceId];
       const frame = ATLAS_FRAMES[sourceId][index % 100], [sx, sy, sw, sh] = frame;
       const scale = size * .92 / Math.max(sw, sh), dw = sw * scale, dh = sh * scale;
       sprite = document.createElement('canvas'); sprite.width = sprite.height = Math.ceil(size * (rotation % Math.PI ? 1.22 : 1));
@@ -80,18 +91,19 @@ const Atlas = {
   },
   init() {
     let loaded = 0;
-    this.sources = [{ file: 'voidstorm-atlas.webp', cols: 5, rows: 5 }, { file: 'expansion-atlas.webp', cols: 4, rows: 4 }, { file: 'projectile-atlas.webp', cols: 4, rows: 4 }, { file: 'reinforcements-atlas.webp', cols: 2, rows: 4 }];
+    this.sources = [{ file: 'voidstorm-atlas.webp', cols: 5, rows: 5 }, { file: 'expansion-atlas.webp', cols: 4, rows: 4 }, { file: 'projectile-atlas.webp', cols: 4, rows: 4 }, { file: 'reinforcements-atlas.webp', cols: 2, rows: 4 }, { file: 'frontier-atlas.webp', cols: 4, rows: 3 }];
     for (const source of this.sources) {
       source.image = new Image();
       source.image.onload = () => {
-        if (++loaded !== 4) return;
+        if (++loaded !== this.sources.length) return;
         this.ready = true;
         // Prewarm every combat sprite once; no sprite rasterization during a dense wave.
         const scratch = document.createElement('canvas').getContext('2d');
         for (const e of Object.values(ENEMIES)) this.draw(scratch, e.sprite, 0, 0, e.radius * 2.7, Math.PI);
         for (const boss of Balance.BOSSES) this.draw(scratch, boss.sprite, 0, 0, boss.size, Math.PI);
-        for (const ship of SHIPS) this.draw(scratch, ship.id, 0, 0, 88);
+        for (const ship of SHIPS) this.draw(scratch, ship.sprite, 0, 0, 88);
         for (const module of Object.values(MODULES)) this.draw(scratch, module.sprite, 0, 0, 45);
+        for (const [index, size] of [[409, 72], [410, 72], [411, 100]]) this.draw(scratch, index, 0, 0, size);
         Object.keys(ShotArt.frames).forEach(style => ShotArt.get(style));
         $('assetStatus').textContent = 'СИСТЕМЫ ГОТОВЫ'; renderMenu(); renderShop(); renderModules(); initBoostHUD();
       };
@@ -153,7 +165,7 @@ const Daily = {
 
 let sessionChanged = false, shopIndex = Save.data.currentShip, selectedLevel = Save.data.campaignLevel, selectedUpgrade = 'dmg';
 let run = { active: false, paused: false, mode: 'MENU', time: 0 };
-let player = null, enemies = [], bullets = [], enemyBullets = [], pickups = [], particles = [], texts = [];
+let player = null, enemies = [], bullets = [], enemyBullets = [], pickups = [], particles = [], texts = [], hazards = [];
 let accumulator = 0, lastFrame = 0, hudTimer = 0, previewTimer = 0;
 const input = { keys: new Set(), pointer: null, lastX: 0, lastY: 0 };
 const stars = Array.from({ length: 100 }, () => ({ x: Math.random() * W, y: Math.random() * H, z: randomBetween(.2, 1), r: randomBetween(.5, 1.7) }));
@@ -165,7 +177,7 @@ function banner(title, subtitle, duration = 2300) { $('waveBanner').querySelecto
 
 class Player {
   constructor() {
-    this.stats = Balance.stats(Save.data.currentShip, Save.data.fleetUpgrades);
+    this.stats = Balance.stats(Save.data.currentShip, Balance.upgradesFor(Save.data));
     this.x = W / 2; this.y = H - 150; this.targetX = this.x; this.targetY = this.y;
     this.hp = this.stats.hp; this.maxHp = this.hp; this.radius = 17; this.hitHeight = 26; this.iframe = 1800; this.shotTimer = 0;
     this.boosts = { overdrive: 0, multishot: 0, shield: 0 };
@@ -189,17 +201,17 @@ class Player {
     if (bullets.length > 160) return;
     Audio.play('shoot');
     const s = this.stats, damage = s.dps * s.interval / 1000;
-    const patterns = { single: [0], double: [-10, 10], spread: [-16, 0, 16], sniper: [0], rapid: [0], homing: [-8, 8], omega: [-12, 12], lance: [-16, 0, 16], storm: [-18, 0, 18], nova: [-18, -11, -4, 4, 11, 18] };
-    const offsets = patterns[s.weapon], guided = ['homing', 'omega', 'storm', 'nova'].includes(s.weapon);
-    offsets.forEach(off => bullets.push(new Bullet(this.x + off, this.y - 29, 0, ['sniper', 'rapid'].includes(s.weapon) ? -1050 : -800, damage * (guided ? .75 : 1) / offsets.length, s.color,
-      { pierce: ['sniper', 'lance'].includes(s.weapon) ? 2 : 1, width: s.weapon === 'sniper' ? 7 : 4 })));
+    const patterns = { single: [0], double: [-10, 10], spread: [-16, 0, 16], sniper: [0], rapid: [0], homing: [-8, 8], omega: [-12, 12], lance: [-16, 0, 16], storm: [-18, 0, 18], nova: [-18, -11, -4, 4, 11, 18], helios: [-12, 0, 12], leviathan: [-18, -6, 6, 18] };
+    const offsets = patterns[s.weapon], guided = ['homing', 'omega', 'storm', 'nova', 'leviathan'].includes(s.weapon);
+    offsets.forEach(off => bullets.push(new Bullet(this.x + off, this.y - 29, 0, -s.projectileSpeed, damage * (guided ? .75 : 1) / offsets.length, s.color,
+      { pierce: ['sniper', 'lance', 'helios'].includes(s.weapon) ? 2 : 1, width: s.weapon === 'sniper' ? 7 : 4 })));
     if (guided) for (const side of [-1, 1]) bullets.push(new Bullet(this.x + side * 21, this.y - 21, side * 35, -740, damage * .125, s.color, { homing: true }));
     if (this.boosts.multishot > 0) for (const side of [-1, 1]) bullets.push(new Bullet(this.x + side * 25, this.y - 20, side * 90, -760, damage * .25, '#85ecff'));
   }
 
   hit(damage) {
     if (!run.active || this.iframe > 0 || this.boosts.shield > 0) return;
-    this.hp = Math.max(0, this.hp - damage); this.iframe = 650; run.shake = settings.shake ? 9 : 0; run.flash = 150; Audio.play('hit');
+    this.hp = Math.max(0, this.hp - damage); this.iframe = 650; run.shake = settings.shake ? 9 : 0; run.flash = 150; Audio.play('hit'); Haptics.hit();
     if (this.hp <= 0) { explosion(this.x, this.y, this.stats.color, 35); finishRun(false); }
   }
   collect(type) {
@@ -212,7 +224,7 @@ class Player {
     c.save(); if (this.iframe > 0 && Math.floor(run.time / 90) % 2) c.globalAlpha = .5;
     const engine = 20 + Math.sin(run.time * .04) * 5;
     c.globalAlpha *= .65; c.fillStyle = '#5bccff'; c.fillRect(this.x - 4, this.y + 23, 8, engine); c.fillStyle = '#d2fbff'; c.fillRect(this.x - 2, this.y + 23, 4, engine * .55); c.globalAlpha = 1;
-    Atlas.draw(c, this.stats.id, this.x, this.y, 88); c.restore();
+    Atlas.draw(c, this.stats.sprite, this.x, this.y, 88); c.restore();
     if (this.boosts.shield > 0) { c.strokeStyle = '#8fc3ff99'; c.lineWidth = 2; c.beginPath(); c.arc(this.x, this.y, 44 + Math.sin(run.time * .004) * 2, 0, Math.PI * 2); c.stroke(); }
     c.fillStyle = '#d8ffff'; c.beginPath(); c.arc(this.x, this.y, 3, 0, Math.PI * 2); c.fill();
   }
@@ -244,6 +256,10 @@ class Bullet {
         this.vx = Math.sin(angle) * 740; this.vy = -Math.cos(angle) * 740; this.angle = angle;
       }
     }
+    if (this.turnRate) {
+      const a = Math.atan2(this.vy, this.vx) + this.turnRate * s, speed = Math.hypot(this.vx, this.vy);
+      this.vx = Math.cos(a) * speed; this.vy = Math.sin(a) * speed; this.angle = a + Math.PI / 2;
+    }
     this.x += this.vx * s; this.y += this.vy * s;
     if (this.split && this.life > (this.style === 'mine' ? 2300 : 1450)) {
       this.active = false;
@@ -259,6 +275,42 @@ class Bullet {
     c.fillStyle = this.color;
     if (this.enemy) c.drawImage(ShotArt.get(this.style), -21, -21);
     else c.drawImage(ShotArt.get(this.homing ? 'plasma' : 'player'), this.pierce > 1 ? -9 : -7, -18, this.pierce > 1 ? 18 : 14, this.pierce > 1 ? 44 : 32); c.restore();
+  }
+}
+// Fixed lanes telegraph before activation; debris can be destroyed, never farms credits.
+function addHazard(kind, x, y, config) {
+  if (hazards.filter(h => h.active).length >= 6 || (kind === 'beam' && hazards.filter(h => h.active && h.kind === 'beam').length >= 2)) return;
+  hazards.push(new Hazard(kind, clamp(x, 45, W - 45), y, config));
+}
+class Hazard {
+  constructor(kind, x, y, config) {
+    Object.assign(this, { kind, x, y, active: true, age: 0, config, radius: kind === 'beam' ? 12 : 27,
+      hp: config.expectedDps * .7, vx: kind === 'pylon' ? (x < W / 2 ? 34 : -34) : 0 });
+  }
+  update(dt) {
+    this.age += dt;
+    if (this.kind === 'beam') {
+      if (this.age > 1100 && this.age < 1800 && player.y > this.y && Math.abs(player.x - this.x) < player.radius + 12) player.hit(this.config.damage * 1.3);
+      if (this.age >= 1900) this.active = false;
+    } else {
+      this.y += (this.kind === 'pylon' ? 76 : 110) * dt / 1000; this.x += this.vx * dt / 1000;
+      if (Math.hypot(this.x - player.x, this.y - player.y) < this.radius + player.radius) { player.hit(this.config.damage * 1.6); this.active = false; }
+      if (this.y > H + 60) this.active = false;
+    }
+  }
+  hit(damage) { if (this.kind === 'beam') return; this.hp -= damage; if (this.hp <= 0) { this.active = false; explosion(this.x, this.y, '#9fbdcc'); } }
+  draw(c) {
+    if (this.kind !== 'beam') { Atlas.draw(c, this.kind === 'pylon' ? 410 : 409, this.x, this.y, 72); return; }
+    c.save();
+    if (this.age < 1100) {
+      c.fillStyle = '#57dfff15'; c.fillRect(this.x - 20, this.y, 40, H - this.y);
+      c.strokeStyle = '#8eedff'; c.setLineDash([12, 12]); c.lineWidth = 2;
+      c.beginPath(); c.moveTo(this.x, this.y); c.lineTo(this.x, H); c.stroke();
+    } else {
+      c.translate(this.x, this.y + (H - this.y) / 2); c.scale(.9, (H - this.y) / 90);
+      Atlas.draw(c, 411, 0, 0, 100);
+    }
+    c.restore();
   }
 }
 class Enemy {
@@ -308,7 +360,7 @@ class Enemy {
     }
     if (this.y > 60 && this.y < Math.min(H - 150, player.y - 65)) {
       this.shotTimer -= dt;
-      if (this.shotTimer <= 0) { this.shoot(); this.shotTimer += this.def.rate * this.config.fireRate * (this.type === 'boss' ? 1 - this.bossPhase * .1 : 1); }
+      if (this.shotTimer <= 0) { this.shoot(); this.shotTimer += (this.type === 'needle' && this.shotCount % 3 ? 180 : this.def.rate * this.config.fireRate * (this.type === 'boss' ? 1 - this.bossPhase * .1 : 1)); }
     }
     if (this.type !== 'boss' && (this.y > H + 90 || this.age > 18500)) {
       this.active = false; if (!this.escort) { run.escaped++; run.resolved++; }
@@ -319,7 +371,7 @@ class Enemy {
     const widths = { orb: 7, ring: 7, bomb: 8, rail: 4, diamond: 5, mine: 8, pulse: 7, toxic: 6, arc: 6, fork: 5 };
     speed *= this.config.bulletSpeed;
     enemyBullets.push(new Bullet(this.x + xOff, this.y + this.radius * .55, Math.cos(angle) * speed, Math.sin(angle) * speed, this.config.damage, this.def.color,
-      { enemy: true, style, width: widths[style] || 4, split: style === 'bomb' || style === 'mine' }));
+      { enemy: true, style, width: widths[style] || 4, split: style === 'bomb' || style === 'mine' || this.type === 'rift', turnRate: this.type === 'resonator' ? (xOff < 0 ? -.18 : .18) : 0 }));
     run.shotsFired++;
   }
   fan(count, spacing, angle, speed, style) { for (let i = 0; i < count; i++) this.emit(angle + (i - (count - 1) / 2) * spacing, speed, style); }
@@ -351,6 +403,10 @@ class Enemy {
       case 'aegis': this.fan(this.armored ? 3 : 5, .26, down, 205, 'ring'); break;
       case 'mirage': for (const offset of [-30, 0, 30]) this.emit(down + (this.shotCount % 2 ? .2 : -.2), 280, 'plasma', offset); break;
       case 'oracle': if (this.shotCount % 2) this.fan(3, .5, down, 95, 'mine'); else this.fan(5, .25, down, 205, 'diamond'); break;
+      case 'resonator': this.emit(down - .25, 250, 'toxic', -18); this.emit(down + .25, 250, 'toxic', 18); break;
+      case 'rift': this.emit(down + Math.sin(this.shotCount) * .3, 130, 'plasma'); break;
+      case 'warden': this.fan(3, .24, down, 220, 'pulse'); if (this.shotCount % 3 === 0) addHazard('rock', this.x, this.y + 45, this.config); break;
+      case 'needle': this.emit(down + (this.shotCount % 3 - 1) * .13, 390, 'shard'); break;
       case 'boss': this.bossShoot(); break;
     }
   }
@@ -396,6 +452,19 @@ class Enemy {
         if (p === 1) for (let i = 0; i < 8; i++) this.emit(n * .31 + i * Math.PI / 4, 205, 'ring');
         if (p === 2) { this.fan(5, .29, down, 260, 'diamond'); if (n % 3 === 0) { this.emit(down - .4, 110, 'bomb', -48); this.emit(down + .4, 110, 'bomb', 48); } }
         break;
+      case 10:
+        if (n % 2) addHazard('beam', 90 + n % 4 * 140, this.y + 60, this.config);
+        else this.fan(5 + p * 2, .27, down, 225, 'shard');
+        break;
+      case 11:
+        if (n % 3 === 1) for (const x of [110, 300, 490]) addHazard('rock', x + Math.sin(n + x) * 35, this.y + 50, this.config);
+        else this.fan(5 + p * 2, .3, down + Math.sin(n) * .2, 205, 'toxic');
+        break;
+      case 12:
+        if (n % 3 === 1) { addHazard('pylon', 100, this.y + 60, this.config); addHazard('pylon', 500, this.y + 60, this.config); }
+        else if (n % 3 === 2) addHazard('beam', n % 2 ? 210 : 390, this.y + 50, this.config);
+        else this.fan(5 + p * 2, .26, down, 250, 'diamond');
+        break;
     }
   }
 
@@ -416,12 +485,12 @@ class Enemy {
     if (this.hp > 0) return;
     this.active = false; run.kills++; if (!this.escort) run.resolved++;
     if (this.type !== 'boss' && !this.escort) run.regularKills++;
-    const reward = this.escort ? 0 : this.def.credits;
+    const reward = this.escort ? 0 : this.type === 'boss' ? this.config.bossReward : Math.round(this.config.killReward * (this.type === 'courier' ? 1.5 : 1));
     run.score += this.escort ? Math.ceil(this.def.score * .5) : this.def.score; run.credits += reward;
     Missions.update('kill_' + this.type, 1); Missions.update('collect_money', reward);
     explosion(this.x, this.y, this.def.color, this.type === 'boss' ? 40 : 11); Audio.play('explode');
     if (this.type === 'boss') {
-      run.bossKilled = true; enemyBullets.length = 0;
+      run.bossKilled = true; enemyBullets.length = 0; hazards.length = 0;
       for (const e of enemies) if (e.escort) { e.active = false; explosion(e.x, e.y, e.def.color, 8); }
       dropModule(this.x, this.y, 'shield');
     } else if (!this.escort && Math.random() < .10 && run.time - run.lastDrop > 3500) dropModule(this.x, this.y);
@@ -444,13 +513,14 @@ const Director = {
   beginWave() {
     if (!run.active) return;
     if (run.pendingSupply) { dropModule(player.x < W / 2 ? W - 110 : 110, -32, run.pendingSupply); run.pendingSupply = null; }
-    if (run.mode === 'ENDLESS') run.config = Balance.survival(run.wave);
+    if (run.mode === 'ENDLESS') run.config = Balance.survival(run.wave, run.survivalStart);
     const c = run.config;
     run.phase = 'combat'; run.spawnTimer = 900; run.waveStarted = run.time;
-    run.queue = Balance.waveTypes(c, run.wave); run.waveTotal = run.queue.length; run.waveResolvedStart = run.resolved;
+    run.queue = Balance.waveTypes(c, run.wave); c.scale = Balance.waveScale(c, run.queue); run.waveTotal = run.queue.length; run.waveResolvedStart = run.resolved;
     run.planned += run.queue.length;
     run.bossPending = c.boss && (run.mode === 'ENDLESS' || run.wave === c.waves);
     run.bossKilled = false; run.bossSpawned = false;
+    if (c.level >= 75 && c.level % 7 === 0) addHazard('rock', 130 + run.wave % 3 * 140, -70, c);
     banner(run.mode === 'CAMPAIGN' ? `ВОЛНА ${run.wave} / ${c.waves}` : `ВОЛНА ${run.wave}`, run.bossPending ? 'Тяжёлый сигнал в конце волны' : run.wave === 1 ? 'Удачного полёта, пилот' : 'Все системы готовы');
   },
   update(dt) {
@@ -463,7 +533,7 @@ const Director = {
       if (pressure > Math.max(18, c.bulletCap * .30)) { run.spawnTimer = 350; return; }
       // Find an affordable enemy without blocking the queue on a heavy unit.
       const index = run.queue.findIndex(type => Balance.canSpawn(type, enemies, c));
-      if (index >= 0) { const type = run.queue.splice(index, 1)[0]; enemies.push(new Enemy(type, c)); run.spawnTimer = c.interval; }
+      if (index >= 0) { const type = run.queue.splice(index, 1)[0]; enemies.push(new Enemy(type, c)); run.spawnTimer = run.queue.length > run.waveTotal - 3 ? 260 : c.interval; }
       else run.spawnTimer = 180;
     }
     const alive = enemies.some(e => e.active);
@@ -473,9 +543,9 @@ const Director = {
         banner(Balance.BOSSES[c.bossKind].name, Balance.BOSSES[c.bossKind].mechanic, 3200); return;
       }
       if (run.bossPending && !run.bossKilled) return;
-      enemyBullets = [];
-      if (run.mode === 'CAMPAIGN' && run.wave >= c.waves) { finishRun(run.regularKills / Math.max(1, run.planned) >= .6, 'coverage'); return; }
-      if (run.mode === 'ENDLESS') { const bonus = 60 + Math.min(30, run.wave) * 15; run.credits += bonus; Missions.update('collect_money', bonus); }
+      enemyBullets = []; hazards = [];
+      if (run.mode === 'CAMPAIGN' && run.wave >= c.waves) { finishRun(run.regularKills / Math.max(1, run.planned) >= .75, 'coverage'); return; }
+      if (run.mode === 'ENDLESS') { const bonus = c.survivalReward; run.credits += bonus; Missions.update('collect_money', bonus); }
       run.wave++; run.phase = 'rest'; run.restTimer = 4300;
       player.hp = Math.min(player.maxHp, player.hp + player.maxHp * .05); player.iframe = Math.max(player.iframe, 1500);
       run.pendingSupply = run.wave % 3 === 0 ? 'health' : run.wave % 2 === 0 ? 'overdrive' : 'multishot';
@@ -501,16 +571,20 @@ function simulate(dt) {
   if (!run.active || run.paused) return;
   const s = dt / 1000; run.time += dt; run.shake *= .87; run.flash = Math.max(0, run.flash - dt);
   player.update(dt); Director.update(dt); if (!run.active) return;
-  for (const list of [enemies, bullets, enemyBullets]) for (const entity of list) if (entity.active) entity.update(dt);
+  for (const list of [enemies, bullets, enemyBullets, hazards]) for (const entity of list) if (entity.active) entity.update(dt);
   for (const b of bullets) {
     if (!b.active) continue;
     for (const e of enemies) {
       if (!b.active || !e.active || b.hits.has(e)) continue;
       if (segmentDistance(e.x, e.y, b.prevX, b.prevY, b.x, b.y) < e.radius + b.width / 2) {
-        b.hits.add(e); e.hit(b.damage); b.pierce--; if (b.pierce <= 0) b.active = false;
+        b.hits.add(e); e.hit(b.damage); b.damage *= .12; b.pierce--; if (b.pierce <= 0) b.active = false;
       }
     }
   }
+  for (const b of bullets) if (b.active) for (const h of hazards) {
+    if (h.active && h.kind !== 'beam' && segmentDistance(h.x, h.y, b.prevX, b.prevY, b.x, b.y) < h.radius) { h.hit(b.damage); b.active = false; break; }
+  }
+  if (!run.active) return;
   for (const b of enemyBullets) if (b.active && hitsPlayer(b)) { b.active = false; player.hit(b.damage); if (!run.active) return; }
   for (const e of enemies) if (e.active && Math.hypot(e.x - player.x, e.y - player.y) < e.radius + player.radius) {
     player.hit(run.config.damage * 2.2);
@@ -525,7 +599,7 @@ function simulate(dt) {
     if (distance < 38) { p.active = false; player.collect(p.type); }
     if (p.y > H + 45 || p.age > 14000) p.active = false;
   }
-  compactActive(enemies); compactActive(bullets); compactActive(enemyBullets); compactActive(pickups);
+  compactActive(enemies); compactActive(bullets); compactActive(enemyBullets); compactActive(pickups); compactActive(hazards);
   for (const p of particles) { p.x += p.vx * s; p.y += p.vy * s; p.life -= s; }
   for (const t of texts) { t.y -= 32 * s; t.life -= s; }
   compactAlive(particles); compactAlive(texts);
@@ -541,11 +615,12 @@ function advance(elapsed) {
 function startRun(mode, level = Save.data.campaignLevel) {
   if (VKAds.busy) { toast('Дождитесь завершения рекламы.'); return; }
   if (!Atlas.ready) { toast(Atlas.error ? 'Проверьте наличие файла атласа в папке assets.' : 'Атлас ещё загружается. Подождите немного.'); return; }
+  if (!Balance.canUse(Save.data, Save.data.currentShip)) { toast('Корпус откроется по мере прохождения кампании.'); return; }
   sessionChanged = true; Audio.unlock(); Missions.check(); clearTimeout(Save.timer); Save.timer = null;
   const safeLevel = clamp(Math.floor(level), 1, Save.data.campaignLevel);
-  run = { active: true, paused: false, mode, level: safeLevel, wave: 1, config: mode === 'CAMPAIGN' ? Balance.campaign(safeLevel) : Balance.survival(1),
+  run = { active: true, paused: false, mode, level: safeLevel, wave: 1, survivalStart: Save.data.campaignLevel, config: mode === 'CAMPAIGN' ? Balance.campaign(safeLevel) : Balance.survival(1, Save.data.campaignLevel),
     time: 0, score: 0, credits: 0, banked: 0, shotsFired: 0, kills: 0, regularKills: 0, escaped: 0, planned: 0, resolved: 0, shake: 0, flash: 0, lastDrop: -10000, missionTimer: 0, bannerUntil: 0, committed: false };
-  enemies = []; bullets = []; enemyBullets = []; particles = []; texts = []; pickups = []; accumulator = 0; hudTimer = 0;
+  enemies = []; bullets = []; enemyBullets = []; particles = []; texts = []; pickups = []; hazards = []; accumulator = 0; hudTimer = 0;
   input.keys.clear(); input.pointer = null; player = new Player();
   document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden')); $('hud').classList.remove('hidden');
   $('controlHint').textContent = matchMedia('(pointer: coarse)').matches ? 'ВЕДИТЕ ПАЛЬЦЕМ ПО ЭКРАНУ · ОГОНЬ АВТОМАТИЧЕСКИЙ' : 'WASD / СТРЕЛКИ / МЫШЬ · ОГОНЬ АВТОМАТИЧЕСКИЙ';
@@ -577,11 +652,11 @@ function finishRun(victory, reason) {
   $('resultTitle').textContent = victory ? (run.level === MAX_LEVEL ? 'ГАЛАКТИКА ВАША' : 'СЕКТОР ОЧИЩЕН') : reason === 'coverage' ? 'СЕКТОР НЕ ОЧИЩЕН' : 'ПОЛЁТ ЗАВЕРШЁН';
   $('resultTitle').style.color = victory ? '#91e6b2' : '#f2b1bc'; $('resultEmblem').textContent = victory ? 'MISSION COMPLETE' : 'SIGNAL LOST';
   $('resultEyebrow').textContent = isCampaign ? `КАМПАНИЯ / СЕКТОР ${String(run.level).padStart(2, '0')}` : (run.score > oldRecord ? 'НОВЫЙ РЕКОРД' : 'ВЫЖИВАНИЕ / ОТЧЁТ');
-  $('resultSub').textContent = victory ? 'Путь к следующей звёздной системе открыт.' : reason === 'coverage' ? `Уничтожено ${coverage}%. Для победы нужно 60%.` : 'Кредиты сохранены. Флот готов к новому вылету.';
+  $('resultSub').textContent = victory ? 'Путь к следующей звёздной системе открыт.' : reason === 'coverage' ? `Уничтожено ${coverage}%. Для победы нужно 75%.` : 'Кредиты сохранены. Флот готов к новому вылету.';
   $('resScore').textContent = fmt(run.score); $('resCredits').textContent = fmt(run.credits); $('resMetricLabel').textContent = isCampaign ? 'УНИЧТОЖЕНО' : 'ВОЛНА';
   $('resMetric').textContent = isCampaign ? `${run.regularKills} / ${run.planned}` : run.wave; $('resTime').textContent = clockText(run.time);
   const nextShip = SHIPS.find(s => !Save.data.unlockedShips.includes(s.id) && s.cost <= Save.data.credits && s.unlock <= Save.data.campaignLevel);
-  $('resultTip').textContent = nextShip ? `Доступен новый корпус: ${nextShip.name}. Загляните в ангар.` : victory ? 'Системы флота усиливают все ваши корабли.' : 'Двигайтесь между залпами. Следите за подкреплениями босса.';
+  $('resultTip').textContent = nextShip ? `Доступен новый корпус: ${nextShip.name}. Загляните в ангар.` : victory ? 'Улучшайте системы выбранного корабля в ангаре.' : 'Двигайтесь между залпами. Следите за подкреплениями босса.';
   $('resActionBtn').textContent = victory && run.level < MAX_LEVEL ? 'СЛЕДУЮЩИЙ СЕКТОР' : 'ПОВТОРИТЬ ПОЛЁТ';
   const replayMode = run.mode, replayLevel = victory && run.level < MAX_LEVEL ? run.level + 1 : run.level;
   $('resActionBtn').onclick = () => { Audio.play('ui'); startRun(replayMode, replayLevel); }; renderMenu(); VKAds.afterFlight(run.time);
@@ -602,16 +677,16 @@ function renderMenu() {
   $('menuShipName').textContent = SHIPS[Save.data.currentShip].name; $('menuShipCode').textContent = String(Save.data.currentShip + 1).padStart(2, '0'); drawMenuShip(performance.now());
 }
 function drawMenuShip(time) {
-  const c = $('menuShipCanvas').getContext('2d'); c.clearRect(0, 0, 500, 230); Atlas.draw(c, Save.data.currentShip, 250, 112 + Math.sin(time * .001) * 5, 200, -.12);
+  const c = $('menuShipCanvas').getContext('2d'); c.clearRect(0, 0, 500, 230); Atlas.draw(c, SHIPS[Save.data.currentShip].sprite, 250, 112 + Math.sin(time * .001) * 5, 200, -.12);
 }
 function renderSectors() {
   const names = ['ТИХАЯ ГРАНИЦА', 'ПОЯС ОБЛОМКОВ', 'ТЁМНЫЙ ФРОНТ', 'СЕРДЦЕ ПУСТОТЫ', 'МЁРТВАЯ ОРБИТА', 'ТУМАННОСТЬ ВЕГА', 'ЗВЁЗДНЫЙ РАЗЛОМ', 'ПОСЛЕДНИЙ РУБЕЖ', 'КРАЙ СИНГУЛЯРНОСТИ', 'ПЕПЕЛ СВЕРХНОВОЙ', 'ЦИТАДЕЛЬ БЕЗДНЫ', 'ГОРИЗОНТ СОБЫТИЙ', 'ЛЕДЯНОЕ ЭХО', 'ПЫЛЬ АНТАРЕСА', 'ПОЯС ГОЛИАФА', 'РАСКОЛОТЫЙ МИР', 'ЛАБИРИНТ ПУЛЬСАРОВ', 'ЗАБЫТАЯ ЭСКАДРА', 'ПРЕДЕЛ АТЛАСА', 'ПРИЗРАКИ ОРИОНА', 'ПЕПЕЛ ИМПЕРИИ', 'КОЛЬЦА ТИТАНА', 'НУЛЕВАЯ ЗВЕЗДА', 'ОКО БУРИ', 'ИСТОК ПУСТОТЫ'];
   $('sectorGrid').replaceChildren();
-  for (let chapter = 0; chapter < MAX_LEVEL / 10; chapter++) {
-    const label = document.createElement('div'); label.className = 'chapter-title'; label.innerHTML = `<span>${String(chapter + 1).padStart(2, '0')} / ${names[chapter]}</span><small>10 СЕКТОРОВ</small>`; $('sectorGrid').append(label);
+  for (let chapter = 0; chapter < MAX_LEVEL / 25; chapter++) {
+    const label = document.createElement('div'); label.className = 'chapter-title'; label.innerHTML = `<span>${String(chapter + 1).padStart(2, '0')} / ${names[chapter]}</span><small>25 СЕКТОРОВ</small>`; $('sectorGrid').append(label);
     const grid = document.createElement('div'); grid.className = 'sector-grid';
-    for (let i = 1; i <= 10; i++) {
-      const level = chapter * 10 + i, button = document.createElement('button');
+    for (let i = 1; i <= 25; i++) {
+      const level = chapter * 25 + i, button = document.createElement('button');
       button.className = `sector-btn ${level === selectedLevel ? 'selected' : ''} ${level < Save.data.campaignLevel || Save.data.levelBest[level] ? 'complete' : ''} ${level % 5 === 0 ? 'boss' : ''}`;
       button.disabled = level > Save.data.campaignLevel; button.setAttribute('aria-label', `Сектор ${level}${level % 5 === 0 ? ', босс' : ''}`);
       button.innerHTML = `${String(level).padStart(2, '0')}<small>${level % 5 === 0 ? 'БОСС' : level < Save.data.campaignLevel ? 'ПРОЙДЕН' : 'СЕКТОР'}</small>`;
@@ -620,43 +695,53 @@ function renderSectors() {
     $('sectorGrid').append(grid);
   }
   const config = Balance.campaign(selectedLevel), recommended = SHIPS[config.tier];
-  $('sectorSummary').innerHTML = `<b>СЕКТОР ${String(selectedLevel).padStart(2, '0')} · ${config.waves} ВОЛНЫ${config.boss ? ' + БОСС' : ''}</b><br>Рекомендуемый корпус: ${recommended.name}.<br>Награда: ${fmt(selectedLevel < Save.data.campaignLevel || Save.data.levelBest[selectedLevel] ? config.repeatReward : config.reward)} CR + добыча. Для победы: 60% противников.`;
+  $('sectorSummary').innerHTML = `<b>СЕКТОР ${String(selectedLevel).padStart(2, '0')} · ${config.waves} ВОЛНЫ${config.boss ? ' + БОСС' : ''}</b><br>Рекомендуемый корпус: ${recommended.name}.<br>Награда: ${fmt(selectedLevel < Save.data.campaignLevel || Save.data.levelBest[selectedLevel] ? config.repeatReward : config.reward)} CR + добыча. Для победы: 75% противников.`;
   $('launchSectorBtn').textContent = `В СЕКТОР ${String(selectedLevel).padStart(2, '0')}`;
 }
 function drawShopShip(time) {
-  const c = $('shipPreviewCanvas').getContext('2d'); c.clearRect(0, 0, 500, 280); Atlas.draw(c, shopIndex, 250, 133 + Math.sin(time * .0012) * 4, 242, -.08);
+  const c = $('shipPreviewCanvas').getContext('2d'); c.clearRect(0, 0, 500, 280); Atlas.draw(c, SHIPS[shopIndex].sprite, 250, 133 + Math.sin(time * .0012) * 4, 242, -.08);
 }
 function renderShop() {
-  const ship = Balance.stats(shopIndex, Save.data.fleetUpgrades), owned = Save.data.unlockedShips.includes(shopIndex), max = Balance.stats(9, { dmg: MAX_UPGRADE, hp: MAX_UPGRADE, rate: MAX_UPGRADE });
-  $('shopCredits').textContent = fmt(Save.data.credits); $('shipNumber').textContent = `${String(shopIndex + 1).padStart(2, '0')} / 10`; $('shipName').textContent = ship.name; $('shipDesc').textContent = ship.role;
-  $('shipTier').textContent = `КОРПУС ${String(shopIndex + 1).padStart(2, '0')} / ${owned ? 'В СОСТАВЕ ФЛОТА' : Save.data.campaignLevel < ship.unlock ? 'ЧЕРТЕЖИ В СЕКТОРЕ ' + ship.unlock : 'ДОСТУПЕН К ПОКУПКЕ'}`;
-  $('statValDmg').textContent = `${Math.round(ship.dps)} ед/с`; $('statValArmor').textContent = `${ship.hp} HP`; $('statValSpeed').textContent = `${ship.fireRate.toFixed(1)} залп/с`;
-  $('statBarDmg').style.width = `${ship.dps / max.dps * 100}%`; $('statBarArmor').style.width = `${ship.hp / max.hp * 100}%`; $('statBarSpeed').style.width = `${ship.fireRate / Balance.stats(4, {rate:MAX_UPGRADE}).fireRate * 100}%`;
-  const previous = shopIndex > 0 ? Balance.stats(shopIndex - 1, Save.data.fleetUpgrades) : null;
-  $('shipComparison').textContent = previous ? `К предыдущему: урон +${Math.round((ship.dps / previous.dps - 1) * 100)}% · броня +${ship.hp - previous.hp}` : 'Базовый корпус · начало вашего флота';
-  $('buyShipBtn').classList.toggle('hidden', owned); $('selectShipBtn').classList.toggle('hidden', !owned); $('shipCost').textContent = fmt(ship.cost); $('buyShipBtn').disabled = Save.data.credits < ship.cost || Save.data.campaignLevel < ship.unlock;
-  $('selectShipBtn').disabled = Save.data.currentShip === shopIndex; $('selectShipBtn').textContent = Save.data.currentShip === shopIndex ? 'ГОТОВ К ВЫЛЕТУ' : 'ВЫБРАТЬ КОРАБЛЬ';
+  const upgrades = Balance.upgradesFor(Save.data, shopIndex), ship = Balance.stats(shopIndex, upgrades);
+  const owned = Save.data.unlockedShips.includes(shopIndex), usable = Balance.canUse(Save.data, shopIndex);
+  const max = Balance.stats(shopIndex, { dmg: MAX_UPGRADE, hp: MAX_UPGRADE, rate: MAX_UPGRADE });
+  $('shopCredits').textContent = fmt(Save.data.credits); $('shipNumber').textContent = String(shopIndex + 1).padStart(2, '0') + ' / ' + SHIPS.length;
+  $('shipName').textContent = ship.name; $('shipDesc').textContent = ship.role;
+  $('shipTier').textContent = 'СЕКТОРЫ ' + ship.unlock + '–' + (ship.unlock + 24) + ' / ' + (Save.data.campaignLevel < ship.unlock ? 'ДОСТУП С СЕКТОРА ' + ship.unlock : owned ? 'В СОСТАВЕ ФЛОТА' : shopIndex > 0 && !Save.data.unlockedShips.includes(shopIndex - 1) ? 'СНАЧАЛА КОРПУС ' + shopIndex : 'ДОСТУПЕН К ПОКУПКЕ');
+  $('statValDmg').textContent = fmt(ship.dps) + ' ед/с'; $('statValArmor').textContent = fmt(ship.hp) + ' HP'; $('statValSpeed').textContent = ship.fireRate.toFixed(1) + ' залп/с';
+  $('statBarDmg').style.width = ship.dps / max.dps * 100 + '%'; $('statBarArmor').style.width = ship.hp / max.hp * 100 + '%'; $('statBarSpeed').style.width = ship.fireRate / max.fireRate * 100 + '%';
+  const previous = shopIndex ? Balance.stats(shopIndex - 1, { dmg: 5, hp: 5, rate: 5 }) : null;
+  $('shipComparison').textContent = previous ? 'Базовый корпус сильнее предыдущего с полной прокачкой: урон +' + Math.round((SHIPS[shopIndex].dps / previous.dps - 1) * 100) + '% · броня +' + Math.round((SHIPS[shopIndex].hp / previous.hp - 1) * 100) + '%' : 'Ваш первый корабль · улучшайте системы по ходу главы';
+  $('buyShipBtn').classList.toggle('hidden', owned); $('selectShipBtn').classList.toggle('hidden', !owned); $('shipCost').textContent = fmt(ship.cost); $('buyShipBtn').disabled = !Balance.canBuy(Save.data, shopIndex);
+  $('selectShipBtn').disabled = !usable || Save.data.currentShip === shopIndex;
+  $('selectShipBtn').textContent = !usable ? 'ДОСТУП С СЕКТОРА ' + ship.unlock : Save.data.currentShip === shopIndex ? 'ГОТОВ К ВЫЛЕТУ' : 'ВЫБРАТЬ КОРАБЛЬ';
   $('shipDots').replaceChildren();
-  SHIPS.forEach(s => { const dot = document.createElement('button'); dot.className = `ship-dot ${s.id === shopIndex ? 'selected' : ''}`; dot.setAttribute('aria-label', s.name); dot.onclick = () => { shopIndex = s.id; renderShop(); }; $('shipDots').append(dot); });
+  SHIPS.forEach(s => { const dot = document.createElement('button'); dot.className = 'ship-dot' + (s.id === shopIndex ? ' selected' : ''); dot.setAttribute('aria-label', s.name); dot.onclick = () => { shopIndex = s.id; renderShop(); }; $('shipDots').append(dot); });
+  renderUpgradeOptions(); drawShopShip(performance.now());
+}
+function renderUpgradeOptions() {
+  const upgrades = Balance.upgradesFor(Save.data, shopIndex);
   for (const [key, id] of [['dmg', 'Dmg'], ['hp', 'Hp'], ['rate', 'Rate']]) {
-    const rank = Save.data.fleetUpgrades[key], cost = Balance.upgradeCost(rank);
-    $(`${key}LvlText`).textContent = `РАНГ ${rank} / ${MAX_UPGRADE}`; $(`${key}CostText`).textContent = rank >= MAX_UPGRADE ? 'МАКСИМУМ' : `${fmt(cost)} CR`;
-    $(`upgrade${id}Btn`).disabled = false;
-    $(`upgrade${id}Btn`).classList.toggle('selected', selectedUpgrade === key);
-    $(`upgrade${id}Btn`).setAttribute('aria-pressed', String(selectedUpgrade === key));
+    const rank = upgrades[key], cost = Balance.upgradeCost(rank, shopIndex);
+    $(key + 'LvlText').textContent = 'РАНГ ' + rank + ' / ' + MAX_UPGRADE;
+    $(key + 'CostText').textContent = rank >= MAX_UPGRADE ? 'МАКСИМУМ' : fmt(cost) + ' CR';
+    const button = $('upgrade' + id + 'Btn'); button.disabled = false;
+    button.classList.toggle('selected', selectedUpgrade === key); button.setAttribute('aria-pressed', String(selectedUpgrade === key));
   }
-  const rank = Save.data.fleetUpgrades[selectedUpgrade], cost = Balance.upgradeCost(rank), names = { dmg: 'ОРУДИЯ', hp: 'БРОНЯ', rate: 'СКОРОСТРЕЛЬНОСТЬ' };
-  const before = Balance.stats(shopIndex, Save.data.fleetUpgrades), after = Balance.stats(shopIndex, { ...Save.data.fleetUpgrades, [selectedUpgrade]: Math.min(MAX_UPGRADE, rank + 1) });
+  const rank = upgrades[selectedUpgrade], cost = Balance.upgradeCost(rank, shopIndex), names = { dmg: 'ОРУДИЯ', hp: 'БРОНЯ', rate: 'СКОРОСТРЕЛЬНОСТЬ' };
+  const before = Balance.stats(shopIndex, upgrades), after = Balance.stats(shopIndex, { ...upgrades, [selectedUpgrade]: Math.min(MAX_UPGRADE, rank + 1) });
   const field = selectedUpgrade === 'dmg' ? 'dps' : selectedUpgrade === 'rate' ? 'fireRate' : 'hp';
-  $('upgradeDetail').textContent = rank >= MAX_UPGRADE ? `${names[selectedUpgrade]} · максимальный ранг` : `${names[selectedUpgrade]}: ${field === 'fireRate' ? before[field].toFixed(2) : Math.round(before[field])} → ${field === 'fireRate' ? after[field].toFixed(2) : Math.round(after[field])} ${field === 'hp' ? 'HP' : field === 'fireRate' ? 'залп/с' : 'ед/с'} на этом корпусе`;
-  $('buyUpgradeBtn').disabled = rank >= MAX_UPGRADE || Save.data.credits < cost;
-  $('buyUpgradeBtn').textContent = rank >= MAX_UPGRADE ? 'СИСТЕМА УЛУЧШЕНА ДО МАКСИМУМА' : `КУПИТЬ УЛУЧШЕНИЕ · ${fmt(cost)} CR`;
-  drawShopShip(performance.now());
+  const format = n => field === 'fireRate' ? n.toFixed(2) : fmt(n);
+  const unlock = Balance.rankLevel(shopIndex, rank + 1), owned = Balance.canUse(Save.data, shopIndex);
+  $('upgradeDetail').textContent = rank >= MAX_UPGRADE ? names[selectedUpgrade] + ' · максимальный ранг' : names[selectedUpgrade] + ': ' + format(before[field]) + ' → ' + format(after[field]) + (field === 'hp' ? ' HP' : field === 'fireRate' ? ' залп/с' : ' ед/с');
+  $('buyUpgradeBtn').disabled = !Balance.canUpgrade(Save.data, shopIndex, selectedUpgrade);
+  $('buyUpgradeBtn').textContent = !owned ? 'СНАЧАЛА ОТКРОЙТЕ ЭТОТ КОРАБЛЬ' : rank >= MAX_UPGRADE ? 'МАКСИМАЛЬНЫЙ РАНГ' : Save.data.campaignLevel < unlock ? 'НОВЫЙ РАНГ С СЕКТОРА ' + unlock : 'КУПИТЬ УЛУЧШЕНИЕ · ' + fmt(cost) + ' CR';
 }
 function upgrade(type) {
-  const rank = Save.data.fleetUpgrades[type], cost = Balance.upgradeCost(rank);
-  if (rank >= MAX_UPGRADE || Save.data.credits < cost) return;
-  Save.data.credits -= cost; Save.data.fleetUpgrades[type]++; sessionChanged = true; Save.persist(true); Audio.play('powerup'); renderShop();
+  if (!Balance.canUpgrade(Save.data, shopIndex, type)) return;
+  const upgrades = Save.data.upgrades[shopIndex] ||= { dmg: 1, hp: 1, rate: 1 }, rank = upgrades[type];
+  Save.data.credits -= Balance.upgradeCost(rank, shopIndex); upgrades[type]++;
+  sessionChanged = true; Save.persist(true); Audio.play('powerup'); renderShop();
 }
 function renderModules() {
   $('moduleGuide').replaceChildren();
@@ -711,6 +796,7 @@ function render(elapsed, now) {
   drawBackground(elapsed);
   if (run.active) {
     ctx.save(); if (run.shake > .1) ctx.translate(Math.sin(now * .13) * run.shake, Math.cos(now * .11) * run.shake * .6);
+    for (const h of hazards) h.draw(ctx);
     for (const e of enemies) e.draw(ctx);
     for (const p of pickups) Atlas.draw(ctx, MODULES[p.type].sprite, p.x, p.y + Math.sin(p.age * .005) * 2, 45);
     for (const b of bullets) b.draw(ctx); for (const b of enemyBullets) b.draw(ctx); player.draw(ctx);
@@ -732,15 +818,15 @@ const openHangar = () => { shopIndex = Save.data.currentShip; renderShop(); open
 onClick('shopBtn', openHangar); onClick('resHangarBtn', openHangar);
 onClick('prevShip', () => { shopIndex = (shopIndex + SHIPS.length - 1) % SHIPS.length; renderShop(); });
 onClick('nextShip', () => { shopIndex = (shopIndex + 1) % SHIPS.length; renderShop(); });
-onClick('selectShipBtn', () => { if (!Save.data.unlockedShips.includes(shopIndex)) return; Save.data.currentShip = shopIndex; sessionChanged = true; Save.persist(true); renderShop(); });
-onClick('buyShipBtn', () => { const ship = SHIPS[shopIndex]; if (Save.data.unlockedShips.includes(ship.id) || Save.data.credits < ship.cost || Save.data.campaignLevel < ship.unlock) return; Save.data.credits -= ship.cost; Save.data.unlockedShips.push(ship.id); Save.data.currentShip = ship.id; sessionChanged = true; Save.persist(true); Audio.play('powerup'); renderShop(); });
-onClick('upgradeDmgBtn', () => { selectedUpgrade = 'dmg'; renderShop(); }); onClick('upgradeHpBtn', () => { selectedUpgrade = 'hp'; renderShop(); }); onClick('upgradeRateBtn', () => { selectedUpgrade = 'rate'; renderShop(); });
+onClick('selectShipBtn', () => { if (!Balance.canUse(Save.data, shopIndex)) return; Save.data.currentShip = shopIndex; sessionChanged = true; Save.persist(true); renderShop(); });
+onClick('buyShipBtn', () => { const ship = SHIPS[shopIndex]; if (!Balance.canBuy(Save.data, ship.id)) return; Save.data.credits -= ship.cost; Save.data.unlockedShips.push(ship.id); Save.data.upgrades[ship.id] = { dmg: 1, hp: 1, rate: 1 }; Save.data.currentShip = ship.id; sessionChanged = true; Save.persist(true); Audio.play('powerup'); renderShop(); });
+onClick('upgradeDmgBtn', () => { selectedUpgrade = 'dmg'; renderUpgradeOptions(); }); onClick('upgradeHpBtn', () => { selectedUpgrade = 'hp'; renderUpgradeOptions(); }); onClick('upgradeRateBtn', () => { selectedUpgrade = 'rate'; renderUpgradeOptions(); });
 onClick('buyUpgradeBtn', () => upgrade(selectedUpgrade));
 onClick('pauseBtn', pauseGame); onClick('resumeBtn', resumeGame); onClick('quitBtn', showMenu); onClick('resMenuBtn', showMenu);
 onClick('missionsBtn', () => { Missions.render(); openPanel('missionsModal'); }); onClick('claimDailyBtn', () => Daily.claim());
 onClick('settingsBtn', () => openPanel('settingsModal')); onClick('rulesBtn', () => { renderModules(); openPanel('infoModal'); });
 document.querySelectorAll('[data-close]').forEach(button => button.onclick = () => { Audio.play('ui'); showMenu(); });
-for (const [key, id] of [['sfx', 'sfxToggle'], ['music', 'musicToggle'], ['shake', 'shakeToggle']]) { $(id).checked = settings[key]; $(id).onchange = e => { settings[key] = e.target.checked; localSet('voidstorm_settings', JSON.stringify(settings)); Audio.music(); }; }
+for (const [key, id] of [['sfx', 'sfxToggle'], ['music', 'musicToggle'], ['shake', 'shakeToggle'], ['vibration', 'vibrationToggle']]) { $(id).checked = settings[key]; $(id).onchange = e => { settings[key] = e.target.checked; localSet('voidstorm_settings', JSON.stringify(settings)); Audio.music(); }; }
 
 canvas.addEventListener('pointerdown', e => {
   if (!run.active || run.paused || input.pointer !== null) return; e.preventDefault(); Audio.unlock(); input.pointer = e.pointerId; input.lastX = e.clientX; input.lastY = e.clientY;
@@ -767,6 +853,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) { pau
 window.addEventListener('pagehide', () => { if (run.active) { pauseGame(); bankIncome(); } Save.persist(true); });
 
 
-Missions.check(); renderMenu(); renderShop(); renderModules(); initBoostHUD(); Atlas.init(); Daily.check(); VK.init(); requestAnimationFrame(loop);
+Missions.check(); renderMenu(); renderShop(); renderModules(); initBoostHUD(); Atlas.init(); Daily.check(); VK.init();
+if (Save.data.migrationRefund) toast('Общие улучшения возмещены: ' + fmt(Save.data.migrationRefund) + ' CR. Теперь каждый корабль улучшается отдельно.'); requestAnimationFrame(loop);
 // Read-only diagnostics and explicit test hooks for the local regression harness.
-window.Voidstorm = { get state() { return run; }, get player() { return player; }, get enemies() { return enemies; }, get bullets() { return bullets; }, get enemyBullets() { return enemyBullets; }, get save() { return Save.data; }, get atlasReady() { return Atlas.ready; } };
+window.Voidstorm = { get state() { return run; }, get player() { return player; }, get enemies() { return enemies; }, get bullets() { return bullets; }, get enemyBullets() { return enemyBullets; }, get hazards() { return hazards; }, get save() { return Save.data; }, get atlasReady() { return Atlas.ready; } };

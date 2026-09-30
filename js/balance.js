@@ -2,19 +2,19 @@
 (function (root) {
   'use strict';
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-  const MAX_LEVEL = 250;
-  const MAX_UPGRADE = 20;
+  const MAX_LEVEL = 300;
+  const MAX_UPGRADE = 5;
   const SHIPS = [
-    {"id":0,"name":"ПЕРЕХВАТЧИК","role":"Лёгкий разведчик","cost":0,"hp":100,"speed":480,"dps":24,"interval":240,"weapon":"single","color":"#62e9ff","unlock":1},
-    {"id":1,"name":"ДЖАГГЕРНАУТ","role":"Двойные плазменные орудия","cost":3500,"hp":124,"speed":480,"dps":30,"interval":230,"weapon":"double","color":"#84f9ac","unlock":10},
-    {"id":2,"name":"ПРИЗРАК","role":"Трёхлучевая батарея","cost":11000,"hp":152,"speed":480,"dps":37,"interval":220,"weapon":"spread","color":"#c795ff","unlock":28},
-    {"id":3,"name":"РЕЛЬСОТРОН","role":"Пробивающий импульс • 2 цели","cost":18000,"hp":184,"speed":480,"dps":46,"interval":410,"weapon":"sniper","color":"#ff718a","unlock":50},
-    {"id":4,"name":"ШКВАЛ","role":"Скорострельная плазма","cost":32000,"hp":220,"speed":480,"dps":57,"interval":110,"weapon":"rapid","color":"#ffcb69","unlock":78},
-    {"id":5,"name":"КСЕНОС","role":"Плазма + ракеты с узким захватом","cost":48000,"hp":260,"speed":480,"dps":70,"interval":200,"weapon":"homing","color":"#64f5d5","unlock":110},
-    {"id":6,"name":"ОМЕГА","role":"Двойная батарея и ракеты поддержки","cost":66000,"hp":304,"speed":480,"dps":86,"interval":190,"weapon":"omega","color":"#f6db86","unlock":145},
-    {"id":7,"name":"ПОЛЯРИС","role":"Пробивающий залп • 2 цели","cost":82000,"hp":352,"speed":480,"dps":105,"interval":270,"weapon":"lance","color":"#92cfff","unlock":180},
-    {"id":8,"name":"ЗАТМЕНИЕ","role":"Плазменная батарея и ракеты поддержки","cost":94000,"hp":404,"speed":480,"dps":128,"interval":180,"weapon":"storm","color":"#c9a1ff","unlock":215},
-    {"id":9,"name":"СИНГУЛЯРНОСТЬ","role":"Флагман • шесть орудий","cost":110000,"hp":460,"speed":480,"dps":156,"interval":170,"weapon":"nova","color":"#b3f7ff","unlock":240}
+    {"id":0,"name":"ПЕРЕХВАТЧИК","role":"Лёгкий разведчик","interval":240,"weapon":"single","color":"#62e9ff"},
+    {"id":1,"name":"ДЖАГГЕРНАУТ","role":"Двойные плазменные орудия","interval":230,"weapon":"double","color":"#84f9ac"},
+    {"id":2,"name":"ПРИЗРАК","role":"Трёхлучевая батарея","interval":220,"weapon":"spread","color":"#c795ff"},
+    {"id":3,"name":"РЕЛЬСОТРОН","role":"Пробивающий импульс • 2 цели","interval":410,"weapon":"sniper","color":"#ff718a"},
+    {"id":4,"name":"ШКВАЛ","role":"Скорострельная плазма","interval":110,"weapon":"rapid","color":"#ffcb69"},
+    {"id":5,"name":"КСЕНОС","role":"Плазма + ракеты с узким захватом","interval":200,"weapon":"homing","color":"#64f5d5"},
+    {"id":6,"name":"ОМЕГА","role":"Двойная батарея и ракеты поддержки","interval":190,"weapon":"omega","color":"#f6db86"},
+    {"id":7,"name":"ПОЛЯРИС","role":"Пробивающий залп • 2 цели","interval":270,"weapon":"lance","color":"#92cfff"},
+    {"id":8,"name":"ЗАТМЕНИЕ","role":"Плазменная батарея и ракеты поддержки","interval":180,"weapon":"storm","color":"#c9a1ff"},
+    {"id":9,"name":"СИНГУЛЯРНОСТЬ","role":"Флагман • шесть орудий","interval":170,"weapon":"nova","color":"#b3f7ff"}
   ];
   const ENEMIES = {
     drone:   { name: 'Дрон', sprite: 10, unlock: 1, hp: 11, speed: 100, radius: 22, threat: 1, score: 60, credits: 8, rate: 1900, shot: 'red', color: '#ff6477' },
@@ -64,71 +64,105 @@
     { name: 'БАСТИОН', sprite: 114, mechanic: 'Осадные батареи и сброс брони', rate: 1000, size: 182 },
     { name: 'ТИТАН ПУСТОТЫ', sprite: 115, mechanic: 'Три фазы: веера, спираль, кассеты', rate: 820, size: 182 }
   ];
+
+  SHIPS.push(
+    { id: 10, name: 'ГЕЛИОС', role: 'Тройной ионный залп • пробитие 2 целей', interval: 150, weapon: 'helios', color: '#ffe1a0' },
+    { id: 11, name: 'ЛЕВИАФАН', role: 'Флагман • плазма и ракеты поддержки', interval: 160, weapon: 'leviathan', color: '#9becff' }
+  );
+  const money = n => Math.round(n / 10) * 10;
+  const economicScale = tier => Math.pow(1.32, tier);
+  SHIPS.forEach((ship, id) => Object.assign(ship, {
+    sprite: id < 10 ? id : 400 + id - 10, unlock: 1 + id * 25,
+    cost: id ? money(9000 * economicScale(id - 1)) : 0,
+    dps: 24 * Math.pow(2.05, id), hp: Math.round(100 * Math.pow(1.75, id)), speed: 480,
+    projectileSpeed: id >= 10 ? 1800 + (id - 10) * 100 : Math.max(800 + id * 70, ['sniper', 'rapid'].includes(ship.weapon) ? 1050 : 0)
+  }));
+  Object.assign(ENEMIES, {
+    resonator: { name: 'Резонатор', sprite: 402, unlock: 251, hp: 34, speed: 95, radius: 25, threat: 3, score: 340, rate: 1500, shot: 'toxic', color: '#98ff83' },
+    rift: { name: 'Разломщик', sprite: 403, unlock: 263, hp: 42, speed: 85, radius: 27, threat: 3, score: 360, rate: 1850, shot: 'plasma', color: '#f17aff' },
+    warden: { name: 'Бастионер', sprite: 404, unlock: 277, hp: 70, speed: 65, radius: 33, threat: 4, score: 410, rate: 1500, shot: 'pulse', color: '#ffb775' },
+    needle: { name: 'Игла', sprite: 405, unlock: 289, hp: 25, speed: 148, radius: 21, threat: 2, score: 350, rate: 1400, shot: 'shard', color: '#92eaff' }
+  });
+  BOSSES.push(
+    { name: 'ХРОНОС', sprite: 406, mechanic: 'Лучевые дорожки: покиньте отмеченную линию', rate: 1250, size: 180 },
+    { name: 'КРАКЕН', sprite: 407, mechanic: 'Астероиды: пробейте себе проход', rate: 1400, size: 190 },
+    { name: 'ОБЕЛИСК', sprite: 408, mechanic: 'Пилоны и лучи: расчистите коридор', rate: 1350, size: 190 }
+  );
   function stats(shipId, upgrades = {}) {
     const ship = SHIPS[shipId] || SHIPS[0];
     const dmg = clamp(upgrades.dmg || 1, 1, MAX_UPGRADE), hp = clamp(upgrades.hp || 1, 1, MAX_UPGRADE);
-    const rate = clamp(upgrades.rate || upgrades.spd || 1, 1, MAX_UPGRADE);
-    const cadence = 1 + (rate - 1) * .025;
-    return { ...ship, dps: ship.dps * (1 + (dmg - 1) * .07) * cadence,
-      hp: Math.round(ship.hp * (1 + (hp - 1) * .09)), interval: ship.interval / cadence, fireRate: 1000 / ship.interval * cadence };
+    const rate = clamp(upgrades.rate || 1, 1, MAX_UPGRADE), cadence = 1 + (rate - 1) * .05;
+    return { ...ship, dps: ship.dps * (1 + (dmg - 1) * .12) * cadence,
+      hp: Math.round(ship.hp * (1 + (hp - 1) * .15)), interval: ship.interval / cadence, fireRate: 1000 / ship.interval * cadence };
   }
-  const upgradeCost = rank => Math.round((120 + 75 * Math.pow(rank, 1.7)) / 10) * 10;
-  const rankAt = level => Math.min(MAX_UPGRADE, 1 + Math.floor((level - 1) / 13));
+  const upgradeCost = (rank, shipId = 0) => rank >= MAX_UPGRADE ? 0 : money([0, 300, 600, 1050, 1600][rank] * economicScale(shipId));
+  const rankLevel = (shipId, rank) => shipId * 25 + [0, 1, 5, 10, 16, 21][clamp(rank, 1, 5)];
+  const rankAt = level => [1, 5, 10, 16, 21].filter(n => n <= ((level - 1) % 25) + 1).length;
+  const upgradesFor = (save, shipId = save.currentShip) => save.upgrades[shipId] || { dmg: 1, hp: 1, rate: 1 };
+  const canUse = (save, shipId) => save.unlockedShips.includes(shipId) && save.campaignLevel >= SHIPS[shipId].unlock;
+  const canBuy = (save, shipId) => shipId > 0 && !save.unlockedShips.includes(shipId) && save.unlockedShips.includes(shipId - 1) && save.campaignLevel >= SHIPS[shipId].unlock && save.credits >= SHIPS[shipId].cost;
+  const canUpgrade = (save, shipId, key) => ['dmg', 'hp', 'rate'].includes(key) && canUse(save, shipId) && upgradesFor(save, shipId)[key] < MAX_UPGRADE && save.campaignLevel >= rankLevel(shipId, upgradesFor(save, shipId)[key] + 1) && save.credits >= upgradeCost(upgradesFor(save, shipId)[key], shipId);
   function campaign(level) {
     level = clamp(Math.floor(level), 1, MAX_LEVEL);
-    const tier = SHIPS.filter(s => s.unlock <= level).length - 1;
-    const rank = rankAt(level);
-    // Interpolate power through a hull's chapter: no sudden HP wall at purchase milestones.
-    const next = SHIPS[Math.min(9, tier + 1)], current = SHIPS[tier];
-    const progress = next === current ? 0 : (level - current.unlock) / (next.unlock - current.unlock);
-    const basePower = current.dps + (next.dps - current.dps) * progress * .6;
-    const expectedDps = basePower * (1 + (rank - 1) * .07) * (1 + (rank - 1) * .025);
-    return { level, tier, rank, expectedDps, bossHp: expectedDps * (12 + Math.min(14, level * .065)),
-      waves: level >= 101 ? 4 : 3, boss: level % 5 === 0, scale: expectedDps / 24 * (.54 - level * .00035),
-      doctrine: Math.floor((level - 1) / 5) % 6, bossKind: Math.floor(level / 5 - 1 + 10) % 10,
-      maxEnemies: Math.min(10, 5 + Math.floor(level / 28)), maxThreat: Math.max(level % 5 === 0 ? 14 : 0, Math.min(23, 9 + Math.floor(level / 16))),
-      maxShooters: Math.min(8, 4 + Math.floor(level / 35)), bulletCap: Math.min(120, 68 + Math.floor(level / 2)),
-      interval: Math.max(780, 1280 - level * 2.5), fireRate: Math.max(.80, 1.12 - level * .0014),
-      bulletSpeed: 1 + Math.min(.22, level * .0009), budget: Math.min(30, 9 + Math.floor(level / 11)),
-      reward: 350 + level * 18, repeatReward: 100 + level * 5,
-      damage: Math.min(68, 10 + level * .23), speedMult: 1 + Math.min(.22, level * .001) };
+    const tier = Math.floor((level - 1) / 25), stage = (level - 1) % 25 + 1, rank = rankAt(level);
+    const expectedDps = SHIPS[tier].dps * (1 + (stage - 1) / 24 * .776);
+    const expectedHp = SHIPS[tier].hp * (1 + (stage - 1) / 24 * .6);
+    const scale = economicScale(tier);
+    return { level, tier, stage, rank, expectedDps, expectedHp, bossHp: expectedDps * (18 + Math.min(7, level / 40)),
+      waves: 3, boss: level % 5 === 0, scale: expectedDps * .62 / 28,
+      doctrine: Math.floor((level - 1) / 5) % 6,
+      bossKind: level <= 250 ? Math.max(0, Math.floor(level / 5) - 1) % 10 : [10, 1, 11, 3, 12, 6, 10, 11, 9, 12][Math.min(9, Math.floor((level - 251) / 5))],
+      maxEnemies: Math.min(10, 6 + Math.floor(level / 55)), maxThreat: Math.max(level % 5 === 0 ? 15 : 12, Math.min(24, 12 + Math.floor(level / 25))),
+      maxShooters: Math.min(8, 5 + Math.floor(level / 80)), bulletCap: Math.min(130, 70 + Math.floor(level / 3)),
+      interval: Math.max(830, 1000 - level * .5), fireRate: Math.max(.82, 1.04 - level * .00075),
+      bulletSpeed: 1 + Math.min(.20, level * .0007), units: 12 + Math.floor(stage / 6) + Math.floor(tier / 3),
+      reward: money((350 + stage * 12) * scale), repeatReward: money((55 + stage * 2) * scale),
+      killReward: Math.round(12 * scale), bossReward: money(100 * scale),
+      damage: expectedHp / 14, speedMult: 1 + Math.min(.18, level * .0007) };
   }
-  function survival(wave) {
+  function survival(wave, startLevel = 1) {
     wave = Math.max(1, Math.floor(wave));
-    const level = Math.min(MAX_LEVEL, 1 + (wave - 1) * 5), base = campaign(level);
-    const excess = Math.log1p(Math.max(0, wave - 50));
-    return { ...base, wave, waves: Infinity, boss: wave % 5 === 0,
-      bossKind: Math.max(0, Math.floor(wave / 5 - 1)) % BOSSES.length,
-      bossHp: base.bossHp * (1 + excess * .22), scale: base.scale * (1 + excess * .18),
-      maxEnemies: Math.min(11, 5 + Math.floor(wave / 6)), maxThreat: Math.max(wave % 5 === 0 ? 14 : 0, Math.min(24, 9 + Math.floor(wave / 3))),
-      maxShooters: Math.min(8, 4 + Math.floor(wave / 7)), interval: Math.max(780, 1280 - wave * 13),
-      budget: Math.min(34, 9 + Math.floor(wave / 2)), damage: Math.min(110, base.damage + excess * 5), bulletCap: Math.min(130, 68 + wave) };
+    const level = clamp(Math.floor(startLevel), 1, MAX_LEVEL), base = campaign(level);
+    // Anchor never changes with the selected hull; growth continues beyond sector 300.
+    const growth = 1 + .075 * (wave - 1) + .003 * Math.pow(wave - 1, 1.35);
+    return { ...base, wave, waves: Infinity, level: Math.min(MAX_LEVEL, level + (wave - 1) * 2), boss: wave % 5 === 0,
+      bossKind: (Math.floor(level / 5) + Math.floor(wave / 5)) % (level > 250 ? 13 : 10),
+      expectedDps: base.expectedDps * growth, bossHp: base.bossHp * growth, scale: base.scale * growth,
+      units: Math.min(26, base.units + Math.floor((wave - 1) / 3)),
+      maxEnemies: Math.min(11, base.maxEnemies + Math.floor(wave / 10)), maxThreat: Math.min(26, Math.max(15, base.maxThreat) + Math.floor(wave / 8)),
+      maxShooters: Math.min(8, base.maxShooters + Math.floor(wave / 12)), interval: Math.max(780, base.interval - wave * 3),
+      damage: base.damage * Math.sqrt(growth), bulletCap: Math.min(140, base.bulletCap + wave),
+      survivalReward: money((65 + Math.min(50, wave) * 4) * economicScale(base.tier)) };
   }
   function waveTypes(config, wave, random = Math.random) {
     const pool = Object.keys(ENEMIES).filter(k => k !== 'boss' && ENEMIES[k].unlock <= config.level);
-    let budget = config.budget + (wave % 3) * 2;
-    const result = [];
-    while (budget > 0) {
-      const eligible = pool.filter(k => ENEMIES[k].threat <= budget);
-      const doctrines = [['drone', 'fighter', 'striker', 'corsair'], ['scout', 'hunter', 'wraith', 'courier', 'mirage'], ['sniper', 'lancer', 'bomber', 'artillery'], ['tank', 'guardian', 'bulwark', 'aegis'], ['elite', 'weaver', 'saw', 'pulsar'], ['minelayer', 'bomber', 'scout', 'oracle']];
+    const doctrines = [['drone', 'fighter', 'striker', 'corsair', 'needle'], ['scout', 'hunter', 'wraith', 'courier', 'mirage'], ['sniper', 'lancer', 'bomber', 'artillery'], ['tank', 'guardian', 'bulwark', 'aegis', 'warden'], ['elite', 'weaver', 'saw', 'pulsar', 'resonator'], ['minelayer', 'bomber', 'scout', 'oracle', 'rift']];
+    const result = [], count = config.units + wave % 3;
+    let heavy = 0;
+    for (let i = 0; i < count; i++) {
+      const eligible = pool.filter(k => heavy < Math.ceil(count * .35) || ENEMIES[k].threat < 3);
       const favored = eligible.filter(k => doctrines[config.doctrine].includes(k));
       const selection = favored.length && random() < .65 ? favored : eligible;
-      const type = selection[Math.floor(random() * selection.length)];
-      result.push(type); budget -= ENEMIES[type].threat;
+      const type = selection[Math.min(selection.length - 1, Math.floor(random() * selection.length))];
+      result.push(type); if (ENEMIES[type].threat >= 3) heavy++;
     }
+    // Introduce a new silhouette in its first sector, then mix it with its doctrine.
+    const debut = pool.find(k => ENEMIES[k].unlock === config.level);
+    if (debut) result[0] = debut;
     return result;
   }
+  function waveScale(config, types) {
+    return config.expectedDps * .62 * types.length / types.reduce((sum, type) => sum + ENEMIES[type].hp, 0);
+  }
   function canSpawn(type, alive, config) {
-    const def = ENEMIES[type];
-    const active = alive.filter(e => e.active !== false);
-    // Heavy batteries need room for their patterns; avoid a full screen of overlapping fans.
+    const def = ENEMIES[type], active = alive.filter(e => e.active !== false);
     if (def.threat >= 3 && active.filter(e => ENEMIES[e.type].threat >= 3).length >= (config.level < 80 ? 2 : 3)) return false;
     return active.length < config.maxEnemies && active.reduce((n, e) => n + ENEMIES[e.type].threat, 0) + def.threat <= config.maxThreat &&
       (!def.rate || active.filter(e => ENEMIES[e.type].rate).length < config.maxShooters);
   }
   function freshSave() {
-    return { version: 4, credits: 0, campaignLevel: 1, completed: false, unlockedShips: [0], currentShip: 0,
-      fleetUpgrades: { dmg: 1, hp: 1, rate: 1 }, upgrades: {}, highScore: 0, bestWave: 0, bestTime: 0,
+    return { version: 5, credits: 0, campaignLevel: 1, completed: false, unlockedShips: [0], currentShip: 0,
+      upgrades: { 0: { dmg: 1, hp: 1, rate: 1 } }, highScore: 0, bestWave: 0, bestTime: 0,
       levelBest: {}, daily: { last: null, streak: 0 }, missions: { lastGen: 0, list: [] }, stats: { totalPlayTime: 0 } };
   }
   function migrate(raw) {
@@ -137,27 +171,45 @@
     const number = (v, fallback, max = 1e12) => Number.isFinite(Number(v)) ? clamp(Number(v), 0, max) : fallback;
     d.credits = Math.floor(number(raw.credits, 0));
     d.campaignLevel = clamp(Math.floor(number(raw.campaignLevel, 1)), 1, MAX_LEVEL);
-    d.completed = (raw.completed === true && raw.version >= 4) || number(raw.campaignLevel, 1) > MAX_LEVEL;
-    if (raw.completed === true && raw.version === 3 && d.campaignLevel === 120) d.campaignLevel = 121;
-    if (raw.completed === true && raw.version === 2 && d.campaignLevel === 40) d.campaignLevel = 41;
+    d.completed = (raw.completed === true && raw.version >= 5) || number(raw.campaignLevel, 1) > MAX_LEVEL;
+    for (const [version, last] of [[2, 40], [3, 120], [4, 250]]) if (raw.completed === true && raw.version === version && d.campaignLevel === last) d.campaignLevel = last + 1;
     d.unlockedShips = [...new Set([0, ...(Array.isArray(raw.unlockedShips) ? raw.unlockedShips : []).filter(n => Number.isInteger(n) && SHIPS[n])])];
-    d.currentShip = d.unlockedShips.includes(raw.currentShip) ? raw.currentShip : 0;
-    for (const key of ['dmg', 'hp', 'rate']) {
-      const legacy = Object.values(raw.upgrades || {}).map(u => number(u && (u[key] ?? (key === 'rate' ? u.spd : undefined)), 1, MAX_UPGRADE));
-      d.fleetUpgrades[key] = clamp(Math.floor(Math.max(1, number(raw.fleetUpgrades && (raw.fleetUpgrades[key] ?? (key === 'rate' ? raw.fleetUpgrades.spd : undefined)), 1, MAX_UPGRADE), ...legacy)), 1, MAX_UPGRADE);
+    for (const id of d.unlockedShips) {
+      d.upgrades[id] = {};
+      for (const key of ['dmg', 'hp', 'rate']) d.upgrades[id][key] = raw.version >= 5 ? clamp(Math.floor(number(raw.upgrades?.[id]?.[key], 1, MAX_UPGRADE)), 1, MAX_UPGRADE) : 1;
     }
+    if (!(raw.version >= 5)) {
+      const oldCost = rank => money(120 + 75 * Math.pow(rank, 1.7));
+      const purchased = raw.fleetUpgrades ? [raw.fleetUpgrades] : Object.values(raw.upgrades || {});
+      for (const u of purchased) for (const key of ['dmg', 'hp', 'rate']) {
+        const rank = clamp(Math.floor(number(u?.[key] ?? (key === 'rate' ? u?.spd : undefined), 1, 20)), 1, 20);
+        for (let r = 1; r < rank; r++) d.credits += oldCost(r);
+      }
+      d.migrationRefund = d.credits - Math.floor(number(raw.credits, 0));
+    }
+    d.currentShip = canUse(d, raw.currentShip) ? raw.currentShip : Math.max(...d.unlockedShips.filter(id => SHIPS[id].unlock <= d.campaignLevel));
     d.highScore = number(raw.highScore, 0); d.bestWave = number(raw.bestWave, 0); d.bestTime = number(raw.bestTime, 0);
-    d.stats.totalPlayTime = number(raw.stats && raw.stats.totalPlayTime, 0);
+    d.stats.totalPlayTime = number(raw.stats?.totalPlayTime, 0);
     if (raw.daily && typeof raw.daily === 'object') d.daily = { last: typeof raw.daily.last === 'string' ? raw.daily.last : null, streak: Math.floor(number(raw.daily.streak, 0, 6)) };
-    if (raw.levelBest && typeof raw.levelBest === 'object') {
-      for (let l = 1; l <= MAX_LEVEL; l++) if (raw.levelBest[l]) d.levelBest[l] = Math.floor(number(raw.levelBest[l], 0));
-    }
+    if (raw.levelBest && typeof raw.levelBest === 'object') for (let l = 1; l <= MAX_LEVEL; l++) if (raw.levelBest[l]) d.levelBest[l] = Math.floor(number(raw.levelBest[l], 0));
     if (raw.missions && Array.isArray(raw.missions.list)) {
       const ids = ['kill_drone', 'kill_fighter', 'score_run', 'play_time', 'collect_money'];
       d.missions = { lastGen: number(raw.missions.lastGen, 0), list: raw.missions.list.filter(m => m && ids.includes(m.id)).slice(0, 3).map(m => ({ id: m.id, target: Math.max(1, number(m.target, 1)), current: number(m.current, 0), reward: number(m.reward, 200, 10000), claimed: m.claimed === true })) };
     }
     return d;
   }
-  root.Balance = { SHIPS, ENEMIES, BOSSES, MODULES, MAX_LEVEL, MAX_UPGRADE, stats, upgradeCost, rankAt, campaign, survival, waveTypes, canSpawn, freshSave, migrate, clamp };
+  // Spend the preceding chapter's minimum clear income on its upgrades, next hull,
+  // and a 10% reserve. Optional rewards never enter the required progression budget.
+  SHIPS.slice(1).forEach(ship => {
+    const previous = ship.id - 1;
+    let income = 0;
+    for (let stage = 1; stage <= 25; stage++) {
+      const c = campaign(previous * 25 + stage);
+      income += c.reward + Math.ceil((c.units * 3 + 3) * .75) * c.killReward + (c.boss ? c.bossReward : 0);
+    }
+    const upgrades = [1, 2, 3, 4].reduce((sum, rank) => sum + upgradeCost(rank, previous) * 3, 0);
+    ship.cost = money(income * .9 - upgrades);
+  });
+  root.Balance = { SHIPS, ENEMIES, BOSSES, MODULES, MAX_LEVEL, MAX_UPGRADE, stats, upgradeCost, rankAt, rankLevel, upgradesFor, canUse, canBuy, canUpgrade, campaign, survival, waveTypes, waveScale, canSpawn, freshSave, migrate, clamp };
   if (typeof module !== 'undefined') module.exports = root.Balance;
 })(typeof window === 'undefined' ? globalThis : window);

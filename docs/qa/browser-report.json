@@ -3,11 +3,11 @@
   "errors": [],
   "performance": {
     "frames": 240,
-    "medianMs": 7,
+    "medianMs": 6.900000000000091,
     "p95Ms": 7,
     "over40ms": 0,
-    "bullets": 71,
-    "spriteCache": 73,
+    "bullets": 61,
+    "spriteCache": 85,
     "hudChips": 3
   },
   "viewports": [

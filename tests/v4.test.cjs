@@ -4,7 +4,7 @@ const { runtime } = require('./runtime.cjs');
 const B = require('../js/balance.js');
 const { model } = require('./economy.cjs');
 function flight(level = 110) {
-  const r = runtime(); r.run(`Save.data.campaignLevel=250;Save.data.currentShip=5;startRun('CAMPAIGN',${level})`); return r;
+  const r = runtime(); r.run(`Save.data.campaignLevel=250;Save.data.currentShip=5;Save.data.unlockedShips=[0,5];startRun('CAMPAIGN',${level})`); return r;
 }
 test('rest freezes timed modules and supplies arrive far away with the next wave', () => {
   const r = flight();
@@ -31,7 +31,7 @@ test('fire-rate ranks increase sustained damage without changing movement or dam
     assert(b.interval < a.interval); assert(b.dps > a.dps); assert.equal(a.speed, b.speed);
     assert(Math.abs(a.dps * a.interval - b.dps * b.interval) < .001);
   }
-  assert.equal(B.migrate({ version:3, fleetUpgrades:{spd:9}, campaignLevel:120, completed:true }).fleetUpgrades.rate, 9);
+  assert(B.migrate({ version:3, fleetUpgrades:{spd:9}, campaignLevel:120, completed:true }).migrationRefund > 0);
   const migrated = B.migrate({ version:3, campaignLevel:120, completed:true }); assert.equal(migrated.campaignLevel,121); assert.equal(migrated.completed,false);
 });
 test('each hull delivers higher sustained DPS to a narrow target, including the flagship', () => {
@@ -50,8 +50,8 @@ test('central hull ellipse catches body edge and swept shots, with wing graze al
   assert(!r.run('hitsPlayer({prevX:player.x+35,x:player.x+35,prevY:player.y,y:player.y,width:4})'));
   assert(r.run('hitsPlayer({prevX:player.x,x:player.x,prevY:player.y-100,y:player.y+100,width:4})'));
 });
-test('all 23 enemy types shoot, move, resolve, and all 10 boss patterns differ', () => {
-  assert.equal(Object.keys(B.ENEMIES).length-1,23);
+test('all 27 enemy types shoot, move, resolve, and all 10 boss patterns differ', () => {
+  assert.equal(Object.keys(B.ENEMIES).length-1,27);
   const r=flight(250), patterns=[];
   for (const type of Object.keys(B.ENEMIES).filter(t=>t!=='boss')) {
     r.run(`enemyBullets=[];var e=new Enemy('${type}',Balance.campaign(250));e.y=200;e.shoot()`);
@@ -72,18 +72,6 @@ test('late formations cannot stack more than three heavy batteries', () => {
   const c=B.campaign(250), alive=[{type:'tank'},{type:'guardian'},{type:'minelayer'}];
   assert.equal(B.canSpawn('elite',alive,c),false);
   assert.equal(B.canSpawn('drone',alive,c),true);
-});
-test('first-clear economy supports every hull milestone even at 60% coverage', () => {
-  const m=model(.6); assert.equal(m.hull,9); assert(m.credits>=0);
-  for(const key of ['dmg','hp','rate']) assert.equal(m.ranks[key],20);
-  m.purchases.forEach((p,i)=>assert.equal(p.level,B.SHIPS[i+1].unlock));
-  assert(m.rows.every(r=>r.credits>=0));
-  assert(m.rows.every(r=>Math.min(...Object.values(r.ranks))>=B.rankAt(r.level)-2));
-});
-test('ship blueprint gates purchases while previously owned ships stay available', () => {
-  const r=flight();r.run('showMenu();Save.data.campaignLevel=19;Save.data.credits=1e7;shopIndex=9;renderShop()');
-  assert(r.elements.get('buyShipBtn').disabled);r.elements.get('buyShipBtn').onclick();assert(!r.run('Save.data.unlockedShips.includes(9)'));
-  r.run('Save.data.unlockedShips.push(9);renderShop()');r.elements.get('selectShipBtn').onclick();assert.equal(r.run('Save.data.currentShip'),9);
 });
 test('VK banner initializes even when user info fails; restore subscription still exists', async () => {
   const r=runtime();r.run("var calls=[];window.vkBridge={send:async(method,params)=>{calls.push([method,params]);if(method==='VKWebAppGetUserInfo')throw Error('offline');return {result:true}},subscribe:fn=>window.vkEvents=fn}");

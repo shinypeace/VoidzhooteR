@@ -1,43 +1,32 @@
-// First-clear income only: no ads, daily gifts, retries, missions or survival farming.
 const B = require('../js/balance.js');
 const fs = require('node:fs');
-const path = require('node:path');
 function model(coverage = .75) {
-  let seed = 1729, credits = 0, income = 0, spent = 0, hull = 0;
-  const rng = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
-  const ranks = { dmg: 1, hp: 1, rate: 1 }, purchases = [], rows = [];
-  function buy(level) {
-    const next = B.SHIPS[hull + 1];
-    if (next && level >= next.unlock && credits >= next.cost) {
-      credits -= next.cost; spent += next.cost; hull++; purchases.push({ level, hull: next.name, cost: next.cost });
-    }
-    const target = B.rankAt(level);
-    for (const key of ['dmg', 'rate', 'hp']) while (ranks[key] < target) {
-      const cost = B.upgradeCost(ranks[key]);
-      const reserve = B.SHIPS[hull + 1] && B.SHIPS[hull + 1].unlock - level <= 7 ? B.SHIPS[hull + 1].cost : 0;
-      if (credits - reserve < cost) break;
-      credits -= cost; spent += cost; ranks[key]++;
-    }
-  }
+  const save = B.freshSave(), purchases = [], rows = [], chapters = [];
+  let income = 0, spent = 0;
   for (let level = 1; level <= B.MAX_LEVEL; level++) {
-    buy(level);
-    const c = B.campaign(level);
-    // Average 30 seeded formations per wave, not a hand-estimated kill count.
-    let loot = 0;
-    for (let sample = 0; sample < 30; sample++) for (let wave = 1; wave <= c.waves; wave++) {
-      loot += B.waveTypes(c, wave, rng).reduce((n, type) => n + B.ENEMIES[type].credits, 0) * coverage / 30;
+    save.campaignLevel = level;
+    const c = B.campaign(level), id = c.tier;
+    if (id && !save.unlockedShips.includes(id) && B.canBuy(save, id)) {
+      save.credits -= B.SHIPS[id].cost; spent += B.SHIPS[id].cost;
+      save.unlockedShips.push(id); save.upgrades[id] = { dmg: 1, hp: 1, rate: 1 };
+      save.currentShip = id; purchases.push({ level, hull: id, cost: B.SHIPS[id].cost });
     }
-    const earned = Math.round(c.reward + loot + (c.boss ? B.ENEMIES.boss.credits : 0));
-    credits += earned; income += earned;
-    rows.push({ level, earned, credits, hull, ranks: { ...ranks }, recommendedHull: c.tier });
+    const u = B.upgradesFor(save), rank = B.rankAt(level);
+    for (const key of ['dmg', 'rate', 'hp']) while (u[key] < rank && B.canUpgrade(save, save.currentShip, key)) {
+      const cost = B.upgradeCost(u[key], save.currentShip); save.credits -= cost; spent += cost; u[key]++;
+    }
+    const enemies = [1, 2, 3].reduce((n, wave) => n + c.units + wave % 3, 0);
+    // Minimum first-clear income: no gifts, missions, adverts, replays or farming.
+    const earned = c.reward + Math.ceil(enemies * coverage) * c.killReward + (c.boss ? c.bossReward : 0);
+    rows.push({ level, hull: save.currentShip, ranks: { ...u }, beforeFlight: save.credits, earned });
+    save.credits += earned; income += earned;
+    if (level % 25 === 0) chapters.push({ chapter: id + 1, endLevel: level, earned: rows.slice(-25).reduce((n,r)=>n+r.earned,0), upgradeCost: [1,2,3,4].reduce((n,r)=>n+B.upgradeCost(r,id)*3,0), nextHullCost: B.SHIPS[id+1]?.cost || 0, balance: save.credits, ranks: { ...u } });
   }
-  buy(B.MAX_LEVEL);
-  return { coverage, income, spent, credits, hull, ranks, purchases, rows };
+  return { coverage, income, spent, credits: save.credits, hull: save.currentShip, purchases, chapters, rows };
 }
 if (require.main === module) {
-  const models = [.60, .75, .90].map(model);
-  const out = path.join(__dirname, '../docs/qa'); fs.mkdirSync(out, { recursive: true });
-  fs.writeFileSync(path.join(out, 'economy-v4.json'), JSON.stringify(models, null, 2));
+  const models = [.75, .9, 1].map(model);
+  fs.writeFileSync('docs/qa/economy-v5.json', JSON.stringify(models, null, 2));
   for (const { rows, ...summary } of models) console.log(JSON.stringify(summary));
 }
 module.exports = { model };
