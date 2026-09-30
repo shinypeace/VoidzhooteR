@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#070d19">
   <title>VOIDSTORM — За пределами пустоты</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="ui-theme.css">
-  <script src="js/balance.js" defer></script>
-  <script src="js/game.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=4.0.0">
+  <link rel="stylesheet" href="ui-theme.css?v=4.0.0">
+  <script src="js/atlas-frames.js?v=4.0.0" defer></script>
+  <script src="js/balance.js?v=4.0.0" defer></script>
+  <script src="js/vk.js?v=4.0.0" defer></script>
+  <script src="js/game.js?v=4.0.0" defer></script>
 </head>
 <body>
   <main id="gameContainer" aria-label="VOIDSTORM">
@@ -19,17 +21,17 @@
     <div id="toast" role="status" class="hidden"></div>
 
     <section id="mainMenu" class="screen menu-screen">
-      <div class="eyebrow"><span class="status-dot"></span> DEEP SPACE DIVISION <span>03.0</span></div>
+      <div class="eyebrow"><span class="status-dot"></span> DEEP SPACE DIVISION <span>04.0</span></div>
       <div class="brand"><div class="brand-kicker">ЗА ПРЕДЕЛАМИ ПУСТОТЫ</div><h1>VOID<span>STORM</span></h1><div class="brand-line"><span></span> ПРОТОКОЛ ВЫЖИВАНИЯ <span></span></div></div>
       <div class="menu-ship"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><canvas id="menuShipCanvas" width="500" height="230"></canvas><div class="ship-coordinate">VS / <span id="menuShipCode">01</span></div><div class="ship-caption" id="menuShipName">ПЕРЕХВАТЧИК</div></div>
-      <div class="pilot-strip"><div><small>КРЕДИТЫ</small><strong class="gold"><span id="menuCredits">0</span><em> CR</em></strong></div><div><small>СЕКТОР</small><strong><span id="menuLevel">01</span><em> / 120</em></strong></div><div><small>РЕКОРД</small><strong id="menuRecord">0</strong></div></div>
+      <div class="pilot-strip"><div><small>КРЕДИТЫ</small><strong class="gold"><span id="menuCredits">0</span><em> CR</em></strong></div><div><small>СЕКТОР</small><strong><span id="menuLevel">01</span><em> / 250</em></strong></div><div><small>РЕКОРД</small><strong id="menuRecord">0</strong></div></div>
       <div class="menu-actions">
         <button id="campaignBtn" class="btn btn-primary launch-btn"><span><small>ПРОДОЛЖИТЬ ПОЛЁТ</small><b>КАМПАНИЯ</b></span></button>
         <button id="endlessBtn" class="btn btn-violet launch-btn"><span><small>БЕСКОНЕЧНЫЕ ВОЛНЫ</small><b>ВЫЖИВАНИЕ</b></span></button>
         <div class="menu-nav"><button id="shopBtn" class="btn">АНГАР</button><button id="missionsBtn" class="btn">ЗАДАНИЯ</button></div>
         <div class="menu-nav menu-secondary"><button id="settingsBtn" class="btn">НАСТРОЙКИ</button><button id="rulesBtn" class="btn">КАК ИГРАТЬ</button></div>
       </div>
-      <div class="menu-footer"><span>10 КОРАБЛЕЙ · 120 СЕКТОРОВ</span><span id="assetStatus">ЗАГРУЗКА АТЛАСА…</span></div>
+      <div class="menu-footer"><span>10 КОРАБЛЕЙ · 250 СЕКТОРОВ</span><span id="assetStatus">ЗАГРУЗКА АТЛАСА…</span></div>
     </section>
 
     <section id="sectorMenu" class="screen panel-screen hidden" aria-labelledby="sectorTitle">
@@ -46,7 +48,7 @@
         <div class="stats-panel">
           <div class="stat"><div><span>МОЩНОСТЬ</span><strong id="statValDmg"></strong></div><div class="stat-track"><i id="statBarDmg" class="violet-fill"></i></div></div>
           <div class="stat"><div><span>БРОНЯ</span><strong id="statValArmor"></strong></div><div class="stat-track"><i id="statBarArmor" class="green-fill"></i></div></div>
-          <div class="stat"><div><span>СКОРОСТЬ</span><strong id="statValSpeed"></strong></div><div class="stat-track"><i id="statBarSpeed"></i></div></div>
+          <div class="stat"><div><span>СКОРОСТРЕЛЬНОСТЬ</span><strong id="statValSpeed"></strong></div><div class="stat-track"><i id="statBarSpeed"></i></div></div>
         </div>
         <div id="shipComparison" class="comparison"></div>
         <button id="selectShipBtn" class="btn btn-primary full">ВЫБРАТЬ</button><button id="buyShipBtn" class="btn btn-gold full hidden">КУПИТЬ · <span id="shipCost">0</span> CR</button>
@@ -54,9 +56,9 @@
         <div class="upgrade-grid">
           <button id="upgradeDmgBtn" class="upgrade-btn" aria-pressed="true"><span class="upgrade-asset weapon-asset" aria-hidden="true"></span><b>ОРУДИЯ</b><small id="dmgLvlText"></small><strong id="dmgCostText"></strong></button>
           <button id="upgradeHpBtn" class="upgrade-btn" aria-pressed="false"><span class="upgrade-asset armor-asset" aria-hidden="true"></span><b>БРОНЯ</b><small id="hpLvlText"></small><strong id="hpCostText"></strong></button>
-          <button id="upgradeSpdBtn" class="upgrade-btn" aria-pressed="false"><span class="upgrade-asset engine-asset" aria-hidden="true"></span><b>ДВИГАТЕЛЬ</b><small id="spdLvlText"></small><strong id="spdCostText"></strong></button>
+          <button id="upgradeRateBtn" class="upgrade-btn" aria-pressed="false"><span class="upgrade-asset engine-asset" aria-hidden="true"></span><b>СКОРОСТРЕЛЬНОСТЬ</b><small id="rateLvlText"></small><strong id="rateCostText"></strong></button>
         </div>
-        <p class="fine-print">Выберите систему и нажмите «Купить улучшение». Улучшение применяется ко всему флоту. Орудия +12%, броня +14%, скорость +4,5% от базовых за ранг.</p>
+        <p class="fine-print">Выберите систему и нажмите «Купить улучшение». Улучшение применяется ко всему флоту. Орудия +7% урона за залп, броня +9%, скорострельность +2,5% от базовых за ранг. 20 рангов каждой системы. Ранги двигателя перенесены в скорострельность.</p>
       </div>
       <footer class="panel-footer upgrade-purchase"><p id="upgradeDetail"></p><button id="buyUpgradeBtn" class="btn btn-gold full">КУПИТЬ УЛУЧШЕНИЕ</button></footer>
     </section>
@@ -67,7 +69,7 @@
 
     <section id="settingsModal" class="screen panel-screen hidden"><header class="screen-header"><div><div class="eyebrow">БОРТОВЫЕ СИСТЕМЫ</div><h2>НАСТРОЙКИ</h2></div><button class="close-btn" data-close="settingsModal" aria-label="Назад">×</button></header><div class="scroll-area"><label class="setting-row"><span><b>Звуковые эффекты</b><small>Оружие, попадания и интерфейс</small></span><input type="checkbox" id="sfxToggle" checked></label><label class="setting-row"><span><b>Музыка</b><small>Оригинальный саундтрек</small></span><input type="checkbox" id="musicToggle" checked></label><label class="setting-row"><span><b>Тряска экрана</b><small>Обратная связь при повреждении</small></span><input type="checkbox" id="shakeToggle" checked></label><div class="notice">При смене вкладки игра автоматически встаёт на паузу.</div></div><footer class="panel-footer"><button class="btn btn-primary full" data-close="settingsModal">ГОТОВО</button></footer></section>
 
-    <section id="infoModal" class="screen panel-screen hidden"><header class="screen-header"><div><div class="eyebrow">РУКОВОДСТВО ПИЛОТА</div><h2>БАЗА ДАННЫХ</h2></div><button class="close-btn" data-close="infoModal" aria-label="Назад">×</button></header><div class="scroll-area"><div class="section-label">УПРАВЛЕНИЕ</div><p>Мышь, WASD или стрелки — движение. На телефоне корабль быстро следует над пальцем. Корабль стреляет автоматически.</p><p class="muted">Esc / P — пауза. Светящаяся точка в центре корабля — зона попадания. У каждого врага свой рисунок огня: лучи, веера, кольца и кассетные заряды.</p><div class="section-label">МОДУЛИ</div><div id="moduleGuide"></div><div class="section-label">ПРОГРЕССИЯ</div><p>120 секторов в 12 регионах, по 3–4 конечные волны. Каждый пятый сектор охраняет босс с тремя фазами и подкреплениями. Между волнами есть передышка и небольшой ремонт. Уничтожайте минимум 60% обычных противников, чтобы открыть следующий сектор.</p><p class="muted">В выживании сложность растёт от номера волны. Число врагов и снарядов ограничено; каждая пятая волна — босс. Кредиты за уничтоженные корабли сохраняются даже при поражении.</p></div><footer class="panel-footer"><button class="btn btn-primary full" data-close="infoModal">ПРИНЯТО</button></footer></section>
+    <section id="infoModal" class="screen panel-screen hidden"><header class="screen-header"><div><div class="eyebrow">РУКОВОДСТВО ПИЛОТА</div><h2>БАЗА ДАННЫХ</h2></div><button class="close-btn" data-close="infoModal" aria-label="Назад">×</button></header><div class="scroll-area"><div class="section-label">УПРАВЛЕНИЕ</div><p>Мышь, WASD или стрелки — движение. На телефоне корабль быстро следует над пальцем. Корабль стреляет автоматически.</p><p class="muted">Esc / P — пауза. Урон получает центральная часть корпуса, 34 × 52 игровых единицы. Кончики крыльев и ореол снаряда не учитываются. Светящаяся точка обозначает центр корпуса. У каждого врага свой рисунок огня: лучи, веера, кольца и кассетные заряды.</p><div class="section-label">МОДУЛИ</div><div id="moduleGuide"></div><div class="section-label">ПРОГРЕССИЯ</div><p>250 секторов в 25 регионах, по 3–4 конечные волны. Каждый пятый сектор охраняет босс. 10 классов боссов: рывки, ангары, спирали, щиты и разные батареи. Между волнами есть передышка и небольшой ремонт. Таймеры усилений на передышке остановлены. Груз снабжения прилетает сверху с началом новой волны. Уничтожайте минимум 60% обычных противников, чтобы открыть следующий сектор.</p><p class="muted">В выживании сложность растёт от номера волны. Число врагов и снарядов ограничено; каждая пятая волна — босс. Кредиты за уничтоженные корабли сохраняются даже при поражении. Эскорт босса не даёт кредитов. Чертежи корпусов открываются по ходу кампании; самонаведение захватывает только цели впереди корабля.</p></div><footer class="panel-footer"><button class="btn btn-primary full" data-close="infoModal">ПРИНЯТО</button></footer></section>
 
     <div id="hud" class="hidden" aria-label="Статус полёта"><div class="hud-top"><div><small>СЧЁТ</small><strong id="scoreDisplay">0</strong><span class="gold hud-credits"><span id="gameCredits">0</span> CR</span></div><div class="hud-center"><span id="runLabel">СЕКТОР 01</span><b id="waveLabel">ВОЛНА 1 / 3</b><div class="progress-track"><i id="levelProgressBar"></i></div></div><div class="hud-health"><small id="healthText">100 / 100</small><div class="health-track"><i id="healthBar"></i></div><button id="pauseBtn" class="pause-btn" aria-label="Пауза"><span class="pause-bars" aria-hidden="true"></span></button></div></div><div id="bossHUD" class="hidden"><span id="bossName">РАЗРУШИТЕЛЬ</span><div><i id="bossHealthBar"></i></div></div><div id="boostHUD"></div><div id="waveBanner" role="status"><b></b><span></span></div><div id="controlHint">WASD / СТРЕЛКИ / МЫШЬ · ОГОНЬ АВТОМАТИЧЕСКИЙ</div></div>
 

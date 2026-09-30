@@ -1,0 +1,219 @@
+{
+  "version": "4.0.0",
+  "logicTests": 29,
+  "economy": [
+    {
+      "coverage": 0.6,
+      "income": 767471,
+      "spent": 724660,
+      "credits": 42811,
+      "hull": 9,
+      "ranks": {
+        "dmg": 20,
+        "hp": 20,
+        "rate": 20
+      },
+      "purchases": [
+        {
+          "level": 10,
+          "hull": "ДЖАГГЕРНАУТ",
+          "cost": 3500
+        },
+        {
+          "level": 28,
+          "hull": "ПРИЗРАК",
+          "cost": 11000
+        },
+        {
+          "level": 50,
+          "hull": "РЕЛЬСОТРОН",
+          "cost": 18000
+        },
+        {
+          "level": 78,
+          "hull": "ШКВАЛ",
+          "cost": 32000
+        },
+        {
+          "level": 110,
+          "hull": "КСЕНОС",
+          "cost": 48000
+        },
+        {
+          "level": 145,
+          "hull": "ОМЕГА",
+          "cost": 66000
+        },
+        {
+          "level": 180,
+          "hull": "ПОЛЯРИС",
+          "cost": 82000
+        },
+        {
+          "level": 215,
+          "hull": "ЗАТМЕНИЕ",
+          "cost": 94000
+        },
+        {
+          "level": 240,
+          "hull": "СИНГУЛЯРНОСТЬ",
+          "cost": 110000
+        }
+      ]
+    },
+    {
+      "coverage": 0.75,
+      "income": 794027,
+      "spent": 724660,
+      "credits": 69367,
+      "hull": 9,
+      "ranks": {
+        "dmg": 20,
+        "hp": 20,
+        "rate": 20
+      },
+      "purchases": [
+        {
+          "level": 10,
+          "hull": "ДЖАГГЕРНАУТ",
+          "cost": 3500
+        },
+        {
+          "level": 28,
+          "hull": "ПРИЗРАК",
+          "cost": 11000
+        },
+        {
+          "level": 50,
+          "hull": "РЕЛЬСОТРОН",
+          "cost": 18000
+        },
+        {
+          "level": 78,
+          "hull": "ШКВАЛ",
+          "cost": 32000
+        },
+        {
+          "level": 110,
+          "hull": "КСЕНОС",
+          "cost": 48000
+        },
+        {
+          "level": 145,
+          "hull": "ОМЕГА",
+          "cost": 66000
+        },
+        {
+          "level": 180,
+          "hull": "ПОЛЯРИС",
+          "cost": 82000
+        },
+        {
+          "level": 215,
+          "hull": "ЗАТМЕНИЕ",
+          "cost": 94000
+        },
+        {
+          "level": 240,
+          "hull": "СИНГУЛЯРНОСТЬ",
+          "cost": 110000
+        }
+      ]
+    },
+    {
+      "coverage": 0.9,
+      "income": 820576,
+      "spent": 724660,
+      "credits": 95916,
+      "hull": 9,
+      "ranks": {
+        "dmg": 20,
+        "hp": 20,
+        "rate": 20
+      },
+      "purchases": [
+        {
+          "level": 10,
+          "hull": "ДЖАГГЕРНАУТ",
+          "cost": 3500
+        },
+        {
+          "level": 28,
+          "hull": "ПРИЗРАК",
+          "cost": 11000
+        },
+        {
+          "level": 50,
+          "hull": "РЕЛЬСОТРОН",
+          "cost": 18000
+        },
+        {
+          "level": 78,
+          "hull": "ШКВАЛ",
+          "cost": 32000
+        },
+        {
+          "level": 110,
+          "hull": "КСЕНОС",
+          "cost": 48000
+        },
+        {
+          "level": 145,
+          "hull": "ОМЕГА",
+          "cost": 66000
+        },
+        {
+          "level": 180,
+          "hull": "ПОЛЯРИС",
+          "cost": 82000
+        },
+        {
+          "level": 215,
+          "hull": "ЗАТМЕНИЕ",
+          "cost": 94000
+        },
+        {
+          "level": 240,
+          "hull": "СИНГУЛЯРНОСТЬ",
+          "cost": 110000
+        }
+      ]
+    }
+  ],
+  "browser": {
+    "ok": true,
+    "errors": [],
+    "performance": {
+      "frames": 240,
+      "medianMs": 7,
+      "p95Ms": 7,
+      "over40ms": 0,
+      "bullets": 71,
+      "spriteCache": 73,
+      "hudChips": 3
+    },
+    "viewports": [
+      "390x844",
+      "360x640",
+      "320x568",
+      "1440x900"
+    ]
+  },
+  "liveVKAdsVerified": false,
+  "vkValidation": "Mock Bridge request/lifecycle/storage-failure checks only; live inventory requires VK launch.",
+  "campaign": {
+    "seed": 114,
+    "sectors": 250,
+    "cleared": 247,
+    "unfinished": 0,
+    "failed": [
+      170,
+      205,
+      220
+    ],
+    "maxEnemyShots": 85,
+    "note": "Deterministic pilot uses movement, leading and collection of repair/shield modules. Not a human mobile playtest.",
+    "clearedWithRetries": 250,
+    "finalAdjustment": "Gemini batteries pause every third salvo. Sectors 20,170,220 rechecked across seeds 114,709,2026: 7/9 active wins and 0/9 stationary wins. All 250 sector indices have a clearing probe across the full sweep and targeted retries."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "errors": [],
+  "performance": {
+    "frames": 240,
+    "medianMs": 7,
+    "p95Ms": 7,
+    "over40ms": 0,
+    "bullets": 71,
+    "spriteCache": 73,
+    "hudChips": 3
+  },
+  "viewports": [
+    "390x844",
+    "360x640",
+    "320x568",
+    "1440x900"
+  ]
+}

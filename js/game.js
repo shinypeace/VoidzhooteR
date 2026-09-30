@@ -1,4 +1,4 @@
-/* VOIDSTORM 2 — fixed-step simulation, bounded encounters, sprite atlas renderer. */
+/* VOIDSTORM 4 — fixed-step simulation, bounded encounters, sprite atlas renderer. */
 'use strict';
 const { SHIPS, ENEMIES, MODULES, MAX_LEVEL, MAX_UPGRADE, clamp } = Balance;
 const W = 600, H = 1066, STEP = 1000 / 60;
@@ -18,7 +18,7 @@ const settings = { sfx: true, music: true, shake: !matchMedia('(prefers-reduced-
 const Audio = {
   context: null, unlocked: false, lastShot: 0,
   unlock() { this.unlocked = true; this.music(); },
-  music() { const el = $('bgMusic'); el.volume = .23; if (settings.music && this.unlocked && !document.hidden) el.play().catch(() => {}); else el.pause(); },
+  music() { const el = $('bgMusic'); el.volume = .23; if (settings.music && this.unlocked && !document.hidden && !VKAds.busy) el.play().catch(() => {}); else el.pause(); },
   play(type) {
     if (!settings.sfx || !this.unlocked) return;
     const now = performance.now();
@@ -59,46 +59,45 @@ const Save = {
 };
 // Keep an untouched legacy save once, in addition to the original source backup.
 if (!localGet('voidstorm_save_before_v2') && localGet('voidstorm_save')) localSet('voidstorm_save_before_v2', localGet('voidstorm_save'));
-const VK = {
-  async init() {
-    if (!new URLSearchParams(location.search).has('vk_app_id') && !window.vkBridge) return;
-    const timeout = promise => Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error('VK timeout')), 3500))]);
-    try {
-      if (!window.vkBridge) await timeout(new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = 'https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js'; s.onload = resolve; s.onerror = reject; document.head.appendChild(s); }));
-      await timeout(window.vkBridge.send('VKWebAppInit'));
-      const user = await timeout(window.vkBridge.send('VKWebAppGetUserInfo'));
-      const key = `voidstorm_data_${user.id}`;
-      const cloud = await timeout(window.vkBridge.send('VKWebAppStorageGet', { keys: [key] }));
-      const loaded = safeParse(cloud.keys?.[0]?.value) || safeParse(localGet(key));
-      // Never replace a running flight or purchases made while the bridge was loading.
-      if (sessionChanged) { toast('Облачный профиль будет доступен при следующем запуске.'); return; }
-      Save.userId = user.id; if (loaded) { if (!localGet(`${key}_before_v2`)) localSet(`${key}_before_v2`, JSON.stringify(loaded)); Save.data = Balance.migrate(loaded); }
-      Missions.check(); renderMenu(); Daily.check();
-      window.vkBridge.subscribe(e => { if (e.detail.type === 'VKWebAppViewHide') { pauseGame(); $('bgMusic').pause(); } if (e.detail.type === 'VKWebAppViewRestore') Audio.music(); });
-    } catch { /* Local play and its save remain fully available. */ }
-  }
-};
-
+if (!localGet('voidstorm_save_before_v4') && localGet('voidstorm_save')) localSet('voidstorm_save_before_v4', localGet('voidstorm_save'));
 const Atlas = {
-  image: new Image(), ready: false, error: false, cache: new Map(),
+  ready: false, error: false, cache: new Map(), sources: [],
   draw(c, index, x, y, size, rotation = 0) {
     if (!this.ready) return;
     size = Math.round(size);
-    const key = `${index}:${size}:${rotation}`;
+    const key = index + ':' + size + ':' + rotation;
     let sprite = this.cache.get(key);
     if (!sprite) {
-      const cell = this.image.width / 5; sprite = document.createElement('canvas');
-      sprite.width = sprite.height = Math.ceil(size * (rotation % Math.PI ? 1.22 : 1));
-      const sc = sprite.getContext('2d'); sc.translate(sprite.width / 2, sprite.height / 2); sc.rotate(rotation);
-      sc.drawImage(this.image, (index % 5) * cell, Math.floor(index / 5) * cell, cell, cell, -size / 2, -size / 2, size, size);
+      const sourceId = index >= 300 ? 3 : index >= 200 ? 2 : index >= 100 ? 1 : 0, source = this.sources[sourceId];
+      const frame = ATLAS_FRAMES[sourceId][index % 100], [sx, sy, sw, sh] = frame;
+      const scale = size * .92 / Math.max(sw, sh), dw = sw * scale, dh = sh * scale;
+      sprite = document.createElement('canvas'); sprite.width = sprite.height = Math.ceil(size * (rotation % Math.PI ? 1.22 : 1));
+      const sc = sprite.getContext('2d'); sc.translate(sprite.width / 2, sprite.height / 2); sc.rotate(rotation + (index === 302 ? Math.PI : 0));
+      sc.drawImage(source.image, sx, sy, sw, sh, -dw / 2, -dh / 2, dw, dh);
       this.cache.set(key, sprite);
     }
     c.drawImage(sprite, Math.round(x - sprite.width / 2), Math.round(y - sprite.height / 2));
   },
   init() {
-    this.image.onload = () => { this.ready = true; $('assetStatus').textContent = 'СИСТЕМЫ ГОТОВЫ'; renderMenu(); renderShop(); renderModules(); initBoostHUD(); };
-    this.image.onerror = () => { this.error = true; $('assetStatus').textContent = 'АТЛАС НЕ НАЙДЕН'; toast('Не найден assets/voidstorm-atlas.png. Проверьте папку assets.'); };
-    this.image.src = 'assets/voidstorm-atlas.png';
+    let loaded = 0;
+    this.sources = [{ file: 'voidstorm-atlas.webp', cols: 5, rows: 5 }, { file: 'expansion-atlas.webp', cols: 4, rows: 4 }, { file: 'projectile-atlas.webp', cols: 4, rows: 4 }, { file: 'reinforcements-atlas.webp', cols: 2, rows: 4 }];
+    for (const source of this.sources) {
+      source.image = new Image();
+      source.image.onload = () => {
+        if (++loaded !== 4) return;
+        this.ready = true;
+        // Prewarm every combat sprite once; no sprite rasterization during a dense wave.
+        const scratch = document.createElement('canvas').getContext('2d');
+        for (const e of Object.values(ENEMIES)) this.draw(scratch, e.sprite, 0, 0, e.radius * 2.7, Math.PI);
+        for (const boss of Balance.BOSSES) this.draw(scratch, boss.sprite, 0, 0, boss.size, Math.PI);
+        for (const ship of SHIPS) this.draw(scratch, ship.id, 0, 0, 88);
+        for (const module of Object.values(MODULES)) this.draw(scratch, module.sprite, 0, 0, 45);
+        Object.keys(ShotArt.frames).forEach(style => ShotArt.get(style));
+        $('assetStatus').textContent = 'СИСТЕМЫ ГОТОВЫ'; renderMenu(); renderShop(); renderModules(); initBoostHUD();
+      };
+      source.image.onerror = () => { this.error = true; $('assetStatus').textContent = 'ОШИБКА ЗАГРУЗКИ'; toast('Не загружен атлас ' + source.file + '. Перезагрузите игру.'); };
+      source.image.src = 'assets/' + source.file;
+    }
   }
 };
 
@@ -168,7 +167,7 @@ class Player {
   constructor() {
     this.stats = Balance.stats(Save.data.currentShip, Save.data.fleetUpgrades);
     this.x = W / 2; this.y = H - 150; this.targetX = this.x; this.targetY = this.y;
-    this.hp = this.stats.hp; this.maxHp = this.hp; this.radius = 12; this.iframe = 1800; this.shotTimer = 0;
+    this.hp = this.stats.hp; this.maxHp = this.hp; this.radius = 17; this.hitHeight = 26; this.iframe = 1800; this.shotTimer = 0;
     this.boosts = { overdrive: 0, multishot: 0, shield: 0 };
   }
   update(dt) {
@@ -178,9 +177,10 @@ class Player {
     if (kx || ky) { const length = Math.hypot(kx, ky); this.targetX = this.x + kx / length * this.stats.speed * s; this.targetY = this.y + ky / length * this.stats.speed * s; }
     this.targetX = clamp(this.targetX, 28, W - 28); this.targetY = clamp(this.targetY, 100, H - 42);
     // Touch/mouse positioning has no speed cap or accumulated velocity. Settle in ~60ms.
-    const response = kx || ky ? 1 : 1 - Math.exp(-dt / (18 * 330 / this.stats.speed));
+    const response = kx || ky ? 1 : 1 - Math.exp(-dt / (18));
     this.x += (this.targetX - this.x) * response; this.y += (this.targetY - this.y) * response;
     this.iframe = Math.max(0, this.iframe - dt);
+    if (run.phase === 'rest') return;
     for (const type in this.boosts) this.boosts[type] = Math.max(0, this.boosts[type] - dt);
     this.shotTimer -= dt;
     if (this.shotTimer <= 0) { this.shoot(); this.shotTimer += this.stats.interval / (this.boosts.overdrive > 0 ? 1.6 : 1); }
@@ -189,11 +189,14 @@ class Player {
     if (bullets.length > 160) return;
     Audio.play('shoot');
     const s = this.stats, damage = s.dps * s.interval / 1000;
-    const patterns = { single: [0], double: [-9, 9], spread: [-14, 0, 14], sniper: [0], rapid: [0], homing: [-8, 8], omega: [-11, 11], lance: [-15, 0, 15], storm: [-15, 0, 15], nova: [-22, -13, -4, 4, 13, 22] };
-    const offsets = patterns[s.weapon];
-    offsets.forEach(off => bullets.push(new Bullet(this.x + off, this.y - 29, 0, ['sniper', 'rapid'].includes(s.weapon) ? -1050 : -780, damage / offsets.length, s.color, { homing: ['homing', 'omega', 'lance', 'storm', 'nova'].includes(s.weapon), pierce: ['sniper', 'lance'].includes(s.weapon) ? 3 : 1, width: s.weapon === 'sniper' ? 7 : 4 })));
-    if (this.boosts.multishot > 0) for (const side of [-1, 1]) bullets.push(new Bullet(this.x + side * 22, this.y - 20, side * 90, -760, damage * .35, '#85ecff', { homing: true }));
+    const patterns = { single: [0], double: [-10, 10], spread: [-16, 0, 16], sniper: [0], rapid: [0], homing: [-8, 8], omega: [-12, 12], lance: [-16, 0, 16], storm: [-18, 0, 18], nova: [-18, -11, -4, 4, 11, 18] };
+    const offsets = patterns[s.weapon], guided = ['homing', 'omega', 'storm', 'nova'].includes(s.weapon);
+    offsets.forEach(off => bullets.push(new Bullet(this.x + off, this.y - 29, 0, ['sniper', 'rapid'].includes(s.weapon) ? -1050 : -800, damage * (guided ? .75 : 1) / offsets.length, s.color,
+      { pierce: ['sniper', 'lance'].includes(s.weapon) ? 2 : 1, width: s.weapon === 'sniper' ? 7 : 4 })));
+    if (guided) for (const side of [-1, 1]) bullets.push(new Bullet(this.x + side * 21, this.y - 21, side * 35, -740, damage * .125, s.color, { homing: true }));
+    if (this.boosts.multishot > 0) for (const side of [-1, 1]) bullets.push(new Bullet(this.x + side * 25, this.y - 20, side * 90, -760, damage * .25, '#85ecff'));
   }
+
   hit(damage) {
     if (!run.active || this.iframe > 0 || this.boosts.shield > 0) return;
     this.hp = Math.max(0, this.hp - damage); this.iframe = 650; run.shake = settings.shake ? 9 : 0; run.flash = 150; Audio.play('hit');
@@ -216,17 +219,12 @@ class Player {
 }
 const ShotArt = {
   sprites: new Map(),
+  frames: { red: 0, needle: 1, laser: 2, diamond: 3, orb: 4, rail: 5, plasma: 6, bomb: 7, ring: 8, fork: 9, arc: 10, pulse: 11, mine: 12, toxic: 13, shard: 14, player: 15 },
   get(style) {
     if (this.sprites.has(style)) return this.sprites.get(style);
-    const cv = document.createElement('canvas'); cv.width = 40; cv.height = 64; const c = cv.getContext('2d'); c.translate(20, 32);
-    const colors = { red:'#ff5c79', needle:'#ffd66e', laser:'#ffa55d', diamond:'#ff80dd', orb:'#ff645a', rail:'#c3ff80', plasma:'#8fceff', bomb:'#ffbe68', ring:'#c193ff' };
-    c.fillStyle = c.strokeStyle = colors[style] || colors.red; c.shadowColor = c.fillStyle; c.shadowBlur = 7; c.lineWidth = 3;
-    c.beginPath();
-    if (style === 'needle' || style === 'diamond') { const tall = style === 'needle' ? 13 : 9; c.moveTo(0, -tall); c.lineTo(5, 0); c.lineTo(0, tall); c.lineTo(-5, 0); c.closePath(); c.fill(); }
-    else if (style === 'laser' || style === 'rail') { c.fillRect(-3, style === 'rail' ? -23 : -14, 6, style === 'rail' ? 46 : 28); }
-    else if (style === 'ring') { c.arc(0, 0, 8, 0, Math.PI * 2); c.stroke(); }
-    else { c.arc(0, 0, style === 'bomb' ? 10 : style === 'orb' ? 8 : 5, 0, Math.PI * 2); c.fill(); }
-    c.shadowBlur = 0; c.fillStyle = '#fff4e6'; if (style !== 'ring') c.fillRect(-1, style === 'rail' ? -18 : -3, 2, style === 'rail' ? 36 : 6);
+    const cv = document.createElement('canvas'); cv.width = cv.height = 42;
+    if (!Atlas.ready) return cv;
+    Atlas.draw(cv.getContext('2d'), 200 + (this.frames[style] ?? 0), 21, 21, 42);
     this.sprites.set(style, cv); return cv;
   }
 };
@@ -234,13 +232,20 @@ class Bullet {
   constructor(x, y, vx, vy, damage, color, options = {}) { Object.assign(this, { x, y, vx, vy, damage, color, active: true, life: 0, width: 4, homing: false, pierce: 1, enemy: false, style: 'red', split: false }, options); this.hits = this.enemy ? null : new Set(); this.prevX = x; this.prevY = y; this.angle = Math.atan2(vy, vx) + Math.PI / 2; }
   update(dt) {
     const s = dt / 1000; this.prevX = this.x; this.prevY = this.y; this.life += dt;
-    if (this.homing) {
-      let target = null, nearest = Infinity;
-      for (const e of enemies) if (e.active && e.y > 0 && e.y < this.y + 30 && !this.hits.has(e)) { const d = Math.hypot(e.x - this.x, e.y - this.y); if (d < nearest) { target = e; nearest = d; } }
-      if (target) { const angle = Math.atan2(target.y - this.y, target.x - this.x); const factor = Math.min(1, s * 6); this.vx += (Math.cos(angle) * 780 - this.vx) * factor; this.vy += (Math.sin(angle) * 780 - this.vy) * factor; this.angle = Math.atan2(this.vy, this.vx) + Math.PI / 2; }
+    if (this.homing && this.life < 1500) {
+      let target = null, nearest = 520;
+      for (const e of enemies) if (e.active && e.y > 0 && e.y < this.y - 15 && !this.hits.has(e)) {
+        const dx = e.x - this.x, forward = this.y - e.y, distance = Math.hypot(dx, forward);
+        if (Math.abs(dx) < forward * .30 && distance < nearest) { target = e; nearest = distance; }
+      }
+      if (target) {
+        const current = Math.atan2(this.vx, -this.vy), desired = clamp(Math.atan2(target.x - this.x, this.y - target.y), -.30, .30);
+        const angle = current + clamp(desired - current, -s * .85, s * .85);
+        this.vx = Math.sin(angle) * 740; this.vy = -Math.cos(angle) * 740; this.angle = angle;
+      }
     }
     this.x += this.vx * s; this.y += this.vy * s;
-    if (this.split && this.life > 1450) {
+    if (this.split && this.life > (this.style === 'mine' ? 2300 : 1450)) {
       this.active = false;
       for (let i = 0; i < 6; i++) if (enemyBullets.length < run.config.bulletCap) {
         const a = i * Math.PI / 3 + .3;
@@ -252,8 +257,8 @@ class Bullet {
   draw(c) {
     c.save(); c.translate(this.x, this.y); c.rotate(this.angle);
     c.fillStyle = this.color;
-    if (this.enemy) c.drawImage(ShotArt.get(this.style), -20, -32);
-    else { c.fillRect(-this.width / 2, -10, this.width, this.pierce > 1 ? 30 : 20); c.fillStyle = '#e8ffff'; c.fillRect(-1, -9, 2, 12); } c.restore();
+    if (this.enemy) c.drawImage(ShotArt.get(this.style), -21, -21);
+    else c.drawImage(ShotArt.get(this.homing ? 'plasma' : 'player'), this.pierce > 1 ? -9 : -7, -18, this.pierce > 1 ? 18 : 14, this.pierce > 1 ? 44 : 32); c.restore();
   }
 }
 class Enemy {
@@ -264,27 +269,41 @@ class Enemy {
     this.speed = this.def.speed * config.speedMult; this.config = config; this.phase = Math.random() * 6.28;
     this.shotTimer = this.def.rate * config.fireRate * randomBetween(.12, .32);
     this.hitFlash = 0; this.shotCount = 0; this.bossPhase = 0; this.summonTimer = 4200;
-    if (type === 'boss') { this.x = W / 2; this.y = -110; this.maxHp = config.bossHp; this.hp = this.maxHp; this.shotTimer = 950; }
+    if (type === 'boss') { this.boss = Balance.BOSSES[config.bossKind]; this.def = { ...this.def, ...this.boss }; this.radius = this.boss.size * .32; this.x = W / 2; this.y = -110; this.maxHp = config.bossHp; this.hp = this.maxHp; this.shotTimer = 950; }
   }
   update(dt) {
     const s = dt / 1000; this.age += dt; this.hitFlash = Math.max(0, this.hitFlash - dt);
     if (this.type === 'boss') {
       const phase = this.hp > this.maxHp * .67 ? 0 : this.hp > this.maxHp * .33 ? 1 : 2;
       if (phase !== this.bossPhase) { this.bossPhase = phase; this.shotTimer = 1100; banner(`ФАЗА ${phase + 1}`, ['','','Орудия работают на пределе'][phase] || 'Обнаружены подкрепления', 1500); }
-      const kind = this.config.bossKind;
-      this.x = W / 2 + Math.sin(this.age * (this.config.level < 10 ? .00065 : kind === 2 ? .00125 : .00085)) * (this.config.level < 10 ? 140 : kind === 1 ? 145 : 202);
-      const targetY = 170 + Math.sin(this.age * .0011) * 50 + (phase === 2 ? (1 + Math.sin(this.age * .0009)) * 65 : 0);
+      const kind = this.config.bossKind, time = this.age / 1000;
+      let targetX = W / 2 + Math.sin(time * .55) * (this.config.level <= 10 ? 110 : 155);
+      let targetY = 165 + Math.sin(time * 1.1) * 34, motion = 175;
+      if (kind === 1 || kind === 5) { targetX = W / 2 + Math.sin(time * .55) * 120; targetY = 155; }
+      if (kind === 2) { targetX = Math.floor(time / 3.6) % 2 ? 105 : 495; targetY = 185 + (phase === 2 ? 100 : 0); motion = 360; }
+      if (kind === 3) { targetX = W / 2 + Math.sin(time * 1.05) * 135; targetY = 160 + Math.cos(time * .7) * 50; }
+      if (kind === 4) { targetX = W / 2 + Math.sin(time * .45) * 145; }
+      if (kind === 6) { targetX = W / 2 + Math.sin(time * .65) * 180; this.armored = time % 7 < 3; }
+      if (kind === 7) { targetX = W / 2 + Math.cos(time * .8) * 110; targetY = 185 + Math.sin(time * .8) * 75; }
+      if (kind === 8) { targetX = W / 2 + Math.sin(time * .35) * 100; targetY = 155 + (phase === 2 ? 100 : 0); this.armored = time % 8 < 4; }
+      if (kind === 9) { targetX = W / 2 + Math.sin(time * (.6 + phase * .25)) * 190; targetY = 155 + phase * 40; }
+      this.x += clamp(targetX - this.x, -motion * s, motion * s);
       this.y += clamp(targetY - this.y, -130 * s, 130 * s);
       if (this.y > 100) {
         this.summonTimer -= dt;
-        if (this.summonTimer <= 0) { this.summon(); this.summonTimer = kind === 1 ? 5600 : 7200; }
+        if (this.summonTimer <= 0) { this.summon(); this.summonTimer = kind === 1 ? 6200 : kind === 5 ? 7000 : 12000; }
       }
     } else {
-      const holding = this.type === 'sniper' && this.y >= 210 && this.age < 5400;
+      const holding = ['sniper', 'artillery', 'oracle'].includes(this.type) && this.y >= 210 && this.age < 5400;
       if (!holding) this.y += this.speed * s;
       if (this.type === 'drone' || this.type === 'guardian') this.x = clamp(this.originX + Math.sin(this.age * .0016 + this.phase) * 38, 35, W - 35);
       if (this.type === 'hunter' && this.y < H - 300) this.x += clamp(player.x - this.x, -110, 110) * s * .8;
       if (this.type === 'scout') this.x = clamp(this.originX + Math.sin(this.age * .002 + this.phase) * 55, 30, W - 30);
+      if (this.type === 'aegis') this.armored = this.age % 5000 < 2300;
+      if (['corsair', 'saw', 'mirage'].includes(this.type)) this.x = clamp(this.originX + Math.sin(this.age * .0025 + this.phase) * 115, 35, W - 35);
+      if (this.type === 'weaver' || this.type === 'wraith') this.x = clamp(this.originX + Math.sin(this.age * (this.type === 'wraith' ? .003 : .002)) * 100, 38, W - 38);
+      if (this.type === 'lancer' && this.age < 4000 && this.y > 230) this.y -= this.speed * s;
+      if (this.type === 'striker') this.x = clamp(this.originX + Math.sin(this.age * .0014) * 70, 35, W - 35);
       if (this.type === 'elite') this.x = clamp(this.originX + Math.sin(this.age * .0018) * 68, 45, W - 45);
     }
     if (this.y > 60 && this.y < Math.min(H - 150, player.y - 65)) {
@@ -297,17 +316,17 @@ class Enemy {
   }
   emit(angle, speed, style = this.def.shot, xOff = 0) {
     if (enemyBullets.length >= this.config.bulletCap) return;
-    const widths = { orb: 7, ring: 7, bomb: 9, rail: 4, diamond: 5 };
+    const widths = { orb: 7, ring: 7, bomb: 8, rail: 4, diamond: 5, mine: 8, pulse: 7, toxic: 6, arc: 6, fork: 5 };
     speed *= this.config.bulletSpeed;
     enemyBullets.push(new Bullet(this.x + xOff, this.y + this.radius * .55, Math.cos(angle) * speed, Math.sin(angle) * speed, this.config.damage, this.def.color,
-      { enemy: true, style, width: widths[style] || 4, split: style === 'bomb' }));
+      { enemy: true, style, width: widths[style] || 4, split: style === 'bomb' || style === 'mine' }));
     run.shotsFired++;
   }
   fan(count, spacing, angle, speed, style) { for (let i = 0; i < count; i++) this.emit(angle + (i - (count - 1) / 2) * spacing, speed, style); }
   shoot() {
     if (!this.active || !run.active) return;
     this.shotCount++;
-    const down = Math.PI / 2, aim = Math.atan2(player.y - this.y, player.x - this.x);
+    const down = Math.PI / 2, aim = down + Math.sin(this.shotCount * 1.7 + this.phase) * .30;
     switch (this.type) {
       case 'drone': this.emit(down, 230); break;
       case 'scout': this.emit(down - .12, 305, 'needle', -7); this.emit(down + .12, 305, 'needle', 7); break;
@@ -318,22 +337,74 @@ class Enemy {
       case 'elite': this.fan(5, .16, aim, 255, 'plasma'); break;
       case 'bomber': this.emit(down - .24, 115, 'bomb', -17); this.emit(down + .24, 115, 'bomb', 17); break;
       case 'guardian': this.fan(7, .3, down + (this.shotCount % 2 ? .12 : -.12), 195, 'ring'); break;
-      case 'boss': {
-        const p = this.bossPhase, pattern = (this.shotCount + this.config.bossKind) % 4;
-        if (pattern === 0) this.fan(7 + p * 2, .16, down + Math.sin(this.age * .002) * .3, 215, 'orb');
-        if (pattern === 1) { this.fan(3 + p * 2, .14, aim, 290, 'laser'); this.emit(down, 260, 'rail', -39); this.emit(down, 260, 'rail', 39); }
-        if (pattern === 2) { const count = 11 + p * 3; for (let i = 0; i < count; i++) this.emit(Math.PI * 2 * i / count + this.shotCount * .14, 190, this.config.bossKind === 1 ? 'ring' : 'plasma'); }
-        if (pattern === 3) this.fan(5 + p * 2, .21, down, 235, 'diamond');
-        break;
-      }
+      case 'striker': this.emit(down - .14, 300, 'fork', -18); this.emit(down + .14, 300, 'fork', 18); break;
+      case 'weaver': this.fan(3, .30, down + Math.sin(this.shotCount) * .32, 225, 'arc'); break;
+      case 'lancer': this.emit(down - .08, 380, 'shard', -22); this.emit(down + .08, 380, 'shard', 22); break;
+      case 'bulwark': this.fan(5, .24, down + (this.shotCount % 2 ? .12 : -.12), 195, 'pulse'); break;
+      case 'minelayer': this.emit(down - .4, 90, 'mine', -24); this.emit(down + .4, 90, 'mine', 24); break;
+      case 'wraith': this.fan(3, .2, down, 290, 'toxic'); break;
+      case 'corsair': for (const side of [-1, 1]) this.emit(down + side * .25, 285, 'fork', side * 24); break;
+      case 'pulsar': this.fan(this.shotCount % 2 ? 3 : 5, .28, down, 225, 'pulse'); break;
+      case 'saw': this.emit(down - .4, 260, 'arc', -20); this.emit(down + .4, 260, 'arc', 20); break;
+      case 'artillery': if (this.shotCount % 2) this.fan(3, .3, down, 175, 'orb'); else this.emit(down, 105, 'bomb'); break;
+      case 'courier': this.fan(3, .25, down, 300, 'needle'); break;
+      case 'aegis': this.fan(this.armored ? 3 : 5, .26, down, 205, 'ring'); break;
+      case 'mirage': for (const offset of [-30, 0, 30]) this.emit(down + (this.shotCount % 2 ? .2 : -.2), 280, 'plasma', offset); break;
+      case 'oracle': if (this.shotCount % 2) this.fan(3, .5, down, 95, 'mine'); else this.fan(5, .25, down, 205, 'diamond'); break;
+      case 'boss': this.bossShoot(); break;
     }
   }
+  bossShoot() {
+    const p = this.bossPhase, n = this.shotCount, down = Math.PI / 2;
+    switch (this.config.bossKind) {
+      case 0:
+        if (n % 3) this.fan(5 + p * 2, .22, down + Math.sin(n) * .28, 205, 'orb');
+        else for (const offset of [-60, 0, 60]) this.emit(down, 315, 'fork', offset);
+        break;
+      case 1:
+        for (const side of [-1, 1]) { this.emit(down + side * .3, 110, 'bomb', side * 48); this.emit(down, 240, 'laser', side * 48); }
+        break;
+      case 2:
+        if (this.age % 3600 < 1500) break; // Dash first, then expose guns during the stop.
+        this.fan(5 + p * 2, .23, down + (this.x > 300 ? .45 : -.45), 250, 'arc');
+        break;
+      case 3:
+        if (n % 3 === 0) break; // Paired batteries recharge together, opening a crossing window.
+        for (let i = -2; i <= 2; i++) this.emit(down + i * .20 + (n % 2 ? -.14 : .14), 245, n % 2 ? 'shard' : 'rail', n % 2 ? -50 : 50);
+        break;
+      case 4:
+        if (n % 8 >= 4) break;
+        for (let i = -1; i <= 1; i++) this.emit(down + i * .2, 260, 'laser', [-60, -20, 20, 60][n % 4]);
+        break;
+      case 5:
+        if (n % 2) { this.emit(down - .35, 95, 'mine', -48); this.emit(down + .35, 95, 'mine', 48); }
+        else this.fan(7 + p * 2, .28, down + Math.sin(n) * .2, 180, 'toxic');
+        break;
+      case 6:
+        if (this.armored) this.fan(3, .35, down, 215, 'diamond');
+        else this.fan(7 + p * 2, .24, down + (n % 2 ? .12 : -.12), 230, 'shard');
+        break;
+      case 7:
+        for (let i = 0; i < 3; i++) this.emit(n * .27 + i * Math.PI * 2 / 3, 195 + p * 15, 'plasma');
+        break;
+      case 8:
+        if (this.armored) { for (const side of [-1, 1]) for (let i = 0; i < 3; i++) this.emit(down + side * (.08 + i * .20), 245, 'pulse', side * 58); }
+        else if (n % 2) this.fan(5, .25, down, 190, 'orb');
+        break;
+      case 9:
+        if (p === 0) this.fan(7, .24, down + Math.sin(n) * .25, 235, 'fork');
+        if (p === 1) for (let i = 0; i < 8; i++) this.emit(n * .31 + i * Math.PI / 4, 205, 'ring');
+        if (p === 2) { this.fan(5, .29, down, 260, 'diamond'); if (n % 3 === 0) { this.emit(down - .4, 110, 'bomb', -48); this.emit(down + .4, 110, 'bomb', 48); } }
+        break;
+    }
+  }
+
   summon() {
     const cap = this.bossPhase === 0 ? 2 : 3;
     let count = enemies.filter(e => e.active && e.escort).length;
     for (const x of [75, W - 75, W / 2]) {
       if (count >= cap) break;
-      const kind = this.config.bossKind === 1 ? 'hunter' : this.bossPhase === 2 ? 'fighter' : 'scout';
+      const kind = this.config.bossKind === 5 ? 'drone' : this.config.bossKind === 1 ? 'hunter' : this.bossPhase === 2 ? 'fighter' : 'scout';
       const type = ENEMIES[kind].unlock <= this.config.level ? kind : 'drone';
       if (!Balance.canSpawn(type, enemies, this.config)) continue;
       enemies.push(new Enemy(type, this.config, x, true)); count++;
@@ -341,11 +412,11 @@ class Enemy {
   }
   hit(damage) {
     if (!this.active) return;
-    this.hp -= damage; this.hitFlash = 80;
+    this.hp -= damage * (this.armored ? .45 : 1); this.hitFlash = 80;
     if (this.hp > 0) return;
     this.active = false; run.kills++; if (!this.escort) run.resolved++;
     if (this.type !== 'boss' && !this.escort) run.regularKills++;
-    const reward = this.escort ? Math.ceil(this.def.credits * .35) : this.def.credits;
+    const reward = this.escort ? 0 : this.def.credits;
     run.score += this.escort ? Math.ceil(this.def.score * .5) : this.def.score; run.credits += reward;
     Missions.update('kill_' + this.type, 1); Missions.update('collect_money', reward);
     explosion(this.x, this.y, this.def.color, this.type === 'boss' ? 40 : 11); Audio.play('explode');
@@ -356,7 +427,8 @@ class Enemy {
     } else if (!this.escort && Math.random() < .10 && run.time - run.lastDrop > 3500) dropModule(this.x, this.y);
   }
   draw(c) {
-    Atlas.draw(c, this.def.sprite, this.x, this.y, this.type === 'boss' ? 158 : this.radius * 2.7, Math.PI);
+    Atlas.draw(c, this.def.sprite, this.x, this.y, this.type === 'boss' ? this.boss.size : this.radius * 2.7, Math.PI);
+    if (this.armored) { c.strokeStyle = '#8bcfff99'; c.lineWidth = 3; c.beginPath(); c.arc(this.x, this.y, this.radius + 8, 0, Math.PI * 2); c.stroke(); }
     if (this.hitFlash > 0) { c.fillStyle = '#ffffff99'; c.fillRect(this.x - 3, this.y - 3, 6, 6); }
     if (this.hp < this.maxHp && this.type !== 'boss') { c.fillStyle = '#192a3e'; c.fillRect(this.x - 18, this.y - this.radius - 12, 36, 3); c.fillStyle = this.def.color; c.fillRect(this.x - 18, this.y - this.radius - 12, 36 * Math.max(0, this.hp / this.maxHp), 3); }
   }
@@ -371,6 +443,7 @@ function dropModule(x, y, forced) {
 const Director = {
   beginWave() {
     if (!run.active) return;
+    if (run.pendingSupply) { dropModule(player.x < W / 2 ? W - 110 : 110, -32, run.pendingSupply); run.pendingSupply = null; }
     if (run.mode === 'ENDLESS') run.config = Balance.survival(run.wave);
     const c = run.config;
     run.phase = 'combat'; run.spawnTimer = 900; run.waveStarted = run.time;
@@ -385,6 +458,9 @@ const Director = {
     const c = run.config;
     run.spawnTimer -= dt;
     if (run.queue.length && run.spawnTimer <= 0) {
+      // Give dense salvoes time to pass before adding more guns to the field.
+      const pressure = enemyBullets.reduce((n, b) => n + Number(b.active && b.y > H * .38 && b.y < H && b.vy > 0), 0);
+      if (pressure > Math.max(18, c.bulletCap * .30)) { run.spawnTimer = 350; return; }
       // Find an affordable enemy without blocking the queue on a heavy unit.
       const index = run.queue.findIndex(type => Balance.canSpawn(type, enemies, c));
       if (index >= 0) { const type = run.queue.splice(index, 1)[0]; enemies.push(new Enemy(type, c)); run.spawnTimer = c.interval; }
@@ -394,7 +470,7 @@ const Director = {
     if (!run.queue.length && !alive) {
       if (run.bossPending && !run.bossSpawned) {
         run.bossSpawned = true; run.phase = 'boss'; enemies.push(new Enemy('boss', c)); enemyBullets = [];
-        banner(['РАЗРУШИТЕЛЬ', 'НОСИТЕЛЬ', 'ЖНЕЦ'][c.bossKind], 'Три фазы боя · прикрытие из малых кораблей', 2600); return;
+        banner(Balance.BOSSES[c.bossKind].name, Balance.BOSSES[c.bossKind].mechanic, 3200); return;
       }
       if (run.bossPending && !run.bossKilled) return;
       enemyBullets = [];
@@ -402,9 +478,9 @@ const Director = {
       if (run.mode === 'ENDLESS') { const bonus = 60 + Math.min(30, run.wave) * 15; run.credits += bonus; Missions.update('collect_money', bonus); }
       run.wave++; run.phase = 'rest'; run.restTimer = 4300;
       player.hp = Math.min(player.maxHp, player.hp + player.maxHp * .05); player.iframe = Math.max(player.iframe, 1500);
-      dropModule(W / 2, H * .58, run.wave % 3 === 0 ? 'health' : run.wave % 2 === 0 ? 'overdrive' : 'multishot');
+      run.pendingSupply = run.wave % 3 === 0 ? 'health' : run.wave % 2 === 0 ? 'overdrive' : 'multishot';
       bankIncome(); Save.persist(true);
-      banner('ПЕРЕДЫШКА', 'Броня +5% · Подберите модуль снабжения', 3800);
+      banner('ПЕРЕДЫШКА', 'Броня +5% · Снабжение прибудет с новой волной', 3800);
     }
   }
 };
@@ -413,6 +489,11 @@ function segmentDistance(px, py, ax, ay, bx, by) {
   const dx = bx - ax, dy = by - ay, d = dx * dx + dy * dy;
   const t = d ? clamp(((px - ax) * dx + (py - ay) * dy) / d, 0, 1) : 0;
   return Math.hypot(px - ax - t * dx, py - ay - t * dy);
+}
+function hitsPlayer(b) {
+  // Swept ellipse of the central hull. Wings and decorative projectile glow are excluded.
+  const rx = player.radius + b.width, ry = player.hitHeight + b.width;
+  return segmentDistance(0, 0, (b.prevX - player.x) / rx, (b.prevY - player.y) / ry, (b.x - player.x) / rx, (b.y - player.y) / ry) < 1;
 }
 function compactActive(list) { let n = 0; for (let i = 0; i < list.length; i++) if (list[i].active) list[n++] = list[i]; list.length = n; }
 function compactAlive(list) { let n = 0; for (let i = 0; i < list.length; i++) if (list[i].life > 0) list[n++] = list[i]; list.length = n; }
@@ -430,16 +511,17 @@ function simulate(dt) {
       }
     }
   }
-  for (const b of enemyBullets) if (b.active && segmentDistance(player.x, player.y, b.prevX, b.prevY, b.x, b.y) < player.radius + b.width) { b.active = false; player.hit(b.damage); if (!run.active) return; }
+  for (const b of enemyBullets) if (b.active && hitsPlayer(b)) { b.active = false; player.hit(b.damage); if (!run.active) return; }
   for (const e of enemies) if (e.active && Math.hypot(e.x - player.x, e.y - player.y) < e.radius + player.radius) {
     player.hit(run.config.damage * 2.2);
     if (e.type !== 'boss') { e.active = false; if (!e.escort) { run.escaped++; run.resolved++; } explosion(e.x, e.y, e.def.color); }
     if (!run.active) return;
   }
   for (const p of pickups) {
-    p.age += dt; p.y += 88 * s;
+    if (run.phase === 'rest') continue;
+    p.age += dt; p.y += 120 * s;
     const distance = Math.hypot(p.x - player.x, p.y - player.y);
-    if (distance < 120) { p.x += (player.x - p.x) * s * 4; p.y += (player.y - p.y) * s * 4; }
+    if (distance < 65) { p.x += (player.x - p.x) * s * 4; p.y += (player.y - p.y) * s * 4; }
     if (distance < 38) { p.active = false; player.collect(p.type); }
     if (p.y > H + 45 || p.age > 14000) p.active = false;
   }
@@ -457,6 +539,7 @@ function advance(elapsed) {
 }
 
 function startRun(mode, level = Save.data.campaignLevel) {
+  if (VKAds.busy) { toast('Дождитесь завершения рекламы.'); return; }
   if (!Atlas.ready) { toast(Atlas.error ? 'Проверьте наличие файла атласа в папке assets.' : 'Атлас ещё загружается. Подождите немного.'); return; }
   sessionChanged = true; Audio.unlock(); Missions.check(); clearTimeout(Save.timer); Save.timer = null;
   const safeLevel = clamp(Math.floor(level), 1, Save.data.campaignLevel);
@@ -497,18 +580,18 @@ function finishRun(victory, reason) {
   $('resultSub').textContent = victory ? 'Путь к следующей звёздной системе открыт.' : reason === 'coverage' ? `Уничтожено ${coverage}%. Для победы нужно 60%.` : 'Кредиты сохранены. Флот готов к новому вылету.';
   $('resScore').textContent = fmt(run.score); $('resCredits').textContent = fmt(run.credits); $('resMetricLabel').textContent = isCampaign ? 'УНИЧТОЖЕНО' : 'ВОЛНА';
   $('resMetric').textContent = isCampaign ? `${run.regularKills} / ${run.planned}` : run.wave; $('resTime').textContent = clockText(run.time);
-  const nextShip = SHIPS.find(s => !Save.data.unlockedShips.includes(s.id) && s.cost <= Save.data.credits);
+  const nextShip = SHIPS.find(s => !Save.data.unlockedShips.includes(s.id) && s.cost <= Save.data.credits && s.unlock <= Save.data.campaignLevel);
   $('resultTip').textContent = nextShip ? `Доступен новый корпус: ${nextShip.name}. Загляните в ангар.` : victory ? 'Системы флота усиливают все ваши корабли.' : 'Двигайтесь между залпами. Следите за подкреплениями босса.';
   $('resActionBtn').textContent = victory && run.level < MAX_LEVEL ? 'СЛЕДУЮЩИЙ СЕКТОР' : 'ПОВТОРИТЬ ПОЛЁТ';
   const replayMode = run.mode, replayLevel = victory && run.level < MAX_LEVEL ? run.level + 1 : run.level;
-  $('resActionBtn').onclick = () => { Audio.play('ui'); startRun(replayMode, replayLevel); }; renderMenu();
+  $('resActionBtn').onclick = () => { Audio.play('ui'); startRun(replayMode, replayLevel); }; renderMenu(); VKAds.afterFlight(run.time);
 }
 function pauseGame() {
   if (!run.active || run.paused) return; run.paused = true; accumulator = 0; input.keys.clear(); input.pointer = null; $('pauseMenu').classList.remove('hidden'); Save.persist(true);
 }
 function resumeGame() { if (!run.active) return; run.paused = false; lastFrame = performance.now(); accumulator = 0; $('pauseMenu').classList.add('hidden'); }
 function showMenu() {
-  if (run.active) { run.active = false; commitRun(); }
+  if (run.active) { run.active = false; commitRun(); VKAds.afterFlight(run.time); }
   run.paused = false; input.keys.clear(); input.pointer = null; document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
   $('hud').classList.add('hidden'); $('mainMenu').classList.remove('hidden'); $('damageOverlay').style.opacity = 0; renderMenu();
 }
@@ -522,7 +605,7 @@ function drawMenuShip(time) {
   const c = $('menuShipCanvas').getContext('2d'); c.clearRect(0, 0, 500, 230); Atlas.draw(c, Save.data.currentShip, 250, 112 + Math.sin(time * .001) * 5, 200, -.12);
 }
 function renderSectors() {
-  const names = ['ТИХАЯ ГРАНИЦА', 'ПОЯС ОБЛОМКОВ', 'ТЁМНЫЙ ФРОНТ', 'СЕРДЦЕ ПУСТОТЫ', 'МЁРТВАЯ ОРБИТА', 'ТУМАННОСТЬ ВЕГА', 'ЗВЁЗДНЫЙ РАЗЛОМ', 'ПОСЛЕДНИЙ РУБЕЖ', 'КРАЙ СИНГУЛЯРНОСТИ', 'ПЕПЕЛ СВЕРХНОВОЙ', 'ЦИТАДЕЛЬ БЕЗДНЫ', 'ГОРИЗОНТ СОБЫТИЙ'];
+  const names = ['ТИХАЯ ГРАНИЦА', 'ПОЯС ОБЛОМКОВ', 'ТЁМНЫЙ ФРОНТ', 'СЕРДЦЕ ПУСТОТЫ', 'МЁРТВАЯ ОРБИТА', 'ТУМАННОСТЬ ВЕГА', 'ЗВЁЗДНЫЙ РАЗЛОМ', 'ПОСЛЕДНИЙ РУБЕЖ', 'КРАЙ СИНГУЛЯРНОСТИ', 'ПЕПЕЛ СВЕРХНОВОЙ', 'ЦИТАДЕЛЬ БЕЗДНЫ', 'ГОРИЗОНТ СОБЫТИЙ', 'ЛЕДЯНОЕ ЭХО', 'ПЫЛЬ АНТАРЕСА', 'ПОЯС ГОЛИАФА', 'РАСКОЛОТЫЙ МИР', 'ЛАБИРИНТ ПУЛЬСАРОВ', 'ЗАБЫТАЯ ЭСКАДРА', 'ПРЕДЕЛ АТЛАСА', 'ПРИЗРАКИ ОРИОНА', 'ПЕПЕЛ ИМПЕРИИ', 'КОЛЬЦА ТИТАНА', 'НУЛЕВАЯ ЗВЕЗДА', 'ОКО БУРИ', 'ИСТОК ПУСТОТЫ'];
   $('sectorGrid').replaceChildren();
   for (let chapter = 0; chapter < MAX_LEVEL / 10; chapter++) {
     const label = document.createElement('div'); label.className = 'chapter-title'; label.innerHTML = `<span>${String(chapter + 1).padStart(2, '0')} / ${names[chapter]}</span><small>10 СЕКТОРОВ</small>`; $('sectorGrid').append(label);
@@ -544,28 +627,28 @@ function drawShopShip(time) {
   const c = $('shipPreviewCanvas').getContext('2d'); c.clearRect(0, 0, 500, 280); Atlas.draw(c, shopIndex, 250, 133 + Math.sin(time * .0012) * 4, 242, -.08);
 }
 function renderShop() {
-  const ship = Balance.stats(shopIndex, Save.data.fleetUpgrades), owned = Save.data.unlockedShips.includes(shopIndex), max = Balance.stats(9, { dmg: MAX_UPGRADE, hp: MAX_UPGRADE, spd: MAX_UPGRADE });
+  const ship = Balance.stats(shopIndex, Save.data.fleetUpgrades), owned = Save.data.unlockedShips.includes(shopIndex), max = Balance.stats(9, { dmg: MAX_UPGRADE, hp: MAX_UPGRADE, rate: MAX_UPGRADE });
   $('shopCredits').textContent = fmt(Save.data.credits); $('shipNumber').textContent = `${String(shopIndex + 1).padStart(2, '0')} / 10`; $('shipName').textContent = ship.name; $('shipDesc').textContent = ship.role;
-  $('shipTier').textContent = `КОРПУС ${String(shopIndex + 1).padStart(2, '0')} / ${owned ? 'В СОСТАВЕ ФЛОТА' : 'ДОСТУПЕН К ПОКУПКЕ'}`;
-  $('statValDmg').textContent = `${Math.round(ship.dps)} ед/с`; $('statValArmor').textContent = `${ship.hp} HP`; $('statValSpeed').textContent = `${Math.round(ship.speed)} ед/с`;
-  $('statBarDmg').style.width = `${ship.dps / max.dps * 100}%`; $('statBarArmor').style.width = `${ship.hp / max.hp * 100}%`; $('statBarSpeed').style.width = `${ship.speed / max.speed * 100}%`;
+  $('shipTier').textContent = `КОРПУС ${String(shopIndex + 1).padStart(2, '0')} / ${owned ? 'В СОСТАВЕ ФЛОТА' : Save.data.campaignLevel < ship.unlock ? 'ЧЕРТЕЖИ В СЕКТОРЕ ' + ship.unlock : 'ДОСТУПЕН К ПОКУПКЕ'}`;
+  $('statValDmg').textContent = `${Math.round(ship.dps)} ед/с`; $('statValArmor').textContent = `${ship.hp} HP`; $('statValSpeed').textContent = `${ship.fireRate.toFixed(1)} залп/с`;
+  $('statBarDmg').style.width = `${ship.dps / max.dps * 100}%`; $('statBarArmor').style.width = `${ship.hp / max.hp * 100}%`; $('statBarSpeed').style.width = `${ship.fireRate / Balance.stats(4, {rate:MAX_UPGRADE}).fireRate * 100}%`;
   const previous = shopIndex > 0 ? Balance.stats(shopIndex - 1, Save.data.fleetUpgrades) : null;
-  $('shipComparison').textContent = previous ? `К предыдущему: урон +${Math.round((ship.dps / previous.dps - 1) * 100)}% · броня +${ship.hp - previous.hp} · скорость +${Math.round(ship.speed - previous.speed)}` : 'Базовый корпус · начало вашего флота';
-  $('buyShipBtn').classList.toggle('hidden', owned); $('selectShipBtn').classList.toggle('hidden', !owned); $('shipCost').textContent = fmt(ship.cost); $('buyShipBtn').disabled = Save.data.credits < ship.cost;
+  $('shipComparison').textContent = previous ? `К предыдущему: урон +${Math.round((ship.dps / previous.dps - 1) * 100)}% · броня +${ship.hp - previous.hp}` : 'Базовый корпус · начало вашего флота';
+  $('buyShipBtn').classList.toggle('hidden', owned); $('selectShipBtn').classList.toggle('hidden', !owned); $('shipCost').textContent = fmt(ship.cost); $('buyShipBtn').disabled = Save.data.credits < ship.cost || Save.data.campaignLevel < ship.unlock;
   $('selectShipBtn').disabled = Save.data.currentShip === shopIndex; $('selectShipBtn').textContent = Save.data.currentShip === shopIndex ? 'ГОТОВ К ВЫЛЕТУ' : 'ВЫБРАТЬ КОРАБЛЬ';
   $('shipDots').replaceChildren();
   SHIPS.forEach(s => { const dot = document.createElement('button'); dot.className = `ship-dot ${s.id === shopIndex ? 'selected' : ''}`; dot.setAttribute('aria-label', s.name); dot.onclick = () => { shopIndex = s.id; renderShop(); }; $('shipDots').append(dot); });
-  for (const [key, id] of [['dmg', 'Dmg'], ['hp', 'Hp'], ['spd', 'Spd']]) {
+  for (const [key, id] of [['dmg', 'Dmg'], ['hp', 'Hp'], ['rate', 'Rate']]) {
     const rank = Save.data.fleetUpgrades[key], cost = Balance.upgradeCost(rank);
     $(`${key}LvlText`).textContent = `РАНГ ${rank} / ${MAX_UPGRADE}`; $(`${key}CostText`).textContent = rank >= MAX_UPGRADE ? 'МАКСИМУМ' : `${fmt(cost)} CR`;
     $(`upgrade${id}Btn`).disabled = false;
     $(`upgrade${id}Btn`).classList.toggle('selected', selectedUpgrade === key);
     $(`upgrade${id}Btn`).setAttribute('aria-pressed', String(selectedUpgrade === key));
   }
-  const rank = Save.data.fleetUpgrades[selectedUpgrade], cost = Balance.upgradeCost(rank), names = { dmg: 'ОРУДИЯ', hp: 'БРОНЯ', spd: 'ДВИГАТЕЛЬ' };
+  const rank = Save.data.fleetUpgrades[selectedUpgrade], cost = Balance.upgradeCost(rank), names = { dmg: 'ОРУДИЯ', hp: 'БРОНЯ', rate: 'СКОРОСТРЕЛЬНОСТЬ' };
   const before = Balance.stats(shopIndex, Save.data.fleetUpgrades), after = Balance.stats(shopIndex, { ...Save.data.fleetUpgrades, [selectedUpgrade]: Math.min(MAX_UPGRADE, rank + 1) });
-  const field = selectedUpgrade === 'dmg' ? 'dps' : selectedUpgrade === 'spd' ? 'speed' : 'hp';
-  $('upgradeDetail').textContent = rank >= MAX_UPGRADE ? `${names[selectedUpgrade]} · максимальный ранг` : `${names[selectedUpgrade]}: ${Math.round(before[field])} → ${Math.round(after[field])} ${field === 'hp' ? 'HP' : 'ед/с'} на этом корпусе`;
+  const field = selectedUpgrade === 'dmg' ? 'dps' : selectedUpgrade === 'rate' ? 'fireRate' : 'hp';
+  $('upgradeDetail').textContent = rank >= MAX_UPGRADE ? `${names[selectedUpgrade]} · максимальный ранг` : `${names[selectedUpgrade]}: ${field === 'fireRate' ? before[field].toFixed(2) : Math.round(before[field])} → ${field === 'fireRate' ? after[field].toFixed(2) : Math.round(after[field])} ${field === 'hp' ? 'HP' : field === 'fireRate' ? 'залп/с' : 'ед/с'} на этом корпусе`;
   $('buyUpgradeBtn').disabled = rank >= MAX_UPGRADE || Save.data.credits < cost;
   $('buyUpgradeBtn').textContent = rank >= MAX_UPGRADE ? 'СИСТЕМА УЛУЧШЕНА ДО МАКСИМУМА' : `КУПИТЬ УЛУЧШЕНИЕ · ${fmt(cost)} CR`;
   drawShopShip(performance.now());
@@ -606,10 +689,10 @@ function updateHUD() {
   textIfChanged('healthText', `${Math.ceil(player.hp)} / ${player.maxHp}`); $('healthBar').style.width = `${Math.max(0, player.hp / player.maxHp * 100)}%`; $('healthBar').style.background = player.hp < player.maxHp * .3 ? '#ff738c' : '#75e9f5';
   $('waveBanner').style.opacity = run.time < run.bannerUntil ? 1 : 0; $('controlHint').style.opacity = run.time < 7500 ? 1 : 0;
   const boss = enemies.find(e => e.type === 'boss' && e.active); $('bossHUD').classList.toggle('hidden', !boss);
-  if (boss) { textIfChanged('bossName', `${['РАЗРУШИТЕЛЬ', 'НОСИТЕЛЬ', 'ЖНЕЦ'][boss.config.bossKind]} / ФАЗА ${boss.bossPhase + 1}`); $('bossHealthBar').style.width = `${Math.max(0, boss.hp / boss.maxHp * 100)}%`; }
+  if (boss) { textIfChanged('bossName', `${boss.boss.name} / ФАЗА ${boss.bossPhase + 1}`); $('bossHealthBar').style.width = `${Math.max(0, boss.hp / boss.maxHp * 100)}%`; }
   for (const type in player.boosts) {
     const node = boostNodes[type]; if (!node) continue;
-    const time = player.boosts[type], text = `${MODULES[type].name} ${Math.ceil(time / 1000)}с`;
+    const time = player.boosts[type], text = `${MODULES[type].name} ${run.phase === 'rest' ? 'ОЖИДАНИЕ' : Math.ceil(time / 1000) + 'с'}`;
     node.chip.classList.toggle('hidden', time <= 0);
     if (node.text !== text) { node.label.textContent = text; node.text = text; }
   }
@@ -650,8 +733,8 @@ onClick('shopBtn', openHangar); onClick('resHangarBtn', openHangar);
 onClick('prevShip', () => { shopIndex = (shopIndex + SHIPS.length - 1) % SHIPS.length; renderShop(); });
 onClick('nextShip', () => { shopIndex = (shopIndex + 1) % SHIPS.length; renderShop(); });
 onClick('selectShipBtn', () => { if (!Save.data.unlockedShips.includes(shopIndex)) return; Save.data.currentShip = shopIndex; sessionChanged = true; Save.persist(true); renderShop(); });
-onClick('buyShipBtn', () => { const ship = SHIPS[shopIndex]; if (Save.data.unlockedShips.includes(ship.id) || Save.data.credits < ship.cost) return; Save.data.credits -= ship.cost; Save.data.unlockedShips.push(ship.id); Save.data.currentShip = ship.id; sessionChanged = true; Save.persist(true); Audio.play('powerup'); renderShop(); });
-onClick('upgradeDmgBtn', () => { selectedUpgrade = 'dmg'; renderShop(); }); onClick('upgradeHpBtn', () => { selectedUpgrade = 'hp'; renderShop(); }); onClick('upgradeSpdBtn', () => { selectedUpgrade = 'spd'; renderShop(); });
+onClick('buyShipBtn', () => { const ship = SHIPS[shopIndex]; if (Save.data.unlockedShips.includes(ship.id) || Save.data.credits < ship.cost || Save.data.campaignLevel < ship.unlock) return; Save.data.credits -= ship.cost; Save.data.unlockedShips.push(ship.id); Save.data.currentShip = ship.id; sessionChanged = true; Save.persist(true); Audio.play('powerup'); renderShop(); });
+onClick('upgradeDmgBtn', () => { selectedUpgrade = 'dmg'; renderShop(); }); onClick('upgradeHpBtn', () => { selectedUpgrade = 'hp'; renderShop(); }); onClick('upgradeRateBtn', () => { selectedUpgrade = 'rate'; renderShop(); });
 onClick('buyUpgradeBtn', () => upgrade(selectedUpgrade));
 onClick('pauseBtn', pauseGame); onClick('resumeBtn', resumeGame); onClick('quitBtn', showMenu); onClick('resMenuBtn', showMenu);
 onClick('missionsBtn', () => { Missions.render(); openPanel('missionsModal'); }); onClick('claimDailyBtn', () => Daily.claim());
@@ -683,7 +766,7 @@ window.addEventListener('blur', pauseGame);
 document.addEventListener('visibilitychange', () => { if (document.hidden) { pauseGame(); Save.persist(true); } Audio.music(); });
 window.addEventListener('pagehide', () => { if (run.active) { pauseGame(); bankIncome(); } Save.persist(true); });
 
-Object.values(ENEMIES).forEach(e => ShotArt.get(e.shot));
+
 Missions.check(); renderMenu(); renderShop(); renderModules(); initBoostHUD(); Atlas.init(); Daily.check(); VK.init(); requestAnimationFrame(loop);
 // Read-only diagnostics and explicit test hooks for the local regression harness.
 window.Voidstorm = { get state() { return run; }, get player() { return player; }, get enemies() { return enemies; }, get bullets() { return bullets; }, get enemyBullets() { return enemyBullets; }, get save() { return Save.data; }, get atlasReady() { return Atlas.ready; } };

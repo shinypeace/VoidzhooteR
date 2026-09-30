@@ -1,0 +1,9185 @@
+[
+  {
+    "coverage": 0.6,
+    "income": 767471,
+    "spent": 724660,
+    "credits": 42811,
+    "hull": 9,
+    "ranks": {
+      "dmg": 20,
+      "hp": 20,
+      "rate": 20
+    },
+    "purchases": [
+      {
+        "level": 10,
+        "hull": "ДЖАГГЕРНАУТ",
+        "cost": 3500
+      },
+      {
+        "level": 28,
+        "hull": "ПРИЗРАК",
+        "cost": 11000
+      },
+      {
+        "level": 50,
+        "hull": "РЕЛЬСОТРОН",
+        "cost": 18000
+      },
+      {
+        "level": 78,
+        "hull": "ШКВАЛ",
+        "cost": 32000
+      },
+      {
+        "level": 110,
+        "hull": "КСЕНОС",
+        "cost": 48000
+      },
+      {
+        "level": 145,
+        "hull": "ОМЕГА",
+        "cost": 66000
+      },
+      {
+        "level": 180,
+        "hull": "ПОЛЯРИС",
+        "cost": 82000
+      },
+      {
+        "level": 215,
+        "hull": "ЗАТМЕНИЕ",
+        "cost": 94000
+      },
+      {
+        "level": 240,
+        "hull": "СИНГУЛЯРНОСТЬ",
+        "cost": 110000
+      }
+    ],
+    "rows": [
+      {
+        "level": 1,
+        "earned": 526,
+        "credits": 526,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 2,
+        "earned": 551,
+        "credits": 1077,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 3,
+        "earned": 568,
+        "credits": 1645,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 4,
+        "earned": 572,
+        "credits": 2217,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 5,
+        "earned": 771,
+        "credits": 2988,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 6,
+        "earned": 641,
+        "credits": 3629,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 7,
+        "earned": 644,
+        "credits": 4273,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 8,
+        "earned": 662,
+        "credits": 4935,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 9,
+        "earned": 681,
+        "credits": 5616,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 10,
+        "earned": 879,
+        "credits": 2995,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 11,
+        "earned": 722,
+        "credits": 3717,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 12,
+        "earned": 739,
+        "credits": 4456,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 13,
+        "earned": 759,
+        "credits": 5215,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 14,
+        "earned": 766,
+        "credits": 5381,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 15,
+        "earned": 964,
+        "credits": 6345,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 16,
+        "earned": 811,
+        "credits": 7156,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 17,
+        "earned": 829,
+        "credits": 7985,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 18,
+        "earned": 847,
+        "credits": 8832,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 19,
+        "earned": 864,
+        "credits": 9696,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 20,
+        "earned": 1062,
+        "credits": 10758,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 21,
+        "earned": 893,
+        "credits": 11651,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 22,
+        "earned": 925,
+        "credits": 12576,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 23,
+        "earned": 945,
+        "credits": 13521,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 24,
+        "earned": 962,
+        "credits": 14483,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 25,
+        "earned": 1160,
+        "credits": 15643,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 26,
+        "earned": 1021,
+        "credits": 16664,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 27,
+        "earned": 1039,
+        "credits": 16623,
+        "hull": 1,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 28,
+        "earned": 1058,
+        "credits": 6681,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 29,
+        "earned": 1076,
+        "credits": 7757,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 30,
+        "earned": 1273,
+        "credits": 9030,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 31,
+        "earned": 1087,
+        "credits": 10117,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 32,
+        "earned": 1106,
+        "credits": 11223,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 33,
+        "earned": 1138,
+        "credits": 12361,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 34,
+        "earned": 1167,
+        "credits": 13528,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 35,
+        "earned": 1365,
+        "credits": 14893,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 36,
+        "earned": 1211,
+        "credits": 16104,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 37,
+        "earned": 1229,
+        "credits": 17333,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 38,
+        "earned": 1245,
+        "credits": 18578,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 39,
+        "earned": 1266,
+        "credits": 19844,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 40,
+        "earned": 1464,
+        "credits": 19478,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 41,
+        "earned": 1293,
+        "credits": 20771,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 42,
+        "earned": 1311,
+        "credits": 22082,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 43,
+        "earned": 1329,
+        "credits": 23411,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 44,
+        "earned": 1361,
+        "credits": 24772,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 45,
+        "earned": 1558,
+        "credits": 26330,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 46,
+        "earned": 1401,
+        "credits": 27731,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 47,
+        "earned": 1421,
+        "credits": 29152,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 48,
+        "earned": 1436,
+        "credits": 30588,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 49,
+        "earned": 1454,
+        "credits": 32042,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 50,
+        "earned": 1654,
+        "credits": 15696,
+        "hull": 3,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 51,
+        "earned": 1478,
+        "credits": 17174,
+        "hull": 3,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 52,
+        "earned": 1497,
+        "credits": 18671,
+        "hull": 3,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 53,
+        "earned": 1515,
+        "credits": 17456,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 54,
+        "earned": 1531,
+        "credits": 18987,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 55,
+        "earned": 1748,
+        "credits": 20735,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 56,
+        "earned": 1609,
+        "credits": 22344,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 57,
+        "earned": 1629,
+        "credits": 23973,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 58,
+        "earned": 1646,
+        "credits": 25619,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 59,
+        "earned": 1662,
+        "credits": 27281,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 60,
+        "earned": 1861,
+        "credits": 29142,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 61,
+        "earned": 1688,
+        "credits": 30830,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 62,
+        "earned": 1707,
+        "credits": 32537,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 63,
+        "earned": 1724,
+        "credits": 34261,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 64,
+        "earned": 1742,
+        "credits": 36003,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 65,
+        "earned": 1940,
+        "credits": 37943,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 66,
+        "earned": 1798,
+        "credits": 35901,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 67,
+        "earned": 1816,
+        "credits": 37717,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 68,
+        "earned": 1832,
+        "credits": 39549,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 69,
+        "earned": 1849,
+        "credits": 41398,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 70,
+        "earned": 2048,
+        "credits": 43446,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 71,
+        "earned": 1874,
+        "credits": 45320,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 72,
+        "earned": 1895,
+        "credits": 47215,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 73,
+        "earned": 1912,
+        "credits": 49127,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 74,
+        "earned": 1931,
+        "credits": 51058,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 75,
+        "earned": 2126,
+        "credits": 53184,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 76,
+        "earned": 1970,
+        "credits": 55154,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 77,
+        "earned": 2004,
+        "credits": 57158,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 78,
+        "earned": 2021,
+        "credits": 27179,
+        "hull": 4,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 79,
+        "earned": 2039,
+        "credits": 24118,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 80,
+        "earned": 2238,
+        "credits": 26356,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 81,
+        "earned": 2061,
+        "credits": 28417,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 82,
+        "earned": 2078,
+        "credits": 30495,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 83,
+        "earned": 2098,
+        "credits": 32593,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 84,
+        "earned": 2114,
+        "credits": 34707,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 85,
+        "earned": 2314,
+        "credits": 37021,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 86,
+        "earned": 2179,
+        "credits": 39200,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 87,
+        "earned": 2197,
+        "credits": 41397,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 88,
+        "earned": 2229,
+        "credits": 43626,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 89,
+        "earned": 2249,
+        "credits": 45875,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 90,
+        "earned": 2445,
+        "credits": 48320,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 91,
+        "earned": 2270,
+        "credits": 50590,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 92,
+        "earned": 2290,
+        "credits": 46370,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 93,
+        "earned": 2306,
+        "credits": 48676,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 94,
+        "earned": 2326,
+        "credits": 51002,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 95,
+        "earned": 2522,
+        "credits": 53524,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 96,
+        "earned": 2365,
+        "credits": 55889,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 97,
+        "earned": 2385,
+        "credits": 58274,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 98,
+        "earned": 2403,
+        "credits": 60677,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 99,
+        "earned": 2436,
+        "credits": 63113,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 100,
+        "earned": 2634,
+        "credits": 65747,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 101,
+        "earned": 2559,
+        "credits": 68306,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 102,
+        "earned": 2578,
+        "credits": 70884,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 103,
+        "earned": 2594,
+        "credits": 73478,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 104,
+        "earned": 2612,
+        "credits": 76090,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 105,
+        "earned": 2811,
+        "credits": 70831,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 106,
+        "earned": 2655,
+        "credits": 73486,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 107,
+        "earned": 2672,
+        "credits": 76158,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 108,
+        "earned": 2688,
+        "credits": 78846,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 109,
+        "earned": 2707,
+        "credits": 81553,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 110,
+        "earned": 2926,
+        "credits": 36479,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 111,
+        "earned": 2740,
+        "credits": 39219,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 112,
+        "earned": 2760,
+        "credits": 41979,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 113,
+        "earned": 2778,
+        "credits": 44757,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 114,
+        "earned": 2794,
+        "credits": 47551,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 115,
+        "earned": 2993,
+        "credits": 50544,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 116,
+        "earned": 2873,
+        "credits": 53417,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 117,
+        "earned": 2891,
+        "credits": 56308,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 118,
+        "earned": 2911,
+        "credits": 49439,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 119,
+        "earned": 2929,
+        "credits": 52368,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 120,
+        "earned": 3127,
+        "credits": 55495,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 121,
+        "earned": 2968,
+        "credits": 58463,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 122,
+        "earned": 2984,
+        "credits": 61447,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 123,
+        "earned": 3004,
+        "credits": 64451,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 124,
+        "earned": 3021,
+        "credits": 67472,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 125,
+        "earned": 3217,
+        "credits": 70689,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 126,
+        "earned": 3063,
+        "credits": 73752,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 127,
+        "earned": 3081,
+        "credits": 76833,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 128,
+        "earned": 3100,
+        "credits": 79933,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 129,
+        "earned": 3119,
+        "credits": 83052,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 130,
+        "earned": 3318,
+        "credits": 86370,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 131,
+        "earned": 3145,
+        "credits": 77875,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 132,
+        "earned": 3182,
+        "credits": 81057,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 133,
+        "earned": 3202,
+        "credits": 84259,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 134,
+        "earned": 3221,
+        "credits": 87480,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 135,
+        "earned": 3418,
+        "credits": 90898,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 136,
+        "earned": 3263,
+        "credits": 94161,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 137,
+        "earned": 3282,
+        "credits": 97443,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 138,
+        "earned": 3301,
+        "credits": 100744,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 139,
+        "earned": 3319,
+        "credits": 104063,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 140,
+        "earned": 3516,
+        "credits": 107579,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 141,
+        "earned": 3320,
+        "credits": 110899,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 142,
+        "earned": 3339,
+        "credits": 114238,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 143,
+        "earned": 3374,
+        "credits": 117612,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 144,
+        "earned": 3393,
+        "credits": 107385,
+        "hull": 5,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 145,
+        "earned": 3593,
+        "credits": 44978,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 146,
+        "earned": 3482,
+        "credits": 48460,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 147,
+        "earned": 3498,
+        "credits": 51958,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 148,
+        "earned": 3516,
+        "credits": 55474,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 149,
+        "earned": 3535,
+        "credits": 59009,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 150,
+        "earned": 3731,
+        "credits": 62740,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 151,
+        "earned": 3546,
+        "credits": 66286,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 152,
+        "earned": 3566,
+        "credits": 69852,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 153,
+        "earned": 3584,
+        "credits": 73436,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 154,
+        "earned": 3622,
+        "credits": 77058,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 155,
+        "earned": 3829,
+        "credits": 80887,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 156,
+        "earned": 3819,
+        "credits": 84706,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 157,
+        "earned": 3829,
+        "credits": 72815,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 158,
+        "earned": 3864,
+        "credits": 76679,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 159,
+        "earned": 3882,
+        "credits": 80561,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 160,
+        "earned": 4087,
+        "credits": 84648,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 161,
+        "earned": 3757,
+        "credits": 88405,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 162,
+        "earned": 3778,
+        "credits": 92183,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 163,
+        "earned": 3792,
+        "credits": 95975,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 164,
+        "earned": 3807,
+        "credits": 99782,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 165,
+        "earned": 4030,
+        "credits": 103812,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 166,
+        "earned": 3874,
+        "credits": 107686,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 167,
+        "earned": 3894,
+        "credits": 111580,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 168,
+        "earned": 3909,
+        "credits": 115489,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 169,
+        "earned": 3930,
+        "credits": 119419,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 170,
+        "earned": 4126,
+        "credits": 105575,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 171,
+        "earned": 3930,
+        "credits": 109505,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 172,
+        "earned": 3949,
+        "credits": 113454,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 173,
+        "earned": 3968,
+        "credits": 117422,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 174,
+        "earned": 3983,
+        "credits": 121405,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 175,
+        "earned": 4180,
+        "credits": 125585,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 176,
+        "earned": 4101,
+        "credits": 129686,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 177,
+        "earned": 4118,
+        "credits": 133804,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 178,
+        "earned": 4136,
+        "credits": 137940,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 179,
+        "earned": 4159,
+        "credits": 142099,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 180,
+        "earned": 4350,
+        "credits": 64449,
+        "hull": 7,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 181,
+        "earned": 4165,
+        "credits": 68614,
+        "hull": 7,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 182,
+        "earned": 4186,
+        "credits": 72800,
+        "hull": 7,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 183,
+        "earned": 4199,
+        "credits": 56659,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 184,
+        "earned": 4214,
+        "credits": 60873,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 185,
+        "earned": 4415,
+        "credits": 65288,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 186,
+        "earned": 4407,
+        "credits": 69695,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 187,
+        "earned": 4481,
+        "credits": 74176,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 188,
+        "earned": 4481,
+        "credits": 78657,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 189,
+        "earned": 4494,
+        "credits": 83151,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 190,
+        "earned": 4704,
+        "credits": 87855,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 191,
+        "earned": 4357,
+        "credits": 92212,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 192,
+        "earned": 4374,
+        "credits": 96586,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 193,
+        "earned": 4392,
+        "credits": 100978,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 194,
+        "earned": 4412,
+        "credits": 105390,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 195,
+        "earned": 4607,
+        "credits": 109997,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 196,
+        "earned": 4458,
+        "credits": 91625,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 197,
+        "earned": 4474,
+        "credits": 96099,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 198,
+        "earned": 4520,
+        "credits": 100619,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 199,
+        "earned": 4536,
+        "credits": 105155,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 200,
+        "earned": 4742,
+        "credits": 109897,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 201,
+        "earned": 4527,
+        "credits": 114424,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 202,
+        "earned": 4546,
+        "credits": 118970,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 203,
+        "earned": 4562,
+        "credits": 123532,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 204,
+        "earned": 4583,
+        "credits": 128115,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 205,
+        "earned": 4779,
+        "credits": 132894,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 206,
+        "earned": 4691,
+        "credits": 137585,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 207,
+        "earned": 4710,
+        "credits": 142295,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 208,
+        "earned": 4722,
+        "credits": 147017,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 209,
+        "earned": 4760,
+        "credits": 126337,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 210,
+        "earned": 4956,
+        "credits": 131293,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 211,
+        "earned": 4765,
+        "credits": 136058,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 212,
+        "earned": 4784,
+        "credits": 140842,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 213,
+        "earned": 4800,
+        "credits": 145642,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 214,
+        "earned": 4822,
+        "credits": 150464,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 215,
+        "earned": 5018,
+        "credits": 61482,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 216,
+        "earned": 5001,
+        "credits": 66483,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 217,
+        "earned": 4995,
+        "credits": 71478,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 218,
+        "earned": 5044,
+        "credits": 76522,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 219,
+        "earned": 5048,
+        "credits": 81570,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 220,
+        "earned": 5256,
+        "credits": 86826,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 221,
+        "earned": 4960,
+        "credits": 91786,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 222,
+        "earned": 4979,
+        "credits": 68625,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 223,
+        "earned": 4997,
+        "credits": 73622,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 224,
+        "earned": 5016,
+        "credits": 78638,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 225,
+        "earned": 5212,
+        "credits": 83850,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 226,
+        "earned": 5062,
+        "credits": 88912,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 227,
+        "earned": 5081,
+        "credits": 93993,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 228,
+        "earned": 5097,
+        "credits": 99090,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 229,
+        "earned": 5118,
+        "credits": 104208,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 230,
+        "earned": 5317,
+        "credits": 109525,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 231,
+        "earned": 5124,
+        "credits": 114649,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 232,
+        "earned": 5148,
+        "credits": 119797,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 233,
+        "earned": 5163,
+        "credits": 124960,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 234,
+        "earned": 5180,
+        "credits": 130140,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 235,
+        "earned": 5383,
+        "credits": 125193,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 236,
+        "earned": 5309,
+        "credits": 120172,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 18,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 237,
+        "earned": 5325,
+        "credits": 125497,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 18,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 238,
+        "earned": 5341,
+        "credits": 120508,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 239,
+        "earned": 5360,
+        "credits": 125868,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 240,
+        "earned": 5558,
+        "credits": 21426,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 241,
+        "earned": 5359,
+        "credits": 26785,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 242,
+        "earned": 5367,
+        "credits": 32152,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 243,
+        "earned": 5389,
+        "credits": 37541,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 244,
+        "earned": 5404,
+        "credits": 42945,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 245,
+        "earned": 5606,
+        "credits": 48551,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 246,
+        "earned": 5573,
+        "credits": 54124,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 247,
+        "earned": 5585,
+        "credits": 59709,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 248,
+        "earned": 5595,
+        "credits": 31374,
+        "hull": 9,
+        "ranks": {
+          "dmg": 20,
+          "hp": 20,
+          "rate": 20
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 249,
+        "earned": 5622,
+        "credits": 36996,
+        "hull": 9,
+        "ranks": {
+          "dmg": 20,
+          "hp": 20,
+          "rate": 20
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 250,
+        "earned": 5815,
+        "credits": 42811,
+        "hull": 9,
+        "ranks": {
+          "dmg": 20,
+          "hp": 20,
+          "rate": 20
+        },
+        "recommendedHull": 9
+      }
+    ]
+  },
+  {
+    "coverage": 0.75,
+    "income": 794027,
+    "spent": 724660,
+    "credits": 69367,
+    "hull": 9,
+    "ranks": {
+      "dmg": 20,
+      "hp": 20,
+      "rate": 20
+    },
+    "purchases": [
+      {
+        "level": 10,
+        "hull": "ДЖАГГЕРНАУТ",
+        "cost": 3500
+      },
+      {
+        "level": 28,
+        "hull": "ПРИЗРАК",
+        "cost": 11000
+      },
+      {
+        "level": 50,
+        "hull": "РЕЛЬСОТРОН",
+        "cost": 18000
+      },
+      {
+        "level": 78,
+        "hull": "ШКВАЛ",
+        "cost": 32000
+      },
+      {
+        "level": 110,
+        "hull": "КСЕНОС",
+        "cost": 48000
+      },
+      {
+        "level": 145,
+        "hull": "ОМЕГА",
+        "cost": 66000
+      },
+      {
+        "level": 180,
+        "hull": "ПОЛЯРИС",
+        "cost": 82000
+      },
+      {
+        "level": 215,
+        "hull": "ЗАТМЕНИЕ",
+        "cost": 94000
+      },
+      {
+        "level": 240,
+        "hull": "СИНГУЛЯРНОСТЬ",
+        "cost": 110000
+      }
+    ],
+    "rows": [
+      {
+        "level": 1,
+        "earned": 566,
+        "credits": 566,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 2,
+        "earned": 592,
+        "credits": 1158,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 3,
+        "earned": 610,
+        "credits": 1768,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 4,
+        "earned": 610,
+        "credits": 2378,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 5,
+        "earned": 809,
+        "credits": 3187,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 6,
+        "earned": 687,
+        "credits": 3874,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 7,
+        "earned": 686,
+        "credits": 4560,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 8,
+        "earned": 704,
+        "credits": 5264,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 9,
+        "earned": 723,
+        "credits": 5987,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 10,
+        "earned": 921,
+        "credits": 3408,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 11,
+        "earned": 766,
+        "credits": 4174,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 12,
+        "earned": 783,
+        "credits": 4957,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 13,
+        "earned": 802,
+        "credits": 5759,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 14,
+        "earned": 806,
+        "credits": 5965,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 15,
+        "earned": 1005,
+        "credits": 6970,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 16,
+        "earned": 854,
+        "credits": 7824,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 17,
+        "earned": 872,
+        "credits": 8696,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 18,
+        "earned": 890,
+        "credits": 9586,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 19,
+        "earned": 907,
+        "credits": 10493,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 20,
+        "earned": 1105,
+        "credits": 11598,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 21,
+        "earned": 934,
+        "credits": 12532,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 22,
+        "earned": 970,
+        "credits": 13502,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 23,
+        "earned": 990,
+        "credits": 14492,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 24,
+        "earned": 1007,
+        "credits": 15499,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 25,
+        "earned": 1205,
+        "credits": 16704,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 26,
+        "earned": 1072,
+        "credits": 17776,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 27,
+        "earned": 1090,
+        "credits": 17786,
+        "hull": 1,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 28,
+        "earned": 1109,
+        "credits": 7895,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 29,
+        "earned": 1126,
+        "credits": 9021,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 30,
+        "earned": 1323,
+        "credits": 10344,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 31,
+        "earned": 1132,
+        "credits": 11476,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 32,
+        "earned": 1151,
+        "credits": 12627,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 33,
+        "earned": 1186,
+        "credits": 13813,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 34,
+        "earned": 1219,
+        "credits": 15032,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 35,
+        "earned": 1416,
+        "credits": 16448,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 36,
+        "earned": 1265,
+        "credits": 17713,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 37,
+        "earned": 1283,
+        "credits": 18996,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 38,
+        "earned": 1298,
+        "credits": 20294,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 39,
+        "earned": 1319,
+        "credits": 21613,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 40,
+        "earned": 1517,
+        "credits": 21300,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 41,
+        "earned": 1344,
+        "credits": 22644,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 42,
+        "earned": 1362,
+        "credits": 24006,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 43,
+        "earned": 1380,
+        "credits": 25386,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 44,
+        "earned": 1416,
+        "credits": 26802,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 45,
+        "earned": 1613,
+        "credits": 28415,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 46,
+        "earned": 1457,
+        "credits": 29872,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 47,
+        "earned": 1477,
+        "credits": 31349,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 48,
+        "earned": 1492,
+        "credits": 32841,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 49,
+        "earned": 1510,
+        "credits": 34351,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 50,
+        "earned": 1710,
+        "credits": 18061,
+        "hull": 3,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 51,
+        "earned": 1530,
+        "credits": 19591,
+        "hull": 3,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 52,
+        "earned": 1550,
+        "credits": 21141,
+        "hull": 3,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 53,
+        "earned": 1568,
+        "credits": 19979,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 54,
+        "earned": 1583,
+        "credits": 21562,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 55,
+        "earned": 1805,
+        "credits": 23367,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 56,
+        "earned": 1672,
+        "credits": 25039,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 57,
+        "earned": 1692,
+        "credits": 26731,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 58,
+        "earned": 1709,
+        "credits": 28440,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 59,
+        "earned": 1725,
+        "credits": 30165,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 60,
+        "earned": 1923,
+        "credits": 32088,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 61,
+        "earned": 1748,
+        "credits": 33836,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 62,
+        "earned": 1767,
+        "credits": 35603,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 63,
+        "earned": 1784,
+        "credits": 37387,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 64,
+        "earned": 1802,
+        "credits": 39189,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 65,
+        "earned": 2000,
+        "credits": 41189,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 66,
+        "earned": 1863,
+        "credits": 39212,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 67,
+        "earned": 1881,
+        "credits": 41093,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 68,
+        "earned": 1896,
+        "credits": 42989,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 69,
+        "earned": 1914,
+        "credits": 44903,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 70,
+        "earned": 2112,
+        "credits": 47015,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 71,
+        "earned": 1936,
+        "credits": 48951,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 72,
+        "earned": 1957,
+        "credits": 50908,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 73,
+        "earned": 1974,
+        "credits": 52882,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 74,
+        "earned": 1993,
+        "credits": 54875,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 75,
+        "earned": 2187,
+        "credits": 57062,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 76,
+        "earned": 2033,
+        "credits": 59095,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 77,
+        "earned": 2071,
+        "credits": 61166,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 78,
+        "earned": 2087,
+        "credits": 31253,
+        "hull": 4,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 79,
+        "earned": 2106,
+        "credits": 28259,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 80,
+        "earned": 2304,
+        "credits": 30563,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 81,
+        "earned": 2124,
+        "credits": 32687,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 82,
+        "earned": 2142,
+        "credits": 34829,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 83,
+        "earned": 2161,
+        "credits": 36990,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 84,
+        "earned": 2178,
+        "credits": 39168,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 85,
+        "earned": 2377,
+        "credits": 41545,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 86,
+        "earned": 2249,
+        "credits": 43794,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 87,
+        "earned": 2267,
+        "credits": 46061,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 88,
+        "earned": 2303,
+        "credits": 48364,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 89,
+        "earned": 2323,
+        "credits": 50687,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 90,
+        "earned": 2519,
+        "credits": 53206,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 91,
+        "earned": 2341,
+        "credits": 55547,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 92,
+        "earned": 2361,
+        "credits": 51398,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 93,
+        "earned": 2377,
+        "credits": 53775,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 94,
+        "earned": 2397,
+        "credits": 56172,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 95,
+        "earned": 2592,
+        "credits": 58764,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 96,
+        "earned": 2437,
+        "credits": 61201,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 97,
+        "earned": 2457,
+        "credits": 63658,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 98,
+        "earned": 2475,
+        "credits": 66133,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 99,
+        "earned": 2511,
+        "credits": 68644,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 100,
+        "earned": 2709,
+        "credits": 71353,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 101,
+        "earned": 2657,
+        "credits": 74010,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 102,
+        "earned": 2676,
+        "credits": 76686,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 103,
+        "earned": 2691,
+        "credits": 79377,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 104,
+        "earned": 2710,
+        "credits": 82087,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 105,
+        "earned": 2908,
+        "credits": 76925,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 106,
+        "earned": 2754,
+        "credits": 79679,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 107,
+        "earned": 2771,
+        "credits": 82450,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 108,
+        "earned": 2787,
+        "credits": 85237,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 109,
+        "earned": 2806,
+        "credits": 88043,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 110,
+        "earned": 3030,
+        "credits": 43073,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 111,
+        "earned": 2839,
+        "credits": 45912,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 112,
+        "earned": 2858,
+        "credits": 48770,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 113,
+        "earned": 2877,
+        "credits": 51647,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 114,
+        "earned": 2892,
+        "credits": 54539,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 115,
+        "earned": 3092,
+        "credits": 57631,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 116,
+        "earned": 2982,
+        "credits": 60613,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 117,
+        "earned": 3000,
+        "credits": 63613,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 118,
+        "earned": 3020,
+        "credits": 56853,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 119,
+        "earned": 3038,
+        "credits": 59891,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 120,
+        "earned": 3237,
+        "credits": 63128,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 121,
+        "earned": 3078,
+        "credits": 66206,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 122,
+        "earned": 3094,
+        "credits": 69300,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 123,
+        "earned": 3114,
+        "credits": 72414,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 124,
+        "earned": 3131,
+        "credits": 75545,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 125,
+        "earned": 3327,
+        "credits": 78872,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 126,
+        "earned": 3175,
+        "credits": 82047,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 127,
+        "earned": 3193,
+        "credits": 85240,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 128,
+        "earned": 3211,
+        "credits": 88451,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 129,
+        "earned": 3231,
+        "credits": 91682,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 130,
+        "earned": 3430,
+        "credits": 95112,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 131,
+        "earned": 3255,
+        "credits": 86727,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 132,
+        "earned": 3296,
+        "credits": 90023,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 133,
+        "earned": 3317,
+        "credits": 93340,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 134,
+        "earned": 3336,
+        "credits": 96676,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 135,
+        "earned": 3532,
+        "credits": 100208,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 136,
+        "earned": 3379,
+        "credits": 103587,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 137,
+        "earned": 3398,
+        "credits": 106985,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 138,
+        "earned": 3418,
+        "credits": 110403,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 139,
+        "earned": 3435,
+        "credits": 113838,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 140,
+        "earned": 3632,
+        "credits": 117470,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 141,
+        "earned": 3428,
+        "credits": 120898,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 142,
+        "earned": 3448,
+        "credits": 124346,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 143,
+        "earned": 3487,
+        "credits": 127833,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 144,
+        "earned": 3506,
+        "credits": 117719,
+        "hull": 5,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 145,
+        "earned": 3706,
+        "credits": 55425,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 146,
+        "earned": 3608,
+        "credits": 59033,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 147,
+        "earned": 3623,
+        "credits": 62656,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 148,
+        "earned": 3641,
+        "credits": 66297,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 149,
+        "earned": 3660,
+        "credits": 69957,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 150,
+        "earned": 3856,
+        "credits": 73813,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 151,
+        "earned": 3666,
+        "credits": 77479,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 152,
+        "earned": 3686,
+        "credits": 81165,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 153,
+        "earned": 3704,
+        "credits": 84869,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 154,
+        "earned": 3747,
+        "credits": 88616,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 155,
+        "earned": 3956,
+        "credits": 92572,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 156,
+        "earned": 3984,
+        "credits": 96556,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 157,
+        "earned": 3992,
+        "credits": 84828,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 158,
+        "earned": 4032,
+        "credits": 88860,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 159,
+        "earned": 4050,
+        "credits": 92910,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 160,
+        "earned": 4256,
+        "credits": 97166,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 161,
+        "earned": 3884,
+        "credits": 101050,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 162,
+        "earned": 3905,
+        "credits": 104955,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 163,
+        "earned": 3919,
+        "credits": 108874,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 164,
+        "earned": 3933,
+        "credits": 112807,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 165,
+        "earned": 4162,
+        "credits": 116969,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 166,
+        "earned": 4008,
+        "credits": 120977,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 167,
+        "earned": 4028,
+        "credits": 125005,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 168,
+        "earned": 4043,
+        "credits": 129048,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 169,
+        "earned": 4064,
+        "credits": 133112,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 170,
+        "earned": 4261,
+        "credits": 119403,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 171,
+        "earned": 4055,
+        "credits": 123458,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 172,
+        "earned": 4075,
+        "credits": 127533,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 173,
+        "earned": 4094,
+        "credits": 131627,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 174,
+        "earned": 4108,
+        "credits": 135735,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 175,
+        "earned": 4305,
+        "credits": 140040,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 176,
+        "earned": 4247,
+        "credits": 144287,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 177,
+        "earned": 4264,
+        "credits": 148551,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 178,
+        "earned": 4281,
+        "credits": 152832,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 179,
+        "earned": 4306,
+        "credits": 157138,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 180,
+        "earned": 4494,
+        "credits": 79632,
+        "hull": 7,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 181,
+        "earned": 4304,
+        "credits": 83936,
+        "hull": 7,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 182,
+        "earned": 4326,
+        "credits": 88262,
+        "hull": 7,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 183,
+        "earned": 4338,
+        "credits": 72260,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 184,
+        "earned": 4352,
+        "credits": 76612,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 185,
+        "earned": 4554,
+        "credits": 81166,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 186,
+        "earned": 4585,
+        "credits": 85751,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 187,
+        "earned": 4673,
+        "credits": 90424,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 188,
+        "earned": 4668,
+        "credits": 95092,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 189,
+        "earned": 4679,
+        "credits": 99771,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 190,
+        "earned": 4893,
+        "credits": 104664,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 191,
+        "earned": 4499,
+        "credits": 109163,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 192,
+        "earned": 4516,
+        "credits": 113679,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 193,
+        "earned": 4534,
+        "credits": 118213,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 194,
+        "earned": 4554,
+        "credits": 122767,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 195,
+        "earned": 4749,
+        "credits": 127516,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 196,
+        "earned": 4603,
+        "credits": 109289,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 197,
+        "earned": 4618,
+        "credits": 113907,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 198,
+        "earned": 4672,
+        "credits": 118579,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 199,
+        "earned": 4687,
+        "credits": 123266,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 200,
+        "earned": 4894,
+        "credits": 128160,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 201,
+        "earned": 4666,
+        "credits": 132826,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 202,
+        "earned": 4686,
+        "credits": 137512,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 203,
+        "earned": 4702,
+        "credits": 142214,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 204,
+        "earned": 4723,
+        "credits": 146937,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 205,
+        "earned": 4919,
+        "credits": 151856,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 206,
+        "earned": 4850,
+        "credits": 156706,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 207,
+        "earned": 4868,
+        "credits": 161574,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 208,
+        "earned": 4879,
+        "credits": 166453,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 209,
+        "earned": 4922,
+        "credits": 145935,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 210,
+        "earned": 5117,
+        "credits": 151052,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 211,
+        "earned": 4920,
+        "credits": 155972,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 212,
+        "earned": 4938,
+        "credits": 160910,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 213,
+        "earned": 4954,
+        "credits": 165864,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 214,
+        "earned": 4977,
+        "credits": 170841,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 215,
+        "earned": 5173,
+        "credits": 82014,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 216,
+        "earned": 5192,
+        "credits": 87206,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 217,
+        "earned": 5180,
+        "credits": 92386,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 218,
+        "earned": 5237,
+        "credits": 97623,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 219,
+        "earned": 5238,
+        "credits": 102861,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 220,
+        "earned": 5447,
+        "credits": 108308,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 221,
+        "earned": 5118,
+        "credits": 113426,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 222,
+        "earned": 5137,
+        "credits": 90423,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 223,
+        "earned": 5155,
+        "credits": 95578,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 224,
+        "earned": 5175,
+        "credits": 100753,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 225,
+        "earned": 5370,
+        "credits": 106123,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 226,
+        "earned": 5223,
+        "credits": 111346,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 227,
+        "earned": 5242,
+        "credits": 116588,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 228,
+        "earned": 5258,
+        "credits": 121846,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 229,
+        "earned": 5280,
+        "credits": 127126,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 230,
+        "earned": 5478,
+        "credits": 132604,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 231,
+        "earned": 5278,
+        "credits": 137882,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 232,
+        "earned": 5304,
+        "credits": 143186,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 233,
+        "earned": 5318,
+        "credits": 148504,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 234,
+        "earned": 5335,
+        "credits": 153839,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 235,
+        "earned": 5538,
+        "credits": 128387,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 236,
+        "earned": 5487,
+        "credits": 133874,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 237,
+        "earned": 5502,
+        "credits": 139376,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 238,
+        "earned": 5518,
+        "credits": 144894,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 239,
+        "earned": 5537,
+        "credits": 150431,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 240,
+        "earned": 5735,
+        "credits": 46166,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 241,
+        "earned": 5526,
+        "credits": 51692,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 242,
+        "earned": 5532,
+        "credits": 57224,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 243,
+        "earned": 5555,
+        "credits": 62779,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 244,
+        "earned": 5570,
+        "credits": 68349,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 245,
+        "earned": 5773,
+        "credits": 74122,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 246,
+        "earned": 5772,
+        "credits": 79894,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 247,
+        "earned": 5782,
+        "credits": 85676,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 248,
+        "earned": 5790,
+        "credits": 57536,
+        "hull": 9,
+        "ranks": {
+          "dmg": 20,
+          "hp": 20,
+          "rate": 20
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 249,
+        "earned": 5820,
+        "credits": 63356,
+        "hull": 9,
+        "ranks": {
+          "dmg": 20,
+          "hp": 20,
+          "rate": 20
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 250,
+        "earned": 6011,
+        "credits": 69367,
+        "hull": 9,
+        "ranks": {
+          "dmg": 20,
+          "hp": 20,
+          "rate": 20
+        },
+        "recommendedHull": 9
+      }
+    ]
+  },
+  {
+    "coverage": 0.9,
+    "income": 820576,
+    "spent": 724660,
+    "credits": 95916,
+    "hull": 9,
+    "ranks": {
+      "dmg": 20,
+      "hp": 20,
+      "rate": 20
+    },
+    "purchases": [
+      {
+        "level": 10,
+        "hull": "ДЖАГГЕРНАУТ",
+        "cost": 3500
+      },
+      {
+        "level": 28,
+        "hull": "ПРИЗРАК",
+        "cost": 11000
+      },
+      {
+        "level": 50,
+        "hull": "РЕЛЬСОТРОН",
+        "cost": 18000
+      },
+      {
+        "level": 78,
+        "hull": "ШКВАЛ",
+        "cost": 32000
+      },
+      {
+        "level": 110,
+        "hull": "КСЕНОС",
+        "cost": 48000
+      },
+      {
+        "level": 145,
+        "hull": "ОМЕГА",
+        "cost": 66000
+      },
+      {
+        "level": 180,
+        "hull": "ПОЛЯРИС",
+        "cost": 82000
+      },
+      {
+        "level": 215,
+        "hull": "ЗАТМЕНИЕ",
+        "cost": 94000
+      },
+      {
+        "level": 240,
+        "hull": "СИНГУЛЯРНОСТЬ",
+        "cost": 110000
+      }
+    ],
+    "rows": [
+      {
+        "level": 1,
+        "earned": 606,
+        "credits": 606,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 2,
+        "earned": 634,
+        "credits": 1240,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 3,
+        "earned": 651,
+        "credits": 1891,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 4,
+        "earned": 648,
+        "credits": 2539,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 5,
+        "earned": 846,
+        "credits": 3385,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 6,
+        "earned": 732,
+        "credits": 4117,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 7,
+        "earned": 728,
+        "credits": 4845,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 8,
+        "earned": 746,
+        "credits": 5591,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 9,
+        "earned": 765,
+        "credits": 6356,
+        "hull": 0,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 0
+      },
+      {
+        "level": 10,
+        "earned": 963,
+        "credits": 3819,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 11,
+        "earned": 809,
+        "credits": 4628,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 12,
+        "earned": 826,
+        "credits": 5454,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 13,
+        "earned": 846,
+        "credits": 6300,
+        "hull": 1,
+        "ranks": {
+          "dmg": 1,
+          "hp": 1,
+          "rate": 1
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 14,
+        "earned": 847,
+        "credits": 6547,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 15,
+        "earned": 1046,
+        "credits": 7593,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 16,
+        "earned": 897,
+        "credits": 8490,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 17,
+        "earned": 915,
+        "credits": 9405,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 18,
+        "earned": 933,
+        "credits": 10338,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 19,
+        "earned": 950,
+        "credits": 11288,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 20,
+        "earned": 1148,
+        "credits": 12436,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 21,
+        "earned": 975,
+        "credits": 13411,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 22,
+        "earned": 1014,
+        "credits": 14425,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 23,
+        "earned": 1035,
+        "credits": 15460,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 24,
+        "earned": 1052,
+        "credits": 16512,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 25,
+        "earned": 1250,
+        "credits": 17762,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 26,
+        "earned": 1123,
+        "credits": 18885,
+        "hull": 1,
+        "ranks": {
+          "dmg": 2,
+          "hp": 2,
+          "rate": 2
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 27,
+        "earned": 1140,
+        "credits": 18945,
+        "hull": 1,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 1
+      },
+      {
+        "level": 28,
+        "earned": 1160,
+        "credits": 9105,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 29,
+        "earned": 1177,
+        "credits": 10282,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 30,
+        "earned": 1374,
+        "credits": 11656,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 31,
+        "earned": 1177,
+        "credits": 12833,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 32,
+        "earned": 1196,
+        "credits": 14029,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 33,
+        "earned": 1235,
+        "credits": 15264,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 34,
+        "earned": 1270,
+        "credits": 16534,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 35,
+        "earned": 1468,
+        "credits": 18002,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 36,
+        "earned": 1318,
+        "credits": 19320,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 37,
+        "earned": 1336,
+        "credits": 20656,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 38,
+        "earned": 1351,
+        "credits": 22007,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 39,
+        "earned": 1372,
+        "credits": 23379,
+        "hull": 2,
+        "ranks": {
+          "dmg": 3,
+          "hp": 3,
+          "rate": 3
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 40,
+        "earned": 1571,
+        "credits": 23120,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 41,
+        "earned": 1395,
+        "credits": 24515,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 42,
+        "earned": 1413,
+        "credits": 25928,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 43,
+        "earned": 1432,
+        "credits": 27360,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 44,
+        "earned": 1471,
+        "credits": 28831,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 45,
+        "earned": 1667,
+        "credits": 30498,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 46,
+        "earned": 1513,
+        "credits": 32011,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 47,
+        "earned": 1533,
+        "credits": 33544,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 48,
+        "earned": 1548,
+        "credits": 35092,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 49,
+        "earned": 1565,
+        "credits": 36657,
+        "hull": 2,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 2
+      },
+      {
+        "level": 50,
+        "earned": 1766,
+        "credits": 20423,
+        "hull": 3,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 51,
+        "earned": 1582,
+        "credits": 22005,
+        "hull": 3,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 52,
+        "earned": 1603,
+        "credits": 23608,
+        "hull": 3,
+        "ranks": {
+          "dmg": 4,
+          "hp": 4,
+          "rate": 4
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 53,
+        "earned": 1620,
+        "credits": 22498,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 54,
+        "earned": 1635,
+        "credits": 24133,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 55,
+        "earned": 1862,
+        "credits": 25995,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 56,
+        "earned": 1735,
+        "credits": 27730,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 57,
+        "earned": 1755,
+        "credits": 29485,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 58,
+        "earned": 1772,
+        "credits": 31257,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 59,
+        "earned": 1787,
+        "credits": 33044,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 60,
+        "earned": 1986,
+        "credits": 35030,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 61,
+        "earned": 1808,
+        "credits": 36838,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 62,
+        "earned": 1828,
+        "credits": 38666,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 63,
+        "earned": 1844,
+        "credits": 40510,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 64,
+        "earned": 1862,
+        "credits": 42372,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 65,
+        "earned": 2060,
+        "credits": 44432,
+        "hull": 3,
+        "ranks": {
+          "dmg": 5,
+          "hp": 5,
+          "rate": 5
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 66,
+        "earned": 1927,
+        "credits": 42519,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 67,
+        "earned": 1946,
+        "credits": 44465,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 68,
+        "earned": 1960,
+        "credits": 46425,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 69,
+        "earned": 1978,
+        "credits": 48403,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 70,
+        "earned": 2177,
+        "credits": 50580,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 71,
+        "earned": 1998,
+        "credits": 52578,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 72,
+        "earned": 2019,
+        "credits": 54597,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 73,
+        "earned": 2036,
+        "credits": 56633,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 74,
+        "earned": 2055,
+        "credits": 58688,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 75,
+        "earned": 2249,
+        "credits": 60937,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 76,
+        "earned": 2096,
+        "credits": 63033,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 77,
+        "earned": 2138,
+        "credits": 65171,
+        "hull": 3,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 3
+      },
+      {
+        "level": 78,
+        "earned": 2154,
+        "credits": 35325,
+        "hull": 4,
+        "ranks": {
+          "dmg": 6,
+          "hp": 6,
+          "rate": 6
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 79,
+        "earned": 2172,
+        "credits": 32397,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 80,
+        "earned": 2371,
+        "credits": 34768,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 81,
+        "earned": 2188,
+        "credits": 36956,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 82,
+        "earned": 2205,
+        "credits": 39161,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 83,
+        "earned": 2225,
+        "credits": 41386,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 84,
+        "earned": 2241,
+        "credits": 43627,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 85,
+        "earned": 2441,
+        "credits": 46068,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 86,
+        "earned": 2319,
+        "credits": 48387,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 87,
+        "earned": 2337,
+        "credits": 50724,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 88,
+        "earned": 2376,
+        "credits": 53100,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 89,
+        "earned": 2397,
+        "credits": 55497,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 90,
+        "earned": 2593,
+        "credits": 58090,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 91,
+        "earned": 2412,
+        "credits": 60502,
+        "hull": 4,
+        "ranks": {
+          "dmg": 7,
+          "hp": 7,
+          "rate": 7
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 92,
+        "earned": 2432,
+        "credits": 56424,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 93,
+        "earned": 2447,
+        "credits": 58871,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 94,
+        "earned": 2467,
+        "credits": 61338,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 95,
+        "earned": 2663,
+        "credits": 64001,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 96,
+        "earned": 2509,
+        "credits": 66510,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 97,
+        "earned": 2529,
+        "credits": 69039,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 98,
+        "earned": 2548,
+        "credits": 71587,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 99,
+        "earned": 2587,
+        "credits": 74174,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 100,
+        "earned": 2785,
+        "credits": 76959,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 101,
+        "earned": 2755,
+        "credits": 79714,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 102,
+        "earned": 2774,
+        "credits": 82488,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 103,
+        "earned": 2788,
+        "credits": 85276,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 104,
+        "earned": 2807,
+        "credits": 88083,
+        "hull": 4,
+        "ranks": {
+          "dmg": 8,
+          "hp": 8,
+          "rate": 8
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 105,
+        "earned": 3006,
+        "credits": 83019,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 106,
+        "earned": 2853,
+        "credits": 85872,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 107,
+        "earned": 2870,
+        "credits": 88742,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 108,
+        "earned": 2886,
+        "credits": 91628,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 109,
+        "earned": 2905,
+        "credits": 94533,
+        "hull": 4,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 4
+      },
+      {
+        "level": 110,
+        "earned": 3134,
+        "credits": 49667,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 111,
+        "earned": 2937,
+        "credits": 52604,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 112,
+        "earned": 2957,
+        "credits": 55561,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 113,
+        "earned": 2975,
+        "credits": 58536,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 114,
+        "earned": 2989,
+        "credits": 61525,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 115,
+        "earned": 3190,
+        "credits": 64715,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 116,
+        "earned": 3091,
+        "credits": 67806,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 117,
+        "earned": 3109,
+        "credits": 70915,
+        "hull": 5,
+        "ranks": {
+          "dmg": 9,
+          "hp": 9,
+          "rate": 9
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 118,
+        "earned": 3130,
+        "credits": 64265,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 119,
+        "earned": 3147,
+        "credits": 67412,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 120,
+        "earned": 3346,
+        "credits": 70758,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 121,
+        "earned": 3188,
+        "credits": 73946,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 122,
+        "earned": 3204,
+        "credits": 77150,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 123,
+        "earned": 3224,
+        "credits": 80374,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 124,
+        "earned": 3241,
+        "credits": 83615,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 125,
+        "earned": 3436,
+        "credits": 87051,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 126,
+        "earned": 3286,
+        "credits": 90337,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 127,
+        "earned": 3304,
+        "credits": 93641,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 128,
+        "earned": 3323,
+        "credits": 96964,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 129,
+        "earned": 3343,
+        "credits": 100307,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 130,
+        "earned": 3542,
+        "credits": 103849,
+        "hull": 5,
+        "ranks": {
+          "dmg": 10,
+          "hp": 10,
+          "rate": 10
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 131,
+        "earned": 3364,
+        "credits": 95573,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 132,
+        "earned": 3410,
+        "credits": 98983,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 133,
+        "earned": 3431,
+        "credits": 102414,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 134,
+        "earned": 3451,
+        "credits": 105865,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 135,
+        "earned": 3646,
+        "credits": 109511,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 136,
+        "earned": 3495,
+        "credits": 113006,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 137,
+        "earned": 3514,
+        "credits": 116520,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 138,
+        "earned": 3534,
+        "credits": 120054,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 139,
+        "earned": 3552,
+        "credits": 123606,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 140,
+        "earned": 3748,
+        "credits": 127354,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 141,
+        "earned": 3536,
+        "credits": 130890,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 142,
+        "earned": 3556,
+        "credits": 134446,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 143,
+        "earned": 3599,
+        "credits": 138045,
+        "hull": 5,
+        "ranks": {
+          "dmg": 11,
+          "hp": 11,
+          "rate": 11
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 144,
+        "earned": 3619,
+        "credits": 128044,
+        "hull": 5,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 5
+      },
+      {
+        "level": 145,
+        "earned": 3819,
+        "credits": 65863,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 146,
+        "earned": 3735,
+        "credits": 69598,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 147,
+        "earned": 3749,
+        "credits": 73347,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 148,
+        "earned": 3767,
+        "credits": 77114,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 149,
+        "earned": 3786,
+        "credits": 80900,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 150,
+        "earned": 3981,
+        "credits": 84881,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 151,
+        "earned": 3785,
+        "credits": 88666,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 152,
+        "earned": 3806,
+        "credits": 92472,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 153,
+        "earned": 3825,
+        "credits": 96297,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 154,
+        "earned": 3872,
+        "credits": 100169,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 155,
+        "earned": 4083,
+        "credits": 104252,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 156,
+        "earned": 4149,
+        "credits": 108401,
+        "hull": 6,
+        "ranks": {
+          "dmg": 12,
+          "hp": 12,
+          "rate": 12
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 157,
+        "earned": 4156,
+        "credits": 96837,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 158,
+        "earned": 4199,
+        "credits": 101036,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 159,
+        "earned": 4218,
+        "credits": 105254,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 160,
+        "earned": 4425,
+        "credits": 109679,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 161,
+        "earned": 4011,
+        "credits": 113690,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 162,
+        "earned": 4033,
+        "credits": 117723,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 163,
+        "earned": 4046,
+        "credits": 121769,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 164,
+        "earned": 4060,
+        "credits": 125829,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 165,
+        "earned": 4294,
+        "credits": 130123,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 166,
+        "earned": 4142,
+        "credits": 134265,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 167,
+        "earned": 4163,
+        "credits": 138428,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 168,
+        "earned": 4177,
+        "credits": 142605,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 169,
+        "earned": 4198,
+        "credits": 146803,
+        "hull": 6,
+        "ranks": {
+          "dmg": 13,
+          "hp": 13,
+          "rate": 13
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 170,
+        "earned": 4395,
+        "credits": 133228,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 171,
+        "earned": 4181,
+        "credits": 137409,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 172,
+        "earned": 4201,
+        "credits": 141610,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 173,
+        "earned": 4220,
+        "credits": 145830,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 174,
+        "earned": 4233,
+        "credits": 150063,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 175,
+        "earned": 4430,
+        "credits": 154493,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 176,
+        "earned": 4393,
+        "credits": 158886,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 177,
+        "earned": 4409,
+        "credits": 163295,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 178,
+        "earned": 4427,
+        "credits": 167722,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 179,
+        "earned": 4452,
+        "credits": 172174,
+        "hull": 6,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 6
+      },
+      {
+        "level": 180,
+        "earned": 4639,
+        "credits": 94813,
+        "hull": 7,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 181,
+        "earned": 4443,
+        "credits": 99256,
+        "hull": 7,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 182,
+        "earned": 4467,
+        "credits": 103723,
+        "hull": 7,
+        "ranks": {
+          "dmg": 14,
+          "hp": 14,
+          "rate": 14
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 183,
+        "earned": 4477,
+        "credits": 87860,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 184,
+        "earned": 4491,
+        "credits": 92351,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 185,
+        "earned": 4693,
+        "credits": 97044,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 186,
+        "earned": 4762,
+        "credits": 101806,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 187,
+        "earned": 4864,
+        "credits": 106670,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 188,
+        "earned": 4855,
+        "credits": 111525,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 189,
+        "earned": 4865,
+        "credits": 116390,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 190,
+        "earned": 5082,
+        "credits": 121472,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 191,
+        "earned": 4642,
+        "credits": 126114,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 192,
+        "earned": 4658,
+        "credits": 130772,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 193,
+        "earned": 4676,
+        "credits": 135448,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 194,
+        "earned": 4697,
+        "credits": 140145,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 195,
+        "earned": 4891,
+        "credits": 145036,
+        "hull": 7,
+        "ranks": {
+          "dmg": 15,
+          "hp": 15,
+          "rate": 15
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 196,
+        "earned": 4748,
+        "credits": 126954,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 197,
+        "earned": 4762,
+        "credits": 131716,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 198,
+        "earned": 4823,
+        "credits": 136539,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 199,
+        "earned": 4838,
+        "credits": 141377,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 200,
+        "earned": 5047,
+        "credits": 146424,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 201,
+        "earned": 4806,
+        "credits": 151230,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 202,
+        "earned": 4826,
+        "credits": 156056,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 203,
+        "earned": 4841,
+        "credits": 160897,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 204,
+        "earned": 4863,
+        "credits": 165760,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 205,
+        "earned": 5058,
+        "credits": 170818,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 206,
+        "earned": 5008,
+        "credits": 175826,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 207,
+        "earned": 5026,
+        "credits": 180852,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 208,
+        "earned": 5035,
+        "credits": 185887,
+        "hull": 7,
+        "ranks": {
+          "dmg": 16,
+          "hp": 16,
+          "rate": 16
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 209,
+        "earned": 5084,
+        "credits": 165531,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 210,
+        "earned": 5278,
+        "credits": 170809,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 211,
+        "earned": 5074,
+        "credits": 175883,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 212,
+        "earned": 5093,
+        "credits": 180976,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 213,
+        "earned": 5108,
+        "credits": 186084,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 214,
+        "earned": 5132,
+        "credits": 191216,
+        "hull": 7,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 7
+      },
+      {
+        "level": 215,
+        "earned": 5328,
+        "credits": 102544,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 216,
+        "earned": 5383,
+        "credits": 107927,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 217,
+        "earned": 5365,
+        "credits": 113292,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 218,
+        "earned": 5430,
+        "credits": 118722,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 219,
+        "earned": 5427,
+        "credits": 124149,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 220,
+        "earned": 5638,
+        "credits": 129787,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 221,
+        "earned": 5276,
+        "credits": 135063,
+        "hull": 8,
+        "ranks": {
+          "dmg": 17,
+          "hp": 17,
+          "rate": 17
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 222,
+        "earned": 5295,
+        "credits": 112218,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 223,
+        "earned": 5313,
+        "credits": 117531,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 224,
+        "earned": 5333,
+        "credits": 122864,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 225,
+        "earned": 5528,
+        "credits": 128392,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 226,
+        "earned": 5384,
+        "credits": 133776,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 227,
+        "earned": 5403,
+        "credits": 139179,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 228,
+        "earned": 5418,
+        "credits": 144597,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 229,
+        "earned": 5441,
+        "credits": 150038,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 230,
+        "earned": 5640,
+        "credits": 155678,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 231,
+        "earned": 5431,
+        "credits": 161109,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 232,
+        "earned": 5459,
+        "credits": 166568,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 233,
+        "earned": 5473,
+        "credits": 172041,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 234,
+        "earned": 5489,
+        "credits": 177530,
+        "hull": 8,
+        "ranks": {
+          "dmg": 18,
+          "hp": 18,
+          "rate": 18
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 235,
+        "earned": 5694,
+        "credits": 152234,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 236,
+        "earned": 5665,
+        "credits": 157899,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 237,
+        "earned": 5680,
+        "credits": 163579,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 238,
+        "earned": 5695,
+        "credits": 169274,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 239,
+        "earned": 5713,
+        "credits": 174987,
+        "hull": 8,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 8
+      },
+      {
+        "level": 240,
+        "earned": 5912,
+        "credits": 70899,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 241,
+        "earned": 5694,
+        "credits": 76593,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 242,
+        "earned": 5697,
+        "credits": 82290,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 243,
+        "earned": 5721,
+        "credits": 88011,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 244,
+        "earned": 5735,
+        "credits": 93746,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 245,
+        "earned": 5940,
+        "credits": 99686,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 246,
+        "earned": 5971,
+        "credits": 105657,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 247,
+        "earned": 5979,
+        "credits": 111636,
+        "hull": 9,
+        "ranks": {
+          "dmg": 19,
+          "hp": 19,
+          "rate": 19
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 248,
+        "earned": 5985,
+        "credits": 83691,
+        "hull": 9,
+        "ranks": {
+          "dmg": 20,
+          "hp": 20,
+          "rate": 20
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 249,
+        "earned": 6017,
+        "credits": 89708,
+        "hull": 9,
+        "ranks": {
+          "dmg": 20,
+          "hp": 20,
+          "rate": 20
+        },
+        "recommendedHull": 9
+      },
+      {
+        "level": 250,
+        "earned": 6208,
+        "credits": 95916,
+        "hull": 9,
+        "ranks": {
+          "dmg": 20,
+          "hp": 20,
+          "rate": 20
+        },
+        "recommendedHull": 9
+      }
+    ]
+  }
+]
