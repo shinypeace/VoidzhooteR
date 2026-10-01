@@ -6,15 +6,22 @@ function model(coverage = .75) {
   for (let level = 1; level <= B.MAX_LEVEL; level++) {
     save.campaignLevel = level;
     const c = B.campaign(level), id = c.tier;
-    if (id && !save.unlockedShips.includes(id) && B.canBuy(save, id)) {
-      save.credits -= B.SHIPS[id].cost; spent += B.SHIPS[id].cost;
-      save.unlockedShips.push(id); save.upgrades[id] = { dmg: 1, hp: 1, rate: 1 };
-      save.currentShip = id; purchases.push({ level, hull: id, cost: B.SHIPS[id].cost });
+    // Upgrade evenly whenever money allows; buy the next hull as soon as this
+    // one is complete. The policy never checks a sector or a blueprint gate.
+    while (true) {
+      const u = B.upgradesFor(save);
+      for (let rank = 1; rank < B.MAX_UPGRADE; rank++) for (const key of ['dmg', 'rate', 'hp']) {
+        if (u[key] === rank && B.canUpgrade(save, save.currentShip, key)) {
+          const cost = B.upgradeCost(u[key], save.currentShip); save.credits -= cost; spent += cost; u[key]++;
+        }
+      }
+      const next = save.currentShip + 1;
+      if (!Object.values(u).every(rank => rank === B.MAX_UPGRADE) || !B.canBuy(save, next)) break;
+      save.credits -= B.SHIPS[next].cost; spent += B.SHIPS[next].cost;
+      save.unlockedShips.push(next); save.upgrades[next] = { dmg: 1, hp: 1, rate: 1 }; save.currentShip = next;
+      purchases.push({ level, hull: next, cost: B.SHIPS[next].cost });
     }
-    const u = B.upgradesFor(save), rank = B.rankAt(level);
-    for (const key of ['dmg', 'rate', 'hp']) while (u[key] < rank && B.canUpgrade(save, save.currentShip, key)) {
-      const cost = B.upgradeCost(u[key], save.currentShip); save.credits -= cost; spent += cost; u[key]++;
-    }
+    const u = B.upgradesFor(save);
     const enemies = [1, 2, 3].reduce((n, wave) => n + c.units + wave % 3, 0);
     // Minimum first-clear income: no gifts, missions, adverts, replays or farming.
     const earned = c.reward + Math.ceil(enemies * coverage) * c.killReward + (c.boss ? c.bossReward : 0);
@@ -26,7 +33,7 @@ function model(coverage = .75) {
 }
 if (require.main === module) {
   const models = [.75, .9, 1].map(model);
-  fs.writeFileSync('docs/qa/economy-v5.json', JSON.stringify(models, null, 2));
+  fs.writeFileSync('docs/qa/economy-v5.1.json', JSON.stringify(models, null, 2));
   for (const { rows, ...summary } of models) console.log(JSON.stringify(summary));
 }
 module.exports = { model };

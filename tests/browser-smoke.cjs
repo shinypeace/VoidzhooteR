@@ -17,6 +17,7 @@ fs.mkdirSync(out, { recursive: true });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     await page.goto('http://127.0.0.1:4173/', { waitUntil: 'load' });
     await page.waitForFunction(() => window.Voidstorm?.atlasReady);
+    assert(await page.locator('#toast').evaluate(el => el.classList.contains('hidden')), 'Migration must not show an entry banner');
     await page.screenshot({ path: path.join(out, '01-menu.png') });
     const menuButtons = await page.locator('#mainMenu button').allTextContents();
     assert(!menuButtons.some(t => /[\p{Extended_Pictographic}⌁≡↗∞]/u.test(t)), 'No emoji or symbolic placeholder menu buttons');
@@ -31,7 +32,7 @@ fs.mkdirSync(out, { recursive: true });
     await page.locator('#upgradeHpBtn').click();
     assert.equal(await page.evaluate(() => Voidstorm.save.credits), creditsBefore, 'Selecting an upgrade must not spend credits');
     const hpBefore = await page.evaluate(() => Voidstorm.save.upgrades[Voidstorm.save.currentShip].hp);
-    const cost = await page.evaluate(() => Balance.upgradeCost(Voidstorm.save.upgrades[Voidstorm.save.currentShip].hp));
+    const cost = await page.evaluate(() => Balance.upgradeCost(Voidstorm.save.upgrades[Voidstorm.save.currentShip].hp, Voidstorm.save.currentShip));
     await page.screenshot({ path: path.join(out, '02-upgrade-selection.png') });
     await page.locator('#buyUpgradeBtn').click();
     assert.equal(await page.evaluate(() => Voidstorm.save.credits), creditsBefore - cost);
@@ -96,6 +97,23 @@ fs.mkdirSync(out, { recursive: true });
       assert(fit, `All menu buttons fit at ${size.width}x${size.height}`);
       await page.screenshot({ path: path.join(out, `menu-${size.width}.png`) });
     }
+    // A funded sector-1 profile can buy any hull and upgrade it without prerequisites.
+    await page.evaluate(() => {
+      showMenu(); Save.data = Balance.freshSave();
+      Save.data.credits = SHIPS[11].cost + Balance.upgradeCost(1, 11);
+      shopIndex = 11; renderShop(); openPanel('shopMenu');
+    });
+    await page.locator('#buyShipBtn').click();
+    assert.equal(await page.evaluate(() => Save.data.currentShip), 11);
+    assert.equal(await page.evaluate(() => Save.data.campaignLevel), 1);
+    await page.locator('#upgradeHpBtn').click(); await page.locator('#buyUpgradeBtn').click();
+    assert.equal(await page.evaluate(() => Save.data.upgrades[11].hp), 2);
+    assert.equal(await page.evaluate(() => Save.data.credits), 0);
+    const barWidths = await page.evaluate(() => SHIPS.map(s => {
+      shopIndex = s.id; renderShop();
+      return ['statBarDmg','statBarArmor','statBarSpeed'].map(id => parseFloat($(id).style.width));
+    }));
+    for (let i=1;i<barWidths.length;i++) for(let j=0;j<3;j++) assert(barWidths[i][j]>barWidths[i-1][j]);
     await page.evaluate(() => {
       const gallery=document.createElement('canvas');gallery.id='artReview';gallery.width=1100;gallery.height=1180;
       gallery.style.cssText='position:fixed;left:0;top:0;z-index:999;width:1100px;height:1180px';document.body.append(gallery);

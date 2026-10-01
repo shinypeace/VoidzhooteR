@@ -89,7 +89,6 @@ const VK = {
       if (sessionChanged) { toast('Облачный профиль будет доступен при следующем запуске.'); return; }
       Save.userId = user.id;
       if (loaded) { if (!localGet(`${key}_before_v5`)) localSet(`${key}_before_v5`, JSON.stringify(loaded)); Save.data = Balance.migrate(loaded); }
-      if (Save.data.migrationRefund) toast('Общие улучшения возмещены: ' + fmt(Save.data.migrationRefund) + ' CR. Каждый корабль улучшается отдельно.');
       selectedLevel = Save.data.campaignLevel; shopIndex = Save.data.currentShip; Missions.check(); renderMenu(); renderShop(); Daily.check();
     } catch { /* Ads stay available even if user info or cloud storage fails. */ }
   }

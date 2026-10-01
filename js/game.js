@@ -615,7 +615,7 @@ function advance(elapsed) {
 function startRun(mode, level = Save.data.campaignLevel) {
   if (VKAds.busy) { toast('Дождитесь завершения рекламы.'); return; }
   if (!Atlas.ready) { toast(Atlas.error ? 'Проверьте наличие файла атласа в папке assets.' : 'Атлас ещё загружается. Подождите немного.'); return; }
-  if (!Balance.canUse(Save.data, Save.data.currentShip)) { toast('Корпус откроется по мере прохождения кампании.'); return; }
+  if (!Balance.canUse(Save.data, Save.data.currentShip)) { toast('Выберите купленный корабль в ангаре.'); return; }
   sessionChanged = true; Audio.unlock(); Missions.check(); clearTimeout(Save.timer); Save.timer = null;
   const safeLevel = clamp(Math.floor(level), 1, Save.data.campaignLevel);
   run = { active: true, paused: false, mode, level: safeLevel, wave: 1, survivalStart: Save.data.campaignLevel, config: mode === 'CAMPAIGN' ? Balance.campaign(safeLevel) : Balance.survival(1, Save.data.campaignLevel),
@@ -655,7 +655,7 @@ function finishRun(victory, reason) {
   $('resultSub').textContent = victory ? 'Путь к следующей звёздной системе открыт.' : reason === 'coverage' ? `Уничтожено ${coverage}%. Для победы нужно 75%.` : 'Кредиты сохранены. Флот готов к новому вылету.';
   $('resScore').textContent = fmt(run.score); $('resCredits').textContent = fmt(run.credits); $('resMetricLabel').textContent = isCampaign ? 'УНИЧТОЖЕНО' : 'ВОЛНА';
   $('resMetric').textContent = isCampaign ? `${run.regularKills} / ${run.planned}` : run.wave; $('resTime').textContent = clockText(run.time);
-  const nextShip = SHIPS.find(s => !Save.data.unlockedShips.includes(s.id) && s.cost <= Save.data.credits && s.unlock <= Save.data.campaignLevel);
+  const nextShip = SHIPS.find(s => Balance.canBuy(Save.data, s.id));
   $('resultTip').textContent = nextShip ? `Доступен новый корпус: ${nextShip.name}. Загляните в ангар.` : victory ? 'Улучшайте системы выбранного корабля в ангаре.' : 'Двигайтесь между залпами. Следите за подкреплениями босса.';
   $('resActionBtn').textContent = victory && run.level < MAX_LEVEL ? 'СЛЕДУЮЩИЙ СЕКТОР' : 'ПОВТОРИТЬ ПОЛЁТ';
   const replayMode = run.mode, replayLevel = victory && run.level < MAX_LEVEL ? run.level + 1 : run.level;
@@ -704,17 +704,17 @@ function drawShopShip(time) {
 function renderShop() {
   const upgrades = Balance.upgradesFor(Save.data, shopIndex), ship = Balance.stats(shopIndex, upgrades);
   const owned = Save.data.unlockedShips.includes(shopIndex), usable = Balance.canUse(Save.data, shopIndex);
-  const max = Balance.stats(shopIndex, { dmg: MAX_UPGRADE, hp: MAX_UPGRADE, rate: MAX_UPGRADE });
+  const bars = Balance.statBars(shopIndex, upgrades);
   $('shopCredits').textContent = fmt(Save.data.credits); $('shipNumber').textContent = String(shopIndex + 1).padStart(2, '0') + ' / ' + SHIPS.length;
   $('shipName').textContent = ship.name; $('shipDesc').textContent = ship.role;
-  $('shipTier').textContent = 'СЕКТОРЫ ' + ship.unlock + '–' + (ship.unlock + 24) + ' / ' + (Save.data.campaignLevel < ship.unlock ? 'ДОСТУП С СЕКТОРА ' + ship.unlock : owned ? 'В СОСТАВЕ ФЛОТА' : shopIndex > 0 && !Save.data.unlockedShips.includes(shopIndex - 1) ? 'СНАЧАЛА КОРПУС ' + shopIndex : 'ДОСТУПЕН К ПОКУПКЕ');
+  $('shipTier').textContent = 'КЛАСС ' + String(shopIndex + 1).padStart(2, '0') + ' / ' + (owned ? 'В СОСТАВЕ ФЛОТА' : 'ДОСТУПЕН К ПОКУПКЕ');
   $('statValDmg').textContent = fmt(ship.dps) + ' ед/с'; $('statValArmor').textContent = fmt(ship.hp) + ' HP'; $('statValSpeed').textContent = ship.fireRate.toFixed(1) + ' залп/с';
-  $('statBarDmg').style.width = ship.dps / max.dps * 100 + '%'; $('statBarArmor').style.width = ship.hp / max.hp * 100 + '%'; $('statBarSpeed').style.width = ship.fireRate / max.fireRate * 100 + '%';
+  $('statBarDmg').style.width = bars.dmg + '%'; $('statBarArmor').style.width = bars.hp + '%'; $('statBarSpeed').style.width = bars.rate + '%';
   const previous = shopIndex ? Balance.stats(shopIndex - 1, { dmg: 5, hp: 5, rate: 5 }) : null;
   $('shipComparison').textContent = previous ? 'Базовый корпус сильнее предыдущего с полной прокачкой: урон +' + Math.round((SHIPS[shopIndex].dps / previous.dps - 1) * 100) + '% · броня +' + Math.round((SHIPS[shopIndex].hp / previous.hp - 1) * 100) + '%' : 'Ваш первый корабль · улучшайте системы по ходу главы';
   $('buyShipBtn').classList.toggle('hidden', owned); $('selectShipBtn').classList.toggle('hidden', !owned); $('shipCost').textContent = fmt(ship.cost); $('buyShipBtn').disabled = !Balance.canBuy(Save.data, shopIndex);
   $('selectShipBtn').disabled = !usable || Save.data.currentShip === shopIndex;
-  $('selectShipBtn').textContent = !usable ? 'ДОСТУП С СЕКТОРА ' + ship.unlock : Save.data.currentShip === shopIndex ? 'ГОТОВ К ВЫЛЕТУ' : 'ВЫБРАТЬ КОРАБЛЬ';
+  $('selectShipBtn').textContent = Save.data.currentShip === shopIndex ? 'ГОТОВ К ВЫЛЕТУ' : 'ВЫБРАТЬ КОРАБЛЬ';
   $('shipDots').replaceChildren();
   SHIPS.forEach(s => { const dot = document.createElement('button'); dot.className = 'ship-dot' + (s.id === shopIndex ? ' selected' : ''); dot.setAttribute('aria-label', s.name); dot.onclick = () => { shopIndex = s.id; renderShop(); }; $('shipDots').append(dot); });
   renderUpgradeOptions(); drawShopShip(performance.now());
@@ -732,10 +732,10 @@ function renderUpgradeOptions() {
   const before = Balance.stats(shopIndex, upgrades), after = Balance.stats(shopIndex, { ...upgrades, [selectedUpgrade]: Math.min(MAX_UPGRADE, rank + 1) });
   const field = selectedUpgrade === 'dmg' ? 'dps' : selectedUpgrade === 'rate' ? 'fireRate' : 'hp';
   const format = n => field === 'fireRate' ? n.toFixed(2) : fmt(n);
-  const unlock = Balance.rankLevel(shopIndex, rank + 1), owned = Balance.canUse(Save.data, shopIndex);
+  const owned = Balance.canUse(Save.data, shopIndex);
   $('upgradeDetail').textContent = rank >= MAX_UPGRADE ? names[selectedUpgrade] + ' · максимальный ранг' : names[selectedUpgrade] + ': ' + format(before[field]) + ' → ' + format(after[field]) + (field === 'hp' ? ' HP' : field === 'fireRate' ? ' залп/с' : ' ед/с');
   $('buyUpgradeBtn').disabled = !Balance.canUpgrade(Save.data, shopIndex, selectedUpgrade);
-  $('buyUpgradeBtn').textContent = !owned ? 'СНАЧАЛА ОТКРОЙТЕ ЭТОТ КОРАБЛЬ' : rank >= MAX_UPGRADE ? 'МАКСИМАЛЬНЫЙ РАНГ' : Save.data.campaignLevel < unlock ? 'НОВЫЙ РАНГ С СЕКТОРА ' + unlock : 'КУПИТЬ УЛУЧШЕНИЕ · ' + fmt(cost) + ' CR';
+  $('buyUpgradeBtn').textContent = !owned ? 'СНАЧАЛА КУПИТЕ ЭТОТ КОРАБЛЬ' : rank >= MAX_UPGRADE ? 'МАКСИМАЛЬНЫЙ РАНГ' : 'КУПИТЬ УЛУЧШЕНИЕ · ' + fmt(cost) + ' CR';
 }
 function upgrade(type) {
   if (!Balance.canUpgrade(Save.data, shopIndex, type)) return;
@@ -854,6 +854,6 @@ window.addEventListener('pagehide', () => { if (run.active) { pauseGame(); bankI
 
 
 Missions.check(); renderMenu(); renderShop(); renderModules(); initBoostHUD(); Atlas.init(); Daily.check(); VK.init();
-if (Save.data.migrationRefund) toast('Общие улучшения возмещены: ' + fmt(Save.data.migrationRefund) + ' CR. Теперь каждый корабль улучшается отдельно.'); requestAnimationFrame(loop);
+requestAnimationFrame(loop);
 // Read-only diagnostics and explicit test hooks for the local regression harness.
 window.Voidstorm = { get state() { return run; }, get player() { return player; }, get enemies() { return enemies; }, get bullets() { return bullets; }, get enemyBullets() { return enemyBullets; }, get hazards() { return hazards; }, get save() { return Save.data; }, get atlasReady() { return Atlas.ready; } };

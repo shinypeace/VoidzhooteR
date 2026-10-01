@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#070d19">
   <title>VOIDSTORM — За пределами пустоты</title>
-  <link rel="stylesheet" href="style.css?v=5.0.0">
-  <link rel="stylesheet" href="ui-theme.css?v=5.0.0">
-  <script src="js/atlas-frames.js?v=5.0.0" defer></script>
-  <script src="js/balance.js?v=5.0.0" defer></script>
-  <script src="js/vk.js?v=5.0.0" defer></script>
-  <script src="js/game.js?v=5.0.0" defer></script>
+  <link rel="stylesheet" href="style.css?v=5.1.0">
+  <link rel="stylesheet" href="ui-theme.css?v=5.1.0">
+  <script src="js/atlas-frames.js?v=5.1.0" defer></script>
+  <script src="js/balance.js?v=5.1.0" defer></script>
+  <script src="js/vk.js?v=5.1.0" defer></script>
+  <script src="js/game.js?v=5.1.0" defer></script>
 </head>
 <body>
   <main id="gameContainer" aria-label="VOIDSTORM">
@@ -21,7 +21,7 @@
     <div id="toast" role="status" class="hidden"></div>
 
     <section id="mainMenu" class="screen menu-screen">
-      <div class="eyebrow"><span class="status-dot"></span> DEEP SPACE DIVISION <span>05.0</span></div>
+      <div class="eyebrow"><span class="status-dot"></span> DEEP SPACE DIVISION <span>05.1</span></div>
       <div class="brand"><div class="brand-kicker">ЗА ПРЕДЕЛАМИ ПУСТОТЫ</div><h1>VOID<span>STORM</span></h1><div class="brand-line"><span></span> ПРОТОКОЛ ВЫЖИВАНИЯ <span></span></div></div>
       <div class="menu-ship"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><canvas id="menuShipCanvas" width="500" height="230"></canvas><div class="ship-coordinate">VS / <span id="menuShipCode">01</span></div><div class="ship-caption" id="menuShipName">ПЕРЕХВАТЧИК</div></div>
       <div class="pilot-strip"><div><small>КРЕДИТЫ</small><strong class="gold"><span id="menuCredits">0</span><em> CR</em></strong></div><div><small>СЕКТОР</small><strong><span id="menuLevel">01</span><em> / 300</em></strong></div><div><small>РЕКОРД</small><strong id="menuRecord">0</strong></div></div>
@@ -45,7 +45,7 @@
       <div class="scroll-area hangar-content">
         <div class="ship-preview"><div class="preview-grid"></div><canvas id="shipPreviewCanvas" width="500" height="280"></canvas><button id="prevShip" class="nav-arrow prev" aria-label="Предыдущий корабль">‹</button><button id="nextShip" class="nav-arrow next" aria-label="Следующий корабль">›</button><div class="tier-label" id="shipTier">КЛАСС I</div></div>
         <div class="ship-heading"><h3 id="shipName"></h3><p id="shipDesc"></p></div><div id="shipDots" class="ship-dots"></div>
-        <div class="stats-panel">
+        <div class="stats-panel" title="Шкалы показывают класс корпуса и прокачку. Числа — реальные характеристики."><div class="stats-scale-label">КЛАСС И ПРОКАЧКА</div>
           <div class="stat"><div><span>МОЩНОСТЬ</span><strong id="statValDmg"></strong></div><div class="stat-track"><i id="statBarDmg" class="violet-fill"></i></div></div>
           <div class="stat"><div><span>БРОНЯ</span><strong id="statValArmor"></strong></div><div class="stat-track"><i id="statBarArmor" class="green-fill"></i></div></div>
           <div class="stat"><div><span>СКОРОСТРЕЛЬНОСТЬ</span><strong id="statValSpeed"></strong></div><div class="stat-track"><i id="statBarSpeed"></i></div></div>
@@ -69,7 +69,7 @@
 
     <section id="settingsModal" class="screen panel-screen hidden"><header class="screen-header"><div><div class="eyebrow">БОРТОВЫЕ СИСТЕМЫ</div><h2>НАСТРОЙКИ</h2></div><button class="close-btn" data-close="settingsModal" aria-label="Назад">×</button></header><div class="scroll-area"><label class="setting-row"><span><b>Звуковые эффекты</b><small>Оружие, попадания и интерфейс</small></span><input type="checkbox" id="sfxToggle" checked></label><label class="setting-row"><span><b>Музыка</b><small>Оригинальный саундтрек</small></span><input type="checkbox" id="musicToggle" checked></label><label class="setting-row"><span><b>Тряска экрана</b><small>Обратная связь при повреждении</small></span><input type="checkbox" id="shakeToggle" checked></label><label class="setting-row"><span><b>Вибрация</b><small>При получении урона</small></span><input type="checkbox" id="vibrationToggle" checked></label></div><footer class="panel-footer"><button class="btn btn-primary full" data-close="settingsModal">ГОТОВО</button></footer></section>
 
-    <section id="infoModal" class="screen panel-screen hidden"><header class="screen-header"><div><div class="eyebrow">РУКОВОДСТВО ПИЛОТА</div><h2>БАЗА ДАННЫХ</h2></div><button class="close-btn" data-close="infoModal" aria-label="Назад">×</button></header><div class="scroll-area"><div class="section-label">УПРАВЛЕНИЕ</div><p>Ведите пальцем или мышью. На клавиатуре — WASD или стрелки. Корабль стреляет сам. Esc / P — пауза.</p><div class="section-label">ЦЕЛЬ</div><p>Уничтожьте 75% врагов и босса, если он есть. Улучшайте свой корабль; каждые 25 секторов открывается следующий корпус.</p><p class="muted">Выживание начинается со сложности текущего сектора и растёт с каждой волной. Заработанные кредиты остаются даже при поражении.</p><div class="section-label">МОДУЛИ</div><div id="moduleGuide"></div></div><footer class="panel-footer"><button class="btn btn-primary full" data-close="infoModal">ПРИНЯТО</button></footer></section>
+    <section id="infoModal" class="screen panel-screen hidden"><header class="screen-header"><div><div class="eyebrow">РУКОВОДСТВО ПИЛОТА</div><h2>БАЗА ДАННЫХ</h2></div><button class="close-btn" data-close="infoModal" aria-label="Назад">×</button></header><div class="scroll-area"><div class="section-label">УПРАВЛЕНИЕ</div><p>Ведите пальцем или мышью. На клавиатуре — WASD или стрелки. Корабль стреляет сам. Esc / P — пауза.</p><div class="section-label">ЦЕЛЬ</div><p>Уничтожьте 75% врагов и босса, если он есть. Зарабатывайте кредиты, улучшайте корабли и покупайте новые в ангаре.</p><p class="muted">Выживание начинается со сложности текущего сектора и растёт с каждой волной. Заработанные кредиты остаются даже при поражении.</p><div class="section-label">МОДУЛИ</div><div id="moduleGuide"></div></div><footer class="panel-footer"><button class="btn btn-primary full" data-close="infoModal">ПРИНЯТО</button></footer></section>
 
     <div id="hud" class="hidden" aria-label="Статус полёта"><div class="hud-top"><div><small>СЧЁТ</small><strong id="scoreDisplay">0</strong><span class="gold hud-credits"><span id="gameCredits">0</span> CR</span></div><div class="hud-center"><span id="runLabel">СЕКТОР 01</span><b id="waveLabel">ВОЛНА 1 / 3</b><div class="progress-track"><i id="levelProgressBar"></i></div></div><div class="hud-health"><small id="healthText">100 / 100</small><div class="health-track"><i id="healthBar"></i></div><button id="pauseBtn" class="pause-btn" aria-label="Пауза"><span class="pause-bars" aria-hidden="true"></span></button></div></div><div id="bossHUD" class="hidden"><span id="bossName">РАЗРУШИТЕЛЬ</span><div><i id="bossHealthBar"></i></div></div><div id="boostHUD"></div><div id="waveBanner" role="status"><b></b><span></span></div><div id="controlHint">WASD / СТРЕЛКИ / МЫШЬ · ОГОНЬ АВТОМАТИЧЕСКИЙ</div></div>
 

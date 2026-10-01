@@ -71,9 +71,10 @@
   );
   const money = n => Math.round(n / 10) * 10;
   const economicScale = tier => Math.pow(1.32, tier);
+  const creditScale = [];
   SHIPS.forEach((ship, id) => Object.assign(ship, {
     sprite: id < 10 ? id : 400 + id - 10, unlock: 1 + id * 25,
-    cost: id ? money(9000 * economicScale(id - 1)) : 0,
+    cost: id ? money(10500 * Math.pow(id, 1.4)) : 0,
     dps: 24 * Math.pow(2.05, id), hp: Math.round(100 * Math.pow(1.75, id)), speed: 480,
     projectileSpeed: id >= 10 ? 1800 + (id - 10) * 100 : Math.max(800 + id * 70, ['sniper', 'rapid'].includes(ship.weapon) ? 1050 : 0)
   }));
@@ -95,19 +96,36 @@
     return { ...ship, dps: ship.dps * (1 + (dmg - 1) * .12) * cadence,
       hp: Math.round(ship.hp * (1 + (hp - 1) * .15)), interval: ship.interval / cadence, fireRate: 1000 / ship.interval * cadence };
   }
-  const upgradeCost = (rank, shipId = 0) => rank >= MAX_UPGRADE ? 0 : money([0, 300, 600, 1050, 1600][rank] * economicScale(shipId));
-  const rankLevel = (shipId, rank) => shipId * 25 + [0, 1, 5, 10, 16, 21][clamp(rank, 1, 5)];
+  const upgradeCost = (rank, shipId = 0) => rank >= MAX_UPGRADE ? 0 : money([0, 300, 600, 1050, 1600][rank] * SHIPS[Math.min(SHIPS.length - 1, shipId + 1)].cost / SHIPS[1].cost);
   const rankAt = level => [1, 5, 10, 16, 21].filter(n => n <= ((level - 1) % 25) + 1).length;
   const upgradesFor = (save, shipId = save.currentShip) => save.upgrades[shipId] || { dmg: 1, hp: 1, rate: 1 };
-  const canUse = (save, shipId) => save.unlockedShips.includes(shipId) && save.campaignLevel >= SHIPS[shipId].unlock;
-  const canBuy = (save, shipId) => shipId > 0 && !save.unlockedShips.includes(shipId) && save.unlockedShips.includes(shipId - 1) && save.campaignLevel >= SHIPS[shipId].unlock && save.credits >= SHIPS[shipId].cost;
-  const canUpgrade = (save, shipId, key) => ['dmg', 'hp', 'rate'].includes(key) && canUse(save, shipId) && upgradesFor(save, shipId)[key] < MAX_UPGRADE && save.campaignLevel >= rankLevel(shipId, upgradesFor(save, shipId)[key] + 1) && save.credits >= upgradeCost(upgradesFor(save, shipId)[key], shipId);
+  const canUse = (save, shipId) => !!SHIPS[shipId] && save.unlockedShips.includes(shipId);
+  const canBuy = (save, shipId) => !!SHIPS[shipId] && shipId > 0 && !save.unlockedShips.includes(shipId) && save.credits >= SHIPS[shipId].cost;
+  const canUpgrade = (save, shipId, key) => ['dmg', 'hp', 'rate'].includes(key) && canUse(save, shipId) && upgradesFor(save, shipId)[key] < MAX_UPGRADE && save.credits >= upgradeCost(upgradesFor(save, shipId)[key], shipId);
+  function statBars(shipId, upgrades = {}) {
+    // A common class scale, not a percentage of each hull's own maximum.
+    const base = 16 + clamp(shipId, 0, SHIPS.length - 1) * 7;
+    const rank = key => clamp(upgrades[key] || 1, 1, MAX_UPGRADE) - 1;
+    return { dmg: base + (rank('dmg') + rank('rate')) * .75, hp: base + rank('hp') * 1.5, rate: base + rank('rate') * 1.5 };
+  }
+  function rewards(tier, stage, multiplier = creditScale[tier] || 1) {
+    const scale = economicScale(tier) * multiplier;
+    return { reward: money((500 + stage * 18) * scale), repeatReward: money((55 + stage * 2) * scale),
+      killReward: Math.max(1, Math.round(6 * scale)), bossReward: money(100 * scale) };
+  }
+  function chapterIncome(tier, multiplier) {
+    let income = 0;
+    for (let stage = 1; stage <= 25; stage++) {
+      const r = rewards(tier, stage, multiplier), units = 12 + Math.floor(stage / 6) + Math.floor(tier / 3);
+      income += r.reward + Math.ceil((units * 3 + 3) * .75) * r.killReward + (stage % 5 === 0 ? r.bossReward : 0);
+    }
+    return income;
+  }
   function campaign(level) {
     level = clamp(Math.floor(level), 1, MAX_LEVEL);
     const tier = Math.floor((level - 1) / 25), stage = (level - 1) % 25 + 1, rank = rankAt(level);
     const expectedDps = SHIPS[tier].dps * (1 + (stage - 1) / 24 * .776);
     const expectedHp = SHIPS[tier].hp * (1 + (stage - 1) / 24 * .6);
-    const scale = economicScale(tier);
     return { level, tier, stage, rank, expectedDps, expectedHp, bossHp: expectedDps * (18 + Math.min(7, level / 40)),
       waves: 3, boss: level % 5 === 0, scale: expectedDps * .62 / 28,
       doctrine: Math.floor((level - 1) / 5) % 6,
@@ -116,8 +134,7 @@
       maxShooters: Math.min(8, 5 + Math.floor(level / 80)), bulletCap: Math.min(130, 70 + Math.floor(level / 3)),
       interval: Math.max(830, 1000 - level * .5), fireRate: Math.max(.82, 1.04 - level * .00075),
       bulletSpeed: 1 + Math.min(.20, level * .0007), units: 12 + Math.floor(stage / 6) + Math.floor(tier / 3),
-      reward: money((350 + stage * 12) * scale), repeatReward: money((55 + stage * 2) * scale),
-      killReward: Math.round(12 * scale), bossReward: money(100 * scale),
+      ...rewards(tier, stage),
       damage: expectedHp / 14, speedMult: 1 + Math.min(.18, level * .0007) };
   }
   function survival(wave, startLevel = 1) {
@@ -132,7 +149,8 @@
       maxEnemies: Math.min(11, base.maxEnemies + Math.floor(wave / 10)), maxThreat: Math.min(26, Math.max(15, base.maxThreat) + Math.floor(wave / 8)),
       maxShooters: Math.min(8, base.maxShooters + Math.floor(wave / 12)), interval: Math.max(780, base.interval - wave * 3),
       damage: base.damage * Math.sqrt(growth), bulletCap: Math.min(140, base.bulletCap + wave),
-      survivalReward: money((65 + Math.min(50, wave) * 4) * economicScale(base.tier)) };
+      killReward: base.killReward * 2,
+      survivalReward: money((65 + Math.min(50, wave) * 4) * economicScale(base.tier) * creditScale[base.tier]) };
   }
   function waveTypes(config, wave, random = Math.random) {
     const pool = Object.keys(ENEMIES).filter(k => k !== 'boss' && ENEMIES[k].unlock <= config.level);
@@ -187,7 +205,7 @@
       }
       d.migrationRefund = d.credits - Math.floor(number(raw.credits, 0));
     }
-    d.currentShip = canUse(d, raw.currentShip) ? raw.currentShip : Math.max(...d.unlockedShips.filter(id => SHIPS[id].unlock <= d.campaignLevel));
+    d.currentShip = canUse(d, raw.currentShip) ? raw.currentShip : Math.max(...d.unlockedShips);
     d.highScore = number(raw.highScore, 0); d.bestWave = number(raw.bestWave, 0); d.bestTime = number(raw.bestTime, 0);
     d.stats.totalPlayTime = number(raw.stats?.totalPlayTime, 0);
     if (raw.daily && typeof raw.daily === 'object') d.daily = { last: typeof raw.daily.last === 'string' ? raw.daily.last : null, streak: Math.floor(number(raw.daily.streak, 0, 6)) };
@@ -198,18 +216,16 @@
     }
     return d;
   }
-  // Spend the preceding chapter's minimum clear income on its upgrades, next hull,
-  // and a 10% reserve. Optional rewards never enter the required progression budget.
-  SHIPS.slice(1).forEach(ship => {
-    const previous = ship.id - 1;
-    let income = 0;
-    for (let stage = 1; stage <= 25; stage++) {
-      const c = campaign(previous * 25 + stage);
-      income += c.reward + Math.ceil((c.units * 3 + 3) * .75) * c.killReward + (c.boss ? c.bossReward : 0);
-    }
-    const upgrades = [1, 2, 3, 4].reduce((sum, rank) => sum + upgradeCost(rank, previous) * 3, 0);
-    ship.cost = money(income * .9 - upgrades);
+  // Fund a complete hull and its successor through ~25 first clears. No purchase
+  // uses sector gates. Solve after currency rounding so the budget is achievable.
+  SHIPS.forEach(ship => {
+    const upgrades = [1, 2, 3, 4].reduce((sum, rank) => sum + upgradeCost(rank, ship.id) * 3, 0);
+    const target = (upgrades + SHIPS[Math.min(ship.id + 1, SHIPS.length - 1)].cost) * 1.015;
+    let low = 0, high = 1;
+    while (chapterIncome(ship.id, high) < target) high *= 2;
+    for (let i = 0; i < 32; i++) { const mid = (low + high) / 2; if (chapterIncome(ship.id, mid) < target) low = mid; else high = mid; }
+    creditScale[ship.id] = high;
   });
-  root.Balance = { SHIPS, ENEMIES, BOSSES, MODULES, MAX_LEVEL, MAX_UPGRADE, stats, upgradeCost, rankAt, rankLevel, upgradesFor, canUse, canBuy, canUpgrade, campaign, survival, waveTypes, waveScale, canSpawn, freshSave, migrate, clamp };
+  root.Balance = { SHIPS, ENEMIES, BOSSES, MODULES, MAX_LEVEL, MAX_UPGRADE, stats, statBars, upgradeCost, rankAt, upgradesFor, canUse, canBuy, canUpgrade, chapterIncome, campaign, survival, waveTypes, waveScale, canSpawn, freshSave, migrate, clamp };
   if (typeof module !== 'undefined') module.exports = root.Balance;
 })(typeof window === 'undefined' ? globalThis : window);
