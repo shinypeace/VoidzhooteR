@@ -1,11 +1,11 @@
 {
   "name": "voidstorm",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "private": true,
   "scripts": {
     "start": "node server.cjs",
     "test": "node --test tests/balance.test.cjs tests/game.test.cjs tests/v4.test.cjs tests/v5-mechanics.test.cjs",
-    "check": "node --check js/game.js && node --check js/balance.js && node --check js/vk.js && node --check js/atlas-frames.js",
+    "check": "node --check js/game.js && node --check js/balance.js && node --check js/vk.js && node --check js/atlas-frames.js && node --check js/viewport.js",
     "test:browser": "node tests/browser-smoke.cjs",
     "test:economy": "node tests/economy.cjs"
   }

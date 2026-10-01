@@ -1,12 +1,23 @@
 {
   "ok": true,
   "errors": [],
+  "viewport": {
+    "pageFixed": true,
+    "pinchBlocked": true,
+    "doubleTapBlocked": true,
+    "textSelectionBlocked": true,
+    "menuTouchScroll": true,
+    "menuWheelScroll": true,
+    "boundaryContainment": true,
+    "settingsTaps": true,
+    "safariEventGuards": true
+  },
   "performance": {
     "frames": 240,
     "medianMs": 6.900000000000091,
-    "p95Ms": 7,
+    "p95Ms": 7.099999999999909,
     "over40ms": 0,
-    "bullets": 70,
+    "bullets": 69,
     "spriteCache": 85,
     "hudChips": 3
   },

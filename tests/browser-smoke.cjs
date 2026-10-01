@@ -17,6 +17,7 @@ fs.mkdirSync(out, { recursive: true });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     await page.goto('http://127.0.0.1:4173/', { waitUntil: 'load' });
     await page.waitForFunction(() => window.Voidstorm?.atlasReady);
+    const viewportReport = await require('./viewport-browser.cjs')(page, context);
     assert(await page.locator('#toast').evaluate(el => el.classList.contains('hidden')), 'Migration must not show an entry banner');
     await page.screenshot({ path: path.join(out, '01-menu.png') });
     const menuButtons = await page.locator('#mainMenu button').allTextContents();
@@ -125,7 +126,7 @@ fs.mkdirSync(out, { recursive: true });
     await page.locator('#artReview').screenshot({path:path.join(out,'05-fleet-and-bosses.png')});
     if (errors.length) console.log('Browser exceptions:', JSON.stringify(errors));
     assert.deepEqual(errors, [], 'No browser exceptions');
-    fs.writeFileSync(path.join(out, 'browser-report.json'), JSON.stringify({ ok: true, errors, performance: performanceReport, viewports: ['390x844', '360x640', '320x568', '1440x900'] }, null, 2));
+    fs.writeFileSync(path.join(out, 'browser-report.json'), JSON.stringify({ ok: true, errors, viewport: viewportReport, performance: performanceReport, viewports: ['390x844', '360x640', '320x568', '1440x900'] }, null, 2));
     console.log('Browser smoke checks passed. Screenshots: docs/qa');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
